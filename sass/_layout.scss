@@ -293,14 +293,6 @@ footer {
   a {
     color: var(--link);
   }
-
-  // The command reads as a command, without the inline-code wash shouting at this size.
-  code {
-    padding: 0.05em 0.3em;
-    background: var(--code-inline-bg);
-    border-radius: 0.2rem;
-    font-size: 0.95em;
-  }
 }
 
 // Dims the page behind an open mobile sidebar.
