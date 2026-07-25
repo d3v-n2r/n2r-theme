@@ -196,14 +196,23 @@ math {
   font-size: 1.15em;
 
   // A long derivation scrolls inside its own box rather than widening the page.
+  //
+  // Note what is *not* set here: `display`. MathML Core's user-agent stylesheet gives a display
+  // formula `display: block math`, and the `math` half is what creates the maths formatting
+  // context. Overriding it with plain `block` destroys that context, so the children fall back to
+  // ordinary block layout — every symbol on its own line and fraction bars stretched across the
+  // page. Correct markup, wrong layout mode.
   &[display='block'] {
-    display: block;
     overflow-x: auto;
     overflow-y: hidden;
-    margin: 0.5rem 0;
-    padding: 0.5rem 0;
-    text-align: center;
+    margin: 0.75rem 0;
   }
+}
+
+// comrak wraps a display formula in a paragraph, so centring happens there rather than on the maths
+// element, whose own layout is best left alone.
+p:has(> math[display='block']) {
+  text-align: center;
 }
 
 // A footnote flashes when jumped to, then fades back over nearly two seconds — long enough to
