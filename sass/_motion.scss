@@ -1,0 +1,109 @@
+// Motion.
+//
+// Two sources. Chirpy's own transitions are mostly hover feedback and slide-ins; chirping-astro
+// adds one genuinely better idea, the circular reveal on the appearance toggle. Its page-navigation
+// fade is *not* ported: in that theme the rule is overridden to `animation: none` further down the
+// same stylesheet and the root element is never given a `view-transition-name`, so it has never
+// actually run.
+//
+// Everything here is decoration. `_reset.scss` collapses it all under `prefers-reduced-motion`,
+// including `animation-iteration-count`, so an infinite animation stops rather than becoming a
+// sub-millisecond strobe.
+
+$ease: cubic-bezier(0.4, 0, 0.2, 1);
+$quick: 0.15s;
+$hover: 0.3s;
+$slide: 0.4s;
+
+// ------------------------------------------------------- appearance toggle
+
+// The new theme is clipped in as a circle growing from wherever the reader clicked. The script
+// measures the distance to the furthest corner and passes it in, so the circle always finishes by
+// covering the viewport rather than stopping short on wide screens.
+//
+// `@supports` matters: without the View Transitions API the script swaps the theme instantly, and
+// these rules simply never apply.
+@supports (view-transition-name: root) {
+  :root[data-theme-anim] {
+    view-transition-name: root;
+  }
+
+  :root[data-theme-anim='to-dark'] {
+    &::view-transition-old(root) {
+      z-index: 1;
+      animation: none;
+    }
+
+    &::view-transition-new(root) {
+      z-index: 2;
+      animation: theme-reveal 0.52s $ease forwards;
+    }
+  }
+
+  // Going the other way, the *old* theme is clipped away over the new one, so the circle still
+  // appears to originate at the cursor rather than closing in from the edges.
+  :root[data-theme-anim='to-light'] {
+    &::view-transition-old(root) {
+      z-index: 2;
+      animation: theme-conceal 0.52s $ease forwards;
+    }
+
+    &::view-transition-new(root) {
+      z-index: 1;
+      animation: none;
+    }
+  }
+
+  @keyframes theme-reveal {
+    from {
+      clip-path: circle(0 at var(--theme-x, 50%) var(--theme-y, 50%));
+    }
+    to {
+      clip-path: circle(var(--theme-radius, 150vmax) at var(--theme-x, 50%) var(--theme-y, 50%));
+    }
+  }
+
+  @keyframes theme-conceal {
+    from {
+      clip-path: circle(var(--theme-radius, 150vmax) at var(--theme-x, 50%) var(--theme-y, 50%));
+    }
+    to {
+      clip-path: circle(0 at var(--theme-x, 50%) var(--theme-y, 50%));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation: none !important;
+    }
+  }
+}
+
+// ------------------------------------------------------- shared keyframes
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes menu-pop {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}

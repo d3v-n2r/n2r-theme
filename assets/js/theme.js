@@ -1,8 +1,8 @@
-// Appearance toggle and mobile sidebar.
+// Appearance toggle, mobile sidebar, and back-to-top.
 //
-// Chirpy drives both through Bootstrap components — a Dropdown for the mode menu and its own
-// sidebar script — which costs Bootstrap's JS bundle plus Popper. Neither is needed: the mode
-// toggle is a three-state cycle and the sidebar is one attribute.
+// Chirpy drives the first two through Bootstrap components — a Dropdown for the mode menu and its
+// own sidebar script — which costs Bootstrap's JS bundle plus Popper. Neither is needed: the toggle
+// is a three-state cycle and the sidebar is one attribute.
 //
 // Reading the stored mode happens inline in <head>, before first paint, so a reader who chose dark
 // never sees a white flash. This file only handles interaction afterwards.
@@ -13,6 +13,10 @@
   var root = document.documentElement;
   var STORAGE_KEY = 'mode';
 
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  // ---------------------------------------------------------------- appearance
+
   /** Cycles system → light → dark → system, so a reader can always get back to following the OS. */
   function nextMode(current) {
     if (!current) return 'light';
@@ -20,7 +24,7 @@
     return null;
   }
 
-  function applyMode(mode) {
+  function writeMode(mode) {
     if (mode) {
       root.dataset.mode = mode;
       localStorage.setItem(STORAGE_KEY, mode);
@@ -30,12 +34,65 @@
     }
   }
 
-  var toggle = document.getElementById('mode-toggle');
-  if (toggle) {
-    toggle.addEventListener('click', function () {
-      applyMode(nextMode(root.dataset.mode || null));
+  /** Whether the mode we are moving to paints darker than the one we are leaving. */
+  function resolves(mode) {
+    if (mode) return mode;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
+  /**
+   * Swaps the appearance, revealing the new theme as a circle growing from the click.
+   *
+   * The radius has to reach the furthest corner of the viewport from wherever the pointer was,
+   * or the circle stops short and leaves a ring of the old theme behind.
+   */
+  function switchMode(event) {
+    var current = root.dataset.mode || null;
+    var target = nextMode(current);
+
+    var animated =
+      typeof document.startViewTransition === 'function' && !reducedMotion.matches;
+
+    if (!animated) {
+      writeMode(target);
+      return;
+    }
+
+    var x = event.clientX;
+    var y = event.clientY;
+
+    // Keyboard activation reports no coordinates, so fall back to the button itself.
+    if (!x && !y) {
+      var box = event.currentTarget.getBoundingClientRect();
+      x = box.left + box.width / 2;
+      y = box.top + box.height / 2;
+    }
+
+    var radius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    );
+
+    root.style.setProperty('--theme-x', x + 'px');
+    root.style.setProperty('--theme-y', y + 'px');
+    root.style.setProperty('--theme-radius', radius + 'px');
+    root.dataset.themeAnim = resolves(target) === 'dark' ? 'to-dark' : 'to-light';
+
+    var transition = document.startViewTransition(function () {
+      writeMode(target);
+    });
+
+    transition.finished.finally(function () {
+      delete root.dataset.themeAnim;
     });
   }
+
+  var toggle = document.getElementById('mode-toggle');
+  if (toggle) {
+    toggle.addEventListener('click', switchMode);
+  }
+
+  // ---------------------------------------------------------------- sidebar
 
   var trigger = document.getElementById('sidebar-trigger');
   var mask = document.getElementById('mask');
@@ -69,4 +126,25 @@
       if (trigger) trigger.focus();
     }
   });
+
+  // ---------------------------------------------------------------- back to top
+
+  var backToTop = document.getElementById('back-to-top');
+  if (backToTop) {
+    var SHOW_AFTER = 320;
+
+    var onScroll = function () {
+      backToTop.classList.toggle('show', window.scrollY > SHOW_AFTER);
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    backToTop.addEventListener('click', function () {
+      window.scrollTo({
+        top: 0,
+        behavior: reducedMotion.matches ? 'auto' : 'smooth',
+      });
+    });
+  }
 })();

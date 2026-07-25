@@ -20,6 +20,14 @@ All notable changes to this theme are documented here. The format follows
   lives here rather than as inline colour in the HTML.
 - **M3** — responsive gallery grid consuming the engine's `srcset` variants, inline blur
   placeholders, and EXIF captions.
+- **M3** — JetBrains Mono, self-hosted as latin-subset WOFF2 in three faces, about 65 KB in total.
+  Not the Nerd Font build: that carries roughly ten thousand terminal icon glyphs and runs to
+  several megabytes, none of which a browser can use.
+- **M3** — motion. The appearance toggle reveals the new theme as a circle growing from the click,
+  using the View Transitions API, with an instant swap where the API is missing or the reader has
+  asked for reduced motion. Card hover wash, avatar scale, back-to-top, and a footnote flash on
+  `:target`.
+- **M3** — site-supplied avatar with a monogram fallback.
 - **M0** — `theme.toml` manifest (name, version, license, `min_engine_version`, directory map) and
   the directory layout that maps Chirpy's `_layouts`/`_includes`/`_sass`/`_javascript`/`_data` onto
   `templates/{layouts,partials}`, `sass/`, `assets/{js,img}`, and `locales/`.

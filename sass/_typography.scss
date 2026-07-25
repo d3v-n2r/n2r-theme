@@ -171,3 +171,18 @@ code {
 time {
   font-variant-numeric: tabular-nums;
 }
+
+// A footnote flashes when jumped to, then fades back over nearly two seconds — long enough to
+// notice where you landed without the page feeling like it is doing something.
+:target {
+  animation: footnote-flash 1.75s ease-in-out;
+}
+
+@keyframes footnote-flash {
+  from {
+    background-color: var(--accent-wash);
+  }
+  to {
+    background-color: transparent;
+  }
+}
