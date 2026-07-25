@@ -253,29 +253,19 @@ article {
 
 // ---------------------------------------------------------------- footer
 
+// Deliberately quiet: one line, small, muted. A footer is a signature, not a section.
 footer {
   margin-top: 2rem;
-  padding: 2rem 0 2.5rem;
+  padding: 1rem 0 1.5rem;
   border-top: 1px solid var(--border);
-  font-size: 0.82rem;
-  line-height: 1.7;
+  font-size: 0.75rem;
+  line-height: 1.6;
   color: var(--text-muted);
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  max-width: 44rem;
+  text-wrap: pretty;
 
   a {
     color: inherit;
   }
-}
-
-// The asides sit on their own lines, since running them together reads as one long apology.
-.footer-quips {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  font-style: italic;
 }
 
 // Dims the page behind an open mobile sidebar.
