@@ -92,15 +92,17 @@ hr {
 .content {
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
+  gap: 1.3rem;
 
   // Monospace runs wider per character, so the column is narrower than it would be for a
   // proportional face to land in the same 65–70 character range.
   max-width: 40rem;
 
+  // A heading belongs to what follows it, so it gets air above and stays close to its own text.
   > h2,
-  > h3 {
-    margin-top: 0.8rem;
+  > h3,
+  > h4 {
+    margin-top: 1rem;
   }
 
   ul,

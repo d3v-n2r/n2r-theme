@@ -21,10 +21,13 @@
     </div>
   </div>
 
+{#
+    Home doubles as About, and one entry covers résumé, CV, and portfolio — they answer the same
+    question, so splitting them would make a reader choose between synonyms.
+  #}
   <nav class="sidebar-nav" aria-label="Sections">
     <a href="/">Home</a>
-    <a href="/resume/">Résumé</a>
-    <a href="/projects/">Portfolio</a>
+    <a href="/portfolio/">Résumé / Portfolio</a>
     <a href="{{ site.blog_url | safe }}">Blog</a>
     <a href="/categories/">Categories</a>
     <a href="/tags/">Tags</a>

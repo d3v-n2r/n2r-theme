@@ -208,7 +208,22 @@ main {
   min-width: 0; // lets long code blocks scroll instead of stretching the grid column
   display: flex;
   flex-direction: column;
+  gap: 2rem;
+}
+
+// Everything inside an article — title, metadata, series banner, body, tags, navigation — has its
+// margins reset by the typography rules, so the spacing between them comes from here. Laying it out
+// with `gap` rather than per-element margins means nothing collapses or doubles up.
+article {
+  display: flex;
+  flex-direction: column;
   gap: 1.5rem;
+
+  > header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
 }
 
 #panel {
@@ -239,18 +254,28 @@ main {
 // ---------------------------------------------------------------- footer
 
 footer {
-  padding: 1.5rem 0 2rem;
+  margin-top: 2rem;
+  padding: 2rem 0 2.5rem;
   border-top: 1px solid var(--border);
-  font-size: 0.85rem;
+  font-size: 0.82rem;
+  line-height: 1.7;
   color: var(--text-muted);
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem 1rem;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 44rem;
 
   a {
     color: inherit;
   }
+}
+
+// The asides sit on their own lines, since running them together reads as one long apology.
+.footer-quips {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-style: italic;
 }
 
 // Dims the page behind an open mobile sidebar.

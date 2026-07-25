@@ -129,12 +129,14 @@
   color: var(--text-muted);
 }
 
+// A rule needs room on both sides or it reads as crowding the content rather than separating it.
 .series-nav {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 0.75rem;
-  padding-top: 1.25rem;
+  margin-top: 0.75rem;
+  padding-top: 1.75rem;
   border-top: 1px solid var(--border);
 
   a {
@@ -242,8 +244,9 @@
 #related-posts {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  padding: 2rem 0 0;
+  gap: 1.25rem;
+  margin-top: 1rem;
+  padding-top: 2.5rem;
   border-top: 1px solid var(--border);
 
   h2 {
@@ -254,18 +257,19 @@
 .related-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
-  gap: 0.75rem;
+  gap: 1rem;
 
   .card {
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
-    padding: 0.85rem 1rem;
+    gap: 0.5rem;
+    padding: 1rem 1.1rem;
   }
 
   .card-title {
     font-size: 0.95rem;
     font-weight: 620;
+    line-height: 1.4;
     margin: 0;
   }
 }
