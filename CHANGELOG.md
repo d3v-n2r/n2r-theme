@@ -19,7 +19,7 @@ All notable changes to this theme are documented here. The format follows
 
 ### Security
 
-- `main` is protected against force-pushes and deletion.
+- `main` is protected against force-pushes and deletion, and requires signed commits.
 
 The templates, styles, and scripts themselves are ported at M3.
 
