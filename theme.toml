@@ -1,0 +1,17 @@
+# Theme manifest — read by n2r-engine when this directory is used as a theme.
+# Fields are provisional until the engine's theme system lands at M3.
+
+name = "n2r-theme"
+version = "0.1.0"
+description = "Chirpy-parity theme for n2r-engine, plus portfolio and gallery sections"
+license = "MIT"
+repository = "https://github.com/d3v-n2r/n2r-theme"
+
+# Minimum engine version this theme expects.
+min_engine_version = "0.1.0"
+
+[directories]
+templates = "templates"
+sass = "sass"
+assets = "assets"
+locales = "locales"

@@ -1,1 +1,9 @@
+# JS toolchain (theme scripts are bundled before release)
 node_modules/
+/assets/js/dist/
+
+# Compiled CSS — the engine compiles sass/ at build time
+*.css.map
+
+# OS noise
+.DS_Store
