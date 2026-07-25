@@ -5,6 +5,7 @@
   The appearance toggle lives in the topbar rather than down here, so it stays reachable without
   opening the sidebar on a narrow screen.
 #}
+{% import "partials/icons.html" as icons %}
 <aside id="sidebar" aria-label="Site navigation">
   <div class="profile">
     {# The picture belongs to the site, not the theme. Sites without one get a monogram. #}
@@ -21,13 +22,10 @@
     </div>
   </div>
 
-{#
-    Home doubles as About, and one entry covers résumé, CV, and portfolio — they answer the same
-    question, so splitting them would make a reader choose between synonyms.
-  #}
+{# Home doubles as About; one entry covers résumé, CV, and portfolio. #}
   <nav class="sidebar-nav" aria-label="Sections">
     <a href="/">Home</a>
-    <a href="/portfolio/">Résumé / Portfolio</a>
+    <a href="/portfolio/">Résumé</a>
     <a href="{{ site.blog_url | safe }}">Blog</a>
     <a href="/categories/">Categories</a>
     <a href="/tags/">Tags</a>
@@ -36,7 +34,18 @@
     <a href="/contact/">Contact</a>
   </nav>
 
+{#
+    Profile links first, feed last, so adding or removing a profile never moves the feed. Every one
+    is icon-only, so the row stays the same height however many there are — with an accessible label,
+    since an icon alone tells a screen reader nothing.
+  #}
   <div class="sidebar-bottom">
-    <a href="/feed.xml" aria-label="RSS feed">RSS</a>
+    {% for profile in site.social %}
+      <a href="{{ profile.url | safe }}" aria-label="{{ profile.name }}" title="{{ profile.name }}" rel="me noopener">
+        {{ icons.icon(profile.icon) }}
+      </a>
+    {% endfor %}
+
+    <a href="/feed.xml" aria-label="RSS feed" title="RSS feed">{{ icons.icon("rss") }}</a>
   </div>
 </aside>

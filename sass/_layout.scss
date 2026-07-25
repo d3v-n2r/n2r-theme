@@ -5,6 +5,7 @@
 // breakpoints: one column below `lg`, sidebar plus content at `lg`, plus the side panel at `xl`.
 
 @use 'breakpoints' as bp;
+@use 'motion';
 @use 'typography' as type;
 
 $sidebar-width: 16.25rem; // 260px, Chirpy's $sidebar-width
@@ -125,12 +126,37 @@ $content-max: 48rem;
   }
 }
 
+// A row of icon-only links: profiles first, feed last.
 .sidebar-bottom {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.15rem;
   padding-top: 1rem;
   border-top: 1px solid var(--border);
+
+  a {
+    display: inline-grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    transition:
+      color motion.$quick ease,
+      background-color motion.$quick ease;
+
+    &:hover {
+      color: var(--link);
+      background: var(--accent-wash);
+    }
+  }
+
+  // Icons inherit `currentColor`, so they follow the palette without a second set for dark mode.
+  svg {
+    width: 1.05rem;
+    height: 1.05rem;
+  }
 }
 
 // ---------------------------------------------------------------- topbar
