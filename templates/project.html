@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}{{ project.title }} · {{ site.title }}{% endblock %}
+{% block topbar_title %}{{ project.title }}{% endblock %}
+
+{% block content %}
+  <article>
+    <header>
+      <h1>{{ project.title }}</h1>
+      {% if project.summary %}<p class="project-summary">{{ project.summary }}</p>{% endif %}
+
+      <div class="post-meta">
+        {% if project.status %}
+          <span class="status status-{{ project.status | lower }}">{{ project.status }}</span>
+        {% endif %}
+        {% if project.date %}
+          <time datetime="{{ project.date.iso }}">{{ project.date.human }}</time>
+        {% endif %}
+      </div>
+
+      {% if project.tech %}
+        <ul class="tech">
+          {% for item in project.tech %}<li>{{ item }}</li>{% endfor %}
+        </ul>
+      {% endif %}
+
+      {% if project.links %}
+        <div class="project-links">
+          {% for link in project.links %}
+            <a href="{{ link.url | safe }}" rel="noopener">{{ link.kind }}</a>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </header>
+
+    <div class="content">{{ project.content | safe }}</div>
+  </article>
+{% endblock %}
+
+{% block panel %}
+  {% with headings = project.headings %}
+    {% include "partials/toc.html" %}
+  {% endwith %}
+{% endblock %}

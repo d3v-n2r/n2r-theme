@@ -322,6 +322,101 @@
   }
 }
 
+// ---------------------------------------------------------------- portfolio
+
+.projects {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.project {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1.2rem 1.35rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+
+  // A featured entry earns a rail rather than a different background, so the page stays calm.
+  &.featured {
+    border-left: 3px solid var(--link);
+  }
+
+  > header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.6rem;
+  }
+
+  h2 {
+    font-size: 1.1rem;
+
+    a {
+      color: var(--text);
+      text-decoration: none;
+
+      &:hover {
+        color: var(--link);
+      }
+    }
+  }
+}
+
+.project-summary {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+}
+
+.status {
+  padding: 0.1rem 0.5rem;
+  border-radius: 1rem;
+  border: 1px solid currentcolor;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+
+  // Status is semantic, so it gets its own colours rather than borrowing the accent.
+  &.status-active {
+    color: var(--good);
+  }
+  &.status-shipped {
+    color: var(--link);
+  }
+  &.status-paused {
+    color: var(--warn);
+  }
+  &.status-archived {
+    color: var(--text-muted);
+  }
+}
+
+.tech {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+
+  li {
+    padding: 0.1rem 0.45rem;
+    border-radius: 0.25rem;
+    background: var(--accent-wash);
+    color: var(--text-muted);
+    font-size: 0.76rem;
+  }
+}
+
+.project-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  font-size: 0.85rem;
+}
+
 // ---------------------------------------------------------------- archives
 
 .archive-year {

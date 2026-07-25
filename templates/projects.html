@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Portfolio · {{ site.title }}{% endblock %}
+{% block topbar_title %}Portfolio{% endblock %}
+
+{% block content %}
+  <h1>Portfolio</h1>
+
+  <div class="projects">
+    {% for project in projects %}
+      <article class="project{% if project.featured %} featured{% endif %}">
+        <header>
+          <h2><a href="{{ project.url | safe }}">{{ project.title }}</a></h2>
+          {% if project.status %}
+            {# The status is a closed set in the engine, so the class name is always one of four. #}
+            <span class="status status-{{ project.status | lower }}">{{ project.status }}</span>
+          {% endif %}
+        </header>
+
+        {% if project.summary %}<p class="project-summary">{{ project.summary }}</p>{% endif %}
+
+        {% if project.tech %}
+          <ul class="tech">
+            {% for item in project.tech %}<li>{{ item }}</li>{% endfor %}
+          </ul>
+        {% endif %}
+
+        {% if project.links %}
+          <div class="project-links">
+            {% for link in project.links %}
+              <a href="{{ link.url | safe }}" rel="noopener">{{ link.kind }}</a>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </article>
+    {% endfor %}
+  </div>
+{% endblock %}
