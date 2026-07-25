@@ -15,6 +15,19 @@
     <title>{% block title %}{{ site.title }}{% endblock %}</title>
     <meta name="description" content="{% block description %}{{ site.description }}{% endblock %}" />
 
+    {#
+      The regular weight is needed for the first line of text on every page, so fetching it
+      alongside the stylesheet rather than after it removes one round trip from first paint. The
+      bold and italic faces are not preloaded — they are not always used, and preloading everything
+      just moves the contention around.
+    #}
+    <link
+      rel="preload"
+      href="/assets/fonts/jetbrains-mono-latin-400-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <link rel="stylesheet" href="/assets/css/main.css" />
     <link
       rel="alternate"

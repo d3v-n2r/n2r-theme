@@ -1,19 +1,17 @@
 // Typography.
 //
-// System stacks throughout — nothing is downloaded, so there is no layout shift on load, no font
-// request leaving the reader's machine, and no CDN in the critical path. That keeps the page-weight
-// story consistent with an engine that renders markdown, highlighting, and images at build time.
-// Chirpy ships Source Sans Pro and Lato as webfonts; this is the deliberate departure.
-
-$font-body:
-  system-ui,
-  -apple-system,
-  'Segoe UI',
-  Roboto,
-  'Helvetica Neue',
-  sans-serif;
+// Monospace throughout, which is a deliberate identity choice for a site whose subject is a
+// compiler-adjacent tool and whose second frontend is a terminal app. Chirpy uses Source Sans Pro
+// and Lato; this is the departure.
+//
+// Mono in running prose is harder to read than a proportional face — every character occupies the
+// same width, so word shapes flatten and the eye gets less to grip. Three adjustments earn that
+// back: a slightly smaller size, more line height than prose usually needs, and a narrower measure.
+// If long posts ever start to feel tiring, swapping `$font-body` to a proportional stack is a
+// one-line change and nothing else in the theme depends on it.
 
 $font-mono:
+  'JetBrains Mono',
   ui-monospace,
   SFMono-Regular,
   'SF Mono',
@@ -22,10 +20,12 @@ $font-mono:
   Consolas,
   monospace;
 
+$font-body: $font-mono;
+
 body {
   font-family: $font-body;
-  font-size: 1rem;
-  line-height: 1.7;
+  font-size: 0.95rem;
+  line-height: 1.75;
 }
 
 h1,
@@ -94,8 +94,9 @@ hr {
   flex-direction: column;
   gap: 1.1rem;
 
-  // Roughly 70 characters at this size, which is where prose stays comfortable.
-  max-width: 44rem;
+  // Monospace runs wider per character, so the column is narrower than it would be for a
+  // proportional face to land in the same 65–70 character range.
+  max-width: 40rem;
 
   > h2,
   > h3 {

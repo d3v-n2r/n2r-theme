@@ -4,7 +4,14 @@
 #}
 <aside id="sidebar" aria-label="Site navigation">
   <div class="profile">
-    <a id="avatar" href="/" aria-label="{{ site.title }} home">{{ site.title | first }}</a>
+    {# The picture belongs to the site, not the theme. Sites without one get a monogram. #}
+    <a id="avatar" href="/" aria-label="{{ site.title }} home">
+      {% if site.avatar %}
+        <img src="{{ site.avatar | safe }}" alt="{{ site.author }}" width="112" height="112" />
+      {% else %}
+        <span class="monogram">{{ site.title | first }}</span>
+      {% endif %}
+    </a>
     <div>
       <p class="site-title"><a href="/">{{ site.title }}</a></p>
       <p class="site-subtitle">{{ site.description }}</p>
