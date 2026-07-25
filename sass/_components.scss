@@ -1,0 +1,196 @@
+// Reusable pieces: post cards, metadata, tags, pagination, the series banner, the gallery grid,
+// and the theme toggle.
+
+@use 'typography' as type;
+
+// ---------------------------------------------------------------- post list
+
+#post-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.card {
+  display: block;
+  padding: 1.15rem 1.35rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  color: inherit;
+  text-decoration: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--link) 45%, var(--border));
+    box-shadow: var(--shadow);
+    color: inherit;
+  }
+}
+
+.card-title {
+  font-size: 1.2rem;
+  margin-bottom: 0.4rem;
+}
+
+.card-summary {
+  color: var(--text-muted);
+  font-size: 0.94rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// ---------------------------------------------------------------- metadata
+
+.post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.85rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+
+  .sep {
+    color: var(--border);
+  }
+
+  a {
+    color: inherit;
+
+    &:hover {
+      color: var(--link);
+    }
+  }
+}
+
+// ---------------------------------------------------------------- tags
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.tag {
+  padding: 0.12rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--link);
+    border-color: var(--link);
+    background: var(--accent-wash);
+  }
+
+  .count {
+    font-variant-numeric: tabular-nums;
+    opacity: 0.7;
+  }
+}
+
+// ---------------------------------------------------------------- series
+
+.series-banner {
+  padding: 0.6rem 0.9rem;
+  border-left: 3px solid var(--link);
+  background: var(--accent-wash);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.series-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+
+  a {
+    font-size: 0.9rem;
+  }
+}
+
+// ---------------------------------------------------------------- pagination
+
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.9rem;
+
+  .position {
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+// ---------------------------------------------------------------- gallery
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 1.25rem;
+
+  figure {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  img {
+    width: 100%;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+
+    // The engine emits a tiny inline placeholder; it shows through until the real file paints.
+    background-size: cover;
+    background-position: center;
+  }
+
+  figcaption {
+    font-family: type.$font-mono;
+    font-size: 0.76rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+  }
+}
+
+// ---------------------------------------------------------------- theme toggle
+
+#mode-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius);
+  color: var(--text-muted);
+
+  &:hover {
+    background: var(--accent-wash);
+    color: var(--text);
+  }
+
+  // Each glyph belongs to one mode; the script decides which is showing.
+  .icon {
+    display: none;
+    line-height: 1;
+  }
+}
+
+:root:not([data-mode]) #mode-toggle .icon-system,
+:root[data-mode='light'] #mode-toggle .icon-light,
+:root[data-mode='dark'] #mode-toggle .icon-dark {
+  display: block;
+}

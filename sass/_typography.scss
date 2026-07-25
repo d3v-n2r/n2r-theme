@@ -1,0 +1,172 @@
+// Typography.
+//
+// System stacks throughout — nothing is downloaded, so there is no layout shift on load, no font
+// request leaving the reader's machine, and no CDN in the critical path. That keeps the page-weight
+// story consistent with an engine that renders markdown, highlighting, and images at build time.
+// Chirpy ships Source Sans Pro and Lato as webfonts; this is the deliberate departure.
+
+$font-body:
+  system-ui,
+  -apple-system,
+  'Segoe UI',
+  Roboto,
+  'Helvetica Neue',
+  sans-serif;
+
+$font-mono:
+  ui-monospace,
+  SFMono-Regular,
+  'SF Mono',
+  'Cascadia Code',
+  Menlo,
+  Consolas,
+  monospace;
+
+body {
+  font-family: $font-body;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font-weight: 620;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: clamp(1.7rem, 1.4rem + 1.4vw, 2.3rem);
+}
+h2 {
+  font-size: clamp(1.35rem, 1.2rem + 0.7vw, 1.6rem);
+}
+h3 {
+  font-size: 1.2rem;
+}
+h4 {
+  font-size: 1.05rem;
+}
+
+p,
+ul,
+ol,
+blockquote,
+figure,
+table,
+pre {
+  margin: 0;
+}
+
+a {
+  color: var(--link);
+  text-decoration-color: color-mix(in srgb, var(--link) 40%, transparent);
+  text-underline-offset: 0.15em;
+
+  &:hover {
+    color: var(--link-hover);
+    text-decoration-color: currentcolor;
+  }
+}
+
+blockquote {
+  padding-left: 1rem;
+  border-left: 3px solid var(--border);
+  color: var(--text-muted);
+}
+
+hr {
+  height: 1px;
+  margin: 0;
+  border: 0;
+  background: var(--border);
+}
+
+// Long-form content: the reading column, and the vertical rhythm inside it.
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+
+  // Roughly 70 characters at this size, which is where prose stays comfortable.
+  max-width: 44rem;
+
+  > h2,
+  > h3 {
+    margin-top: 0.8rem;
+  }
+
+  ul,
+  ol {
+    padding-left: 1.35rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  img {
+    border-radius: var(--radius);
+  }
+
+  figure {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  figcaption {
+    font-family: $font-mono;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+
+  // Tables can be wider than the column, so they scroll inside their own box rather than
+  // pushing the page sideways.
+  .table-wrapper {
+    overflow-x: auto;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.94rem;
+
+    th,
+    td {
+      padding: 0.45rem 0.7rem;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+
+    th {
+      font-weight: 620;
+    }
+
+    td:has(+ td),
+    th:has(+ th) {
+      padding-right: 1.2rem;
+    }
+  }
+}
+
+code {
+  font-family: $font-mono;
+  font-size: 0.88em;
+}
+
+// Inline code only — fenced blocks are styled in `_syntax.scss`.
+:not(pre) > code {
+  padding: 0.1em 0.35em;
+  background: var(--code-inline-bg);
+  border-radius: 0.25rem;
+}
+
+time {
+  font-variant-numeric: tabular-nums;
+}

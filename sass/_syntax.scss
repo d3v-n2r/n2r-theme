@@ -1,0 +1,60 @@
+// Syntax highlighting.
+//
+// The engine highlights at build time and emits syntect's scope-derived class names — `keyword`,
+// `storage`, `string`, `comment` and so on — rather than inline colours. So the markup says what a
+// token *is* and this file decides what it looks like, which is the whole point of the engine and
+// theme being separate: restyling code needs no engine change and no JavaScript reaches the reader.
+
+@use 'typography' as type;
+
+pre {
+  padding: 0.9rem 1.1rem;
+  overflow-x: auto;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: type.$font-mono;
+  font-size: 0.85rem;
+  line-height: 1.65;
+  tab-size: 4;
+}
+
+// syntect nests spans deeply, so colour the innermost scope that matches and let the rest inherit.
+pre {
+  .comment {
+    color: var(--syn-comment);
+    font-style: italic;
+  }
+
+  .keyword,
+  .storage {
+    color: var(--syn-keyword);
+  }
+
+  .string {
+    color: var(--syn-string);
+  }
+
+  .constant {
+    color: var(--syn-number);
+  }
+
+  .entity {
+    color: var(--syn-function);
+  }
+
+  .support,
+  .storage.type {
+    color: var(--syn-type);
+  }
+
+  .punctuation {
+    color: var(--syn-punctuation);
+  }
+
+  // A scope carrying both `storage` and `type` is a type name, not a keyword — `fn` is a keyword,
+  // `u8` is a type, and syntect gives them overlapping scopes.
+  .storage.type.function {
+    color: var(--syn-keyword);
+  }
+}

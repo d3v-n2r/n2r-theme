@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% import "partials/macros.html" as m %}
+
+{% block title %}{{ term.name }} · {{ site.title }}{% endblock %}
+{% block topbar_title %}{{ term.name }}{% endblock %}
+
+{% block content %}
+  <h1>{{ term.name }}</h1>
+  <p class="post-meta">
+    {{ term.count }} post{% if term.count != 1 %}s{% endif %} in
+    <a href="/{{ kind }}/">{{ kind }}</a>
+  </p>
+  {{ m.post_list(pages) }}
+  {{ m.pager(pagination) }}
+{% endblock %}

@@ -1,0 +1,33 @@
+{#
+  The sidebar. Fixed beside the content from `lg` upwards, and slid off-canvas below that by the
+  topbar's button, which sets `data-sidebar` on the root element.
+#}
+<aside id="sidebar" aria-label="Site navigation">
+  <div class="profile">
+    <a id="avatar" href="/" aria-label="{{ site.title }} home">{{ site.title | first }}</a>
+    <div>
+      <p class="site-title"><a href="/">{{ site.title }}</a></p>
+      <p class="site-subtitle">{{ site.description }}</p>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav" aria-label="Sections">
+    <a href="/">Home</a>
+    <a href="/categories/">Categories</a>
+    <a href="/tags/">Tags</a>
+    <a href="/gallery/">Gallery</a>
+  </nav>
+
+  <div class="sidebar-bottom">
+    <button
+      id="mode-toggle"
+      type="button"
+      aria-label="Switch between light, dark, and system appearance"
+    >
+      <span class="icon icon-system" aria-hidden="true">◐</span>
+      <span class="icon icon-light" aria-hidden="true">☀</span>
+      <span class="icon icon-dark" aria-hidden="true">☾</span>
+    </button>
+    <a href="/feed.xml" aria-label="RSS feed">RSS</a>
+  </div>
+</aside>

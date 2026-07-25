@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Gallery · {{ site.title }}{% endblock %}
+{% block topbar_title %}Gallery{% endblock %}
+
+{% block content %}
+  <h1>Gallery</h1>
+
+  <div class="gallery">
+    {% for image in images %}
+      <figure>
+        {#
+          The placeholder is a `data:` URI the engine built and the variant URLs are engine-built
+          paths, so both are marked safe. The caption and every EXIF value came out of a file and
+          stays escaped.
+        #}
+        <img
+          src="{{ image.url | safe }}"
+          srcset="
+            {%- for v in image.variants -%}
+              {{ v.url | safe }} {{ v.width }}w{% if not loop.last %}, {% endif %}
+            {%- endfor -%}
+          "
+          sizes="(max-width: 850px) 100vw, 15rem"
+          width="{{ image.width }}"
+          height="{{ image.height }}"
+          alt="{{ image.title }}"
+          loading="lazy"
+          decoding="async"
+          style="background-image: url('{{ image.placeholder | safe }}')"
+        />
+        <figcaption>
+          {{ image.title }}
+          {% if image.exif %}
+            <br />
+            {% if image.exif.camera %}{{ image.exif.camera }}{% endif %}
+            {% if image.exif.lens %} · {{ image.exif.lens }}{% endif %}
+            {% if image.exif.focal_length %} · {{ image.exif.focal_length }}{% endif %}
+            {% if image.exif.aperture %} · {{ image.exif.aperture }}{% endif %}
+            {% if image.exif.shutter %} · {{ image.exif.shutter }}{% endif %}
+            {% if image.exif.iso %} · ISO {{ image.exif.iso }}{% endif %}
+          {% endif %}
+        </figcaption>
+      </figure>
+    {% endfor %}
+  </div>
+{% endblock %}

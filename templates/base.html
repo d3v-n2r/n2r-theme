@@ -1,0 +1,65 @@
+{#
+  The page skeleton.
+
+  Chirpy fills its layout from front-matter include lists (`panel_includes`, `tail_includes`,
+  `script_includes`) that `default.html` loops over. That exists because Liquid has no template
+  inheritance. Jinja2 does, so those become real blocks: a child template overrides `panel` or
+  `tail` directly instead of naming partials in YAML.
+#}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{% block title %}{{ site.title }}{% endblock %}</title>
+    <meta name="description" content="{% block description %}{{ site.description }}{% endblock %}" />
+
+    <link rel="stylesheet" href="/assets/css/main.css" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      href="/feed.xml"
+      title="{{ site.title }}"
+    />
+
+    {#
+      Applying the stored mode before first paint. This is inline and synchronous on purpose: as an
+      external file it would be fetched after the stylesheet, and a reader who chose dark would see
+      a white flash on every navigation.
+    #}
+    <script>
+      (function () {
+        var mode = localStorage.getItem('mode');
+        if (mode === 'dark' || mode === 'light') {
+          document.documentElement.dataset.mode = mode;
+        }
+      })();
+    </script>
+  </head>
+
+  <body>
+    {% include "partials/sidebar.html" %}
+
+    <div id="main-wrapper">
+      <div class="container">
+        {% include "partials/topbar.html" %}
+
+        <div class="columns">
+          <main>{% block content %}{% endblock %}</main>
+
+          <aside id="panel" aria-label="Page panel">
+            {% block panel %}{% endblock %}
+          </aside>
+        </div>
+
+        {% block tail %}{% endblock %}
+
+        {% include "partials/footer.html" %}
+      </div>
+    </div>
+
+    <div id="mask"></div>
+    <script src="/assets/js/theme.js" defer></script>
+  </body>
+</html>

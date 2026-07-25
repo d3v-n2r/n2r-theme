@@ -1,5 +1,5 @@
 # Theme manifest — read by n2r-engine when this directory is used as a theme.
-# Fields are provisional until the engine's theme system lands at M3.
+# The engine parses this strictly: an unknown key is an error rather than a silent default.
 
 name = "n2r-theme"
 version = "0.1.0"

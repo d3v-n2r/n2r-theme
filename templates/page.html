@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page.title }} · {{ site.title }}{% endblock %}
+{% block topbar_title %}{{ page.title }}{% endblock %}
+
+{% block content %}
+  <article>
+    <header>
+      <h1>{{ page.title }}</h1>
+      <div class="post-meta">
+        {% if page.date %}
+          <time datetime="{{ page.date.iso }}">{{ page.date.human }}</time>
+        {% endif %}
+        {% for category in page.categories %}
+          <span class="sep">·</span>
+          <a href="{{ category.url | safe }}">{{ category.name }}</a>
+        {% endfor %}
+      </div>
+    </header>
+
+    {% if page.series %}
+      <p class="series-banner">
+        Part {{ page.series.number }} of {{ page.series.total }} in
+        <a href="{{ page.series.url | safe }}">{{ page.series.name }}</a>
+      </p>
+    {% endif %}
+
+    {# Rendered from markdown by the engine, not text an author put in a template context. #}
+    <div class="content">{{ page.content | safe }}</div>
+
+    {% if page.tags %}
+      <div class="tags">
+        {% for tag in page.tags %}
+          <a class="tag" href="{{ tag.url | safe }}">{{ tag.name }}</a>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if page.series and (page.series.previous or page.series.next) %}
+      <nav class="series-nav" aria-label="Series navigation">
+        {% if page.series.previous %}
+          <a href="{{ page.series.previous | safe }}" rel="prev">← Previous part</a>
+        {% else %}
+          <span></span>
+        {% endif %}
+        {% if page.series.next %}
+          <a href="{{ page.series.next | safe }}" rel="next">Next part →</a>
+        {% endif %}
+      </nav>
+    {% endif %}
+  </article>
+{% endblock %}
+
+{% block panel %}
+  {% if page.tags %}
+    <section>
+      <p class="panel-heading">Tagged</p>
+      <div class="tags">
+        {% for tag in page.tags %}
+          <a class="tag" href="{{ tag.url | safe }}">{{ tag.name }}</a>
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+{% endblock %}

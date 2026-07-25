@@ -1,0 +1,14 @@
+// n2r-theme — entry stylesheet.
+//
+// Ported from Chirpy's structure (base → components → layout → pages) but without Bootstrap.
+// Chirpy tree-shakes Bootstrap down to a flex-utility subset, roughly six responsive grid rules,
+// and three JS components; reimplementing that slice is less code than shipping the framework, and
+// it removes the breakpoint conflict Chirpy fights throughout its SCSS — Chirpy's `lg` is 850px
+// where Bootstrap's is 992px.
+
+@use 'tokens';
+@use 'reset';
+@use 'typography';
+@use 'layout';
+@use 'components';
+@use 'syntax';

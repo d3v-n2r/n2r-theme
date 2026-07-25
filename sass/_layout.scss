@@ -1,0 +1,245 @@
+// Page structure: sidebar, topbar, main column, and footer.
+//
+// Chirpy builds this from Bootstrap's grid; this is the same shape written directly, which removes
+// both Bootstrap and the breakpoint mismatch it forces. The columns appear at Chirpy's own
+// breakpoints: one column below `lg`, sidebar plus content at `lg`, plus the side panel at `xl`.
+
+@use 'breakpoints' as bp;
+@use 'typography' as type;
+
+$sidebar-width: 16.25rem; // 260px, Chirpy's $sidebar-width
+$topbar-height: 3rem;
+$content-max: 48rem;
+
+// ---------------------------------------------------------------- sidebar
+
+#sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 20;
+  width: $sidebar-width;
+  padding: 2rem 1.25rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+
+  // Off-canvas on narrow screens; the topbar's button slides it in.
+  @include bp.below('lg') {
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+
+    :root[data-sidebar='open'] & {
+      transform: translateX(0);
+    }
+  }
+}
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+#avatar {
+  width: 5.5rem;
+  height: 5.5rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--link);
+  color: var(--accent-contrast);
+  font-family: type.$font-mono;
+  font-size: 1.35rem;
+  font-weight: 700;
+  text-decoration: none;
+  border: 2px solid var(--border);
+}
+
+.site-title {
+  font-size: 1.15rem;
+  font-weight: 640;
+
+  a {
+    color: var(--text);
+    text-decoration: none;
+  }
+}
+
+.site-subtitle {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  flex-grow: 1;
+
+  a {
+    padding: 0.5rem 0.6rem;
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-decoration: none;
+
+    &:hover {
+      background: var(--accent-wash);
+      color: var(--text);
+    }
+
+    &[aria-current] {
+      color: var(--link);
+      background: var(--accent-wash);
+    }
+  }
+}
+
+.sidebar-bottom {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+// ---------------------------------------------------------------- topbar
+
+#topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  height: $topbar-height;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 0.5rem;
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+}
+
+#sidebar-trigger {
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius);
+  color: var(--text-muted);
+
+  &:hover {
+    background: var(--accent-wash);
+    color: var(--text);
+  }
+
+  @include bp.from('lg') {
+    display: none;
+  }
+}
+
+#topbar-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+// ---------------------------------------------------------------- main
+
+#main-wrapper {
+  padding-left: 0;
+
+  @include bp.from('lg') {
+    padding-left: $sidebar-width;
+  }
+}
+
+.container {
+  max-width: $content-max + 18rem;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 4vw, 2rem);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.columns {
+  flex-grow: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2.5rem;
+  padding: 2rem 0 3rem;
+
+  // The side panel is the third column, and only appears when there is room for it.
+  @include bp.from('xl') {
+    grid-template-columns: minmax(0, 1fr) 15rem;
+  }
+}
+
+main {
+  min-width: 0; // lets long code blocks scroll instead of stretching the grid column
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+#panel {
+  display: none;
+  flex-direction: column;
+  gap: 1.75rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+
+  @include bp.from('xl') {
+    display: flex;
+    position: sticky;
+    top: calc(#{$topbar-height} + 1.5rem);
+    align-self: start;
+    border-left: 1px solid var(--border);
+    padding-left: 1.25rem;
+  }
+}
+
+.panel-heading {
+  font-size: 0.78rem;
+  font-weight: 620;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+// ---------------------------------------------------------------- footer
+
+footer {
+  padding: 1.5rem 0 2rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  justify-content: space-between;
+
+  a {
+    color: inherit;
+  }
+}
+
+// Dims the page behind an open mobile sidebar.
+#mask {
+  display: none;
+
+  :root[data-sidebar='open'] & {
+    @include bp.below('lg') {
+      display: block;
+      position: fixed;
+      inset: 0;
+      z-index: 15;
+      background: rgb(0 0 0 / 45%);
+    }
+  }
+}

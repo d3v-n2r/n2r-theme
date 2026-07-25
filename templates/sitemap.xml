@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>{{ site.base_url | safe }}/</loc></url>
+  {% for page in pages %}
+  <url>
+    <loc>{{ site.base_url | safe }}{{ page.url | safe }}</loc>
+    {% if page.date %}<lastmod>{{ page.date.iso }}</lastmod>{% endif %}
+  </url>
+  {% endfor %}
+</urlset>

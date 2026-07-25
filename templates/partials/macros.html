@@ -1,0 +1,61 @@
+{#
+  Shared fragments.
+
+  URLs are piped through `safe` throughout. The engine builds them from slugs it has already reduced
+  to [a-z0-9_-], so they contain nothing to escape — without `safe`, every `/` would render as
+  `&#x2f;`. Titles, names, and anything else an author typed stay escaped.
+#}
+
+{% macro post_list(pages) %}
+  <div id="post-list">
+    {% for page in pages %}
+      <a class="card" href="{{ page.url | safe }}">
+        <h2 class="card-title">{{ page.title }}</h2>
+        <div class="post-meta">
+          {% if page.date %}
+            <time datetime="{{ page.date.iso }}">{{ page.date.human }}</time>
+          {% endif %}
+          {% for category in page.categories %}
+            <span class="sep">·</span><span>{{ category.name }}</span>
+          {% endfor %}
+          {% if page.series %}
+            <span class="sep">·</span>
+            <span>Part {{ page.series.number }} of {{ page.series.total }}</span>
+          {% endif %}
+        </div>
+      </a>
+    {% else %}
+      <p>Nothing published yet.</p>
+    {% endfor %}
+  </div>
+{% endmacro %}
+
+{% macro pager(pagination) %}
+  {% if pagination.total > 1 %}
+    <nav class="pager" aria-label="Pagination">
+      {% if pagination.previous %}
+        <a href="{{ pagination.previous | safe }}" rel="prev">← Newer</a>
+      {% else %}
+        <span></span>
+      {% endif %}
+
+      <span class="position">Page {{ pagination.number }} of {{ pagination.total }}</span>
+
+      {% if pagination.next %}
+        <a href="{{ pagination.next | safe }}" rel="next">Older →</a>
+      {% else %}
+        <span></span>
+      {% endif %}
+    </nav>
+  {% endif %}
+{% endmacro %}
+
+{% macro tag_list(terms) %}
+  <div class="tags">
+    {% for term in terms %}
+      <a class="tag" href="{{ term.url | safe }}">
+        {{ term.name }} <span class="count">{{ term.count }}</span>
+      </a>
+    {% endfor %}
+  </div>
+{% endmacro %}

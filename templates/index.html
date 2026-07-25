@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% import "partials/macros.html" as m %}
+
+{% block content %}
+  {{ m.post_list(pages) }}
+  {{ m.pager(pagination) }}
+{% endblock %}
+
+{% block panel %}
+  <section>
+    <p class="panel-heading">About</p>
+    <p>{{ site.description }}</p>
+  </section>
+{% endblock %}

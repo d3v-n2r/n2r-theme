@@ -1,0 +1,36 @@
+// Breakpoints, carried over from Chirpy's `_sass/abstracts/_breakpoints.scss`.
+//
+// These are Chirpy's own values, not Bootstrap's — note `lg` is 850px, which is where the layout
+// gains its second column. Keeping Chirpy's numbers keeps the responsive behaviour recognisable.
+
+@use 'sass:map';
+
+$breakpoints: (
+  'sm': 576px,
+  'md': 768px,
+  'lg': 850px,
+  'xl': 1200px,
+  'xxl': 1400px,
+  'xxxl': 1650px,
+);
+
+@function get($name) {
+  @if not map.has-key($breakpoints, $name) {
+    @error 'unknown breakpoint `#{$name}`';
+  }
+  @return map.get($breakpoints, $name);
+}
+
+/// Applies from `$name` upwards.
+@mixin from($name) {
+  @media (min-width: get($name)) {
+    @content;
+  }
+}
+
+/// Applies below `$name`.
+@mixin below($name) {
+  @media (max-width: get($name) - 1px) {
+    @content;
+  }
+}

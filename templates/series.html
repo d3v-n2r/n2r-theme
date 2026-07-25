@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}{{ series.name }} · {{ site.title }}{% endblock %}
+{% block topbar_title %}{{ series.name }}{% endblock %}
+
+{% block content %}
+  <h1>{{ series.name }}</h1>
+  <p class="post-meta">
+    A series in {{ series.count }} part{% if series.count != 1 %}s{% endif %}, in reading order.
+  </p>
+
+  <div id="post-list">
+    {% for page in pages %}
+      <a class="card" href="{{ page.url | safe }}">
+        <h2 class="card-title">{{ loop.index }}. {{ page.title }}</h2>
+        {% if page.date %}
+          <div class="post-meta">
+            <time datetime="{{ page.date.iso }}">{{ page.date.human }}</time>
+          </div>
+        {% endif %}
+      </a>
+    {% endfor %}
+  </div>
+{% endblock %}

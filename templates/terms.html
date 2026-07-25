@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% import "partials/macros.html" as m %}
+
+{% block title %}{{ kind | capitalize }} · {{ site.title }}{% endblock %}
+{% block topbar_title %}{{ kind | capitalize }}{% endblock %}
+
+{% block content %}
+  <h1>{{ kind | capitalize }}</h1>
+  <p class="post-meta">{{ terms | length }} in total</p>
+  {{ m.tag_list(terms) }}
+{% endblock %}
