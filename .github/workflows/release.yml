@@ -1,0 +1,63 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+env:
+  ARTIFACT: n2r-theme.tar.gz
+
+jobs:
+  package:
+    name: Package theme
+    runs-on: ubuntu-latest
+    outputs:
+      digest: ${{ steps.digest.outputs.digest }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Package
+        # Ships what a site consumes; repository metadata and CI config stay out.
+        run: |
+          mkdir -p dist
+          tar -czf "dist/$ARTIFACT" \
+            --exclude-vcs \
+            theme.toml templates sass assets locales LICENSE README.md CHANGELOG.md
+      - id: digest
+        run: echo "digest=sha256:$(sha256sum "dist/$ARTIFACT" | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-dist
+          path: dist/
+
+  attest:
+    name: Attest build provenance
+    needs: package
+    runs-on: ubuntu-latest
+    # Signing is isolated from packaging: this job takes only a digest.
+    permissions:
+      id-token: write
+      attestations: write
+      contents: read
+    steps:
+      - uses: actions/attest@v4
+        with:
+          subject-name: ${{ env.ARTIFACT }}
+          subject-digest: ${{ needs.package.outputs.digest }}
+
+  release:
+    name: Publish GitHub release
+    needs: [package, attest]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-dist
+          path: dist
+      - run: gh release create "$GITHUB_REF_NAME" dist/* --generate-notes --repo "$GITHUB_REPOSITORY"
+        env:
+          GH_TOKEN: ${{ github.token }}
