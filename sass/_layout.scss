@@ -312,6 +312,41 @@ article {
   color: var(--text-muted);
 }
 
+// Chirpy separates panel sections by 4rem, which is what stops the aside reading as one long list.
+#panel > section + section,
+#panel > section + nav,
+#panel > nav + section {
+  margin-top: 2.75rem;
+}
+
+#access-lastmod {
+  ul {
+    list-style: none;
+    margin: 0.6rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+
+  a {
+    display: block;
+    font-size: 0.84rem;
+    line-height: 1.45;
+    color: var(--text-muted);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--link);
+    }
+  }
+}
+
+#trending-tags .tags {
+  margin-top: 0.7rem;
+  gap: 0.35rem;
+}
+
 // ---------------------------------------------------------------- footer
 
 // Deliberately quiet: one centred line, small, muted. A footer is a signature, not a section.

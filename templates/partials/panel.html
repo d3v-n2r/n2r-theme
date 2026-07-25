@@ -1,0 +1,28 @@
+{#
+  The right-hand panel, matching Chirpy's: recently updated, then trending tags, then — on a post —
+  the table of contents.
+
+  "Recently updated" ranks by when the source last changed in git rather than when it was published,
+  which is the point of the section: a post revised today is the one worth surfacing.
+#}
+{% if site.recent %}
+  <section id="access-lastmod">
+    <p class="panel-heading">Recently updated</p>
+    <ul>
+      {% for page in site.recent %}
+        <li><a href="{{ page.url | safe }}">{{ page.title }}</a></li>
+      {% endfor %}
+    </ul>
+  </section>
+{% endif %}
+
+{% if site.trending %}
+  <section id="trending-tags">
+    <p class="panel-heading">Trending tags</p>
+    <div class="tags">
+      {% for tag in site.trending %}
+        <a class="tag" href="{{ tag.url | safe }}">{{ tag.name }}</a>
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}

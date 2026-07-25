@@ -1,21 +1,47 @@
 {% extends "base.html" %}
+{% import "partials/icons.html" as icons %}
 
 {% block title %}{{ page.title }} · {{ site.title }}{% endblock %}
+{% block description %}{{ page.description or site.description }}{% endblock %}
 {% block topbar_title %}{{ page.title }}{% endblock %}
 
 {% block content %}
   <article>
     <header>
       <h1>{{ page.title }}</h1>
+
+      {% if page.description %}
+        <p class="post-desc">{{ page.description }}</p>
+      {% endif %}
+
+      {#
+        Byline, dates, and reading time — the same set Chirpy shows, minus page views, which need a
+        third-party analytics script this site does not load.
+      #}
       <div class="post-meta">
+        <span>By {{ page.author }}</span>
         {% if page.date %}
-          <time datetime="{{ page.date.iso }}">{{ page.date.human }}</time>
-        {% endif %}
-        {% for category in page.categories %}
           <span class="sep">·</span>
-          <a href="{{ category.url | safe }}">{{ category.name }}</a>
-        {% endfor %}
+          <span>Posted <time datetime="{{ page.date.iso }}">{{ page.date.human }}</time></span>
+        {% endif %}
+        {% if page.updated %}
+          <span class="sep">·</span>
+          <span>Updated <time datetime="{{ page.updated.iso }}">{{ page.updated.human }}</time></span>
+        {% endif %}
+        <span class="sep">·</span>
+        <span>{{ page.read_time }} min read</span>
       </div>
+
+      {% if page.image %}
+        <figure class="cover">
+          <img
+            src="{{ page.image.path | safe }}"
+            alt="{{ page.image.alt or page.title }}"
+            loading="eager"
+          />
+          {% if page.image.alt %}<figcaption>{{ page.image.alt }}</figcaption>{% endif %}
+        </figure>
+      {% endif %}
     </header>
 
     {% if page.series %}
@@ -28,13 +54,39 @@
     {# Rendered from markdown by the engine, not text an author put in a template context. #}
     <div class="content">{{ page.content | safe }}</div>
 
-    {% if page.tags %}
-      <div class="tags">
-        {% for tag in page.tags %}
-          <a class="tag" href="{{ tag.url | safe }}">{{ tag.name }}</a>
-        {% endfor %}
+    <footer class="post-tail">
+      {% if page.categories %}
+        <div class="post-meta">
+          {{ icons.icon("categories") }}
+          {% for category in page.categories %}
+            <a href="{{ category.url | safe }}">{{ category.name }}</a>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if page.tags %}
+        <div class="tags">
+          {% for tag in page.tags %}
+            <a class="tag" href="{{ tag.url | safe }}">{{ tag.name }}</a>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <div class="post-tail-bottom">
+        <span class="licence">
+          This post is licensed under
+          <a href="https://creativecommons.org/licenses/by/4.0/" rel="license">CC BY 4.0</a>
+          by {{ page.author }}.
+        </span>
+        {#
+          A copy-link button rather than share buttons for particular networks: those are outbound
+          trackers wearing an icon, and this one works for every destination.
+        #}
+        <button class="share" type="button" data-share="{{ site.base_url | safe }}{{ page.url | safe }}">
+          Copy link
+        </button>
       </div>
-    {% endif %}
+    </footer>
 
     {% if page.series and (page.series.previous or page.series.next) %}
       <nav class="series-nav" aria-label="Series navigation">
@@ -55,9 +107,33 @@
   {% with headings = page.headings %}
     {% include "partials/toc.html" %}
   {% endwith %}
+  {% include "partials/panel.html" %}
 {% endblock %}
 
 {% block tail %}
+  {#
+    Previous and next by date, which is a different question from "what else is like this" — so
+    both appear, navigation first.
+  #}
+  {% if page.previous or page.next %}
+    <nav class="post-nav" aria-label="Post navigation">
+      {% if page.previous %}
+        <a class="card" href="{{ page.previous.url | safe }}" rel="prev">
+          <span class="direction">Previous</span>
+          <span class="card-title">{{ page.previous.title }}</span>
+        </a>
+      {% else %}
+        <span></span>
+      {% endif %}
+      {% if page.next %}
+        <a class="card next" href="{{ page.next.url | safe }}" rel="next">
+          <span class="direction">Next</span>
+          <span class="card-title">{{ page.next.title }}</span>
+        </a>
+      {% endif %}
+    </nav>
+  {% endif %}
+
   {% include "partials/related.html" %}
   {% include "partials/comments.html" %}
 {% endblock %}

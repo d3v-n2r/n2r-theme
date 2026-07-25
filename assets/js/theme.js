@@ -145,6 +145,27 @@
     }
   });
 
+  // ---------------------------------------------------------------- copy link
+
+  // One button that works for every destination, rather than a row of per-network share links —
+  // those are outbound trackers wearing an icon.
+  document.querySelectorAll('[data-share]').forEach(function (button) {
+    button.addEventListener('click', function () {
+      var url = button.dataset.share;
+      var done = function () {
+        var original = button.textContent;
+        button.textContent = 'Copied';
+        setTimeout(function () {
+          button.textContent = original;
+        }, 1600);
+      };
+
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(done, function () {});
+      }
+    });
+  });
+
   // ---------------------------------------------------------------- back to top
 
   var backToTop = document.getElementById('back-to-top');
