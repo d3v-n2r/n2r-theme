@@ -177,13 +177,31 @@ time {
 // Maths is typeset to MathML by the engine, so this is the whole of the theme's involvement — no
 // KaTeX, no MathJax, no CDN, and nothing to load before a formula becomes readable.
 math {
-  font-size: 1.05em;
+  // MathML lays fractions, integrals, and sub/superscripts out *vertically*. Inheriting the body's
+  // 1.75 line height pushes those rows apart until a formula looks like a column of loose symbols,
+  // which is exactly what correct markup in the wrong line height looks like.
+  line-height: normal;
+
+  // Maths also needs a font carrying maths metrics: stretchy integrals and brackets, proper
+  // fraction bars, italic variables. Monospace has none of those, so the browser fakes them badly.
+  // These are the maths faces that ship with TeX distributions and operating systems; the serif
+  // fallback is still far closer than the body's monospace.
+  font-family:
+    'Latin Modern Math',
+    'STIX Two Math',
+    'Cambria Math',
+    'DejaVu Math TeX Gyre',
+    'Noto Sans Math',
+    serif;
+  font-size: 1.15em;
 
   // A long derivation scrolls inside its own box rather than widening the page.
-  &[display="block"] {
+  &[display='block'] {
     display: block;
     overflow-x: auto;
-    padding: 0.4rem 0;
+    overflow-y: hidden;
+    margin: 0.5rem 0;
+    padding: 0.5rem 0;
     text-align: center;
   }
 }
