@@ -333,6 +333,60 @@
   }
 }
 
+// ---------------------------------------------------------------- callouts
+//
+// GitHub alerts — `> [!NOTE]`, `> [!TIP]`, `> [!WARNING]` and friends — which comrak emits natively.
+// Chirpy gets the same effect by post-processing kramdown annotations; here it is just markdown.
+//
+// Each kind takes its colour from the semantic tokens rather than the accent, because the whole
+// point is that a warning does not look like a note.
+
+.markdown-alert {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.8rem 1rem;
+  border-left: 3px solid var(--callout);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  background: var(--callout-wash);
+
+  // Set per kind below; the note colour is the fallback.
+  --callout: var(--link);
+  --callout-wash: var(--accent-wash);
+
+  p {
+    margin: 0;
+  }
+}
+
+.markdown-alert-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--callout);
+}
+
+.markdown-alert-tip {
+  --callout: var(--good);
+  --callout-wash: color-mix(in srgb, var(--good) 10%, transparent);
+}
+
+.markdown-alert-warning {
+  --callout: var(--warn);
+  --callout-wash: color-mix(in srgb, var(--warn) 12%, transparent);
+}
+
+.markdown-alert-caution {
+  --callout: var(--bad);
+  --callout-wash: color-mix(in srgb, var(--bad) 10%, transparent);
+}
+
+.markdown-alert-important {
+  --callout: var(--link);
+  --callout-wash: var(--accent-wash);
+}
+
 // ---------------------------------------------------------------- front page
 
 .recent {
