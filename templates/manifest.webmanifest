@@ -1,0 +1,26 @@
+{#-
+  The web app manifest.
+
+  Values go through `tojson` rather than being interpolated raw: a site title containing a quote or
+  a backslash would otherwise produce a file that is not valid JSON, and nothing would report it.
+-#}
+{
+  "name": {{ site.title | tojson }},
+  "short_name": {{ (site.pwa.short_name or site.title) | tojson }},
+  "description": {{ site.description | tojson }},
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": {{ (site.pwa.theme_color or "#1e1e2e") | tojson }},
+  "background_color": {{ (site.pwa.background_color or "#1e1e2e") | tojson }},
+  "icons": [
+    {%- for icon in site.pwa.icons %}
+    {
+      "src": {{ icon.src | tojson }},
+      "sizes": {{ icon.sizes | tojson }},
+      "type": {{ icon.type | tojson }},
+      "purpose": "any maskable"
+    }{% if not loop.last %},{% endif %}
+    {%- endfor %}
+  ]
+}

@@ -55,6 +55,7 @@
 
     if (!animated) {
       writeMode(target);
+      syncComments(target);
       return;
     }
 
@@ -84,7 +85,24 @@
 
     transition.finished.finally(function () {
       delete root.dataset.themeAnim;
+      syncComments(target);
     });
+  }
+
+  /**
+   * Tells an embedded comment thread which appearance to use.
+   *
+   * giscus renders in an iframe, so it cannot see the page's own theme change. Without this the
+   * comments stay light on a dark page — the one part of the site that would ignore the toggle.
+   */
+  function syncComments(mode) {
+    var frame = document.querySelector('iframe.giscus-frame');
+    if (!frame) return;
+
+    frame.contentWindow.postMessage(
+      { giscus: { setConfig: { theme: resolves(mode) === 'dark' ? 'dark' : 'light' } } },
+      'https://giscus.app'
+    );
   }
 
   var toggle = document.getElementById('mode-toggle');

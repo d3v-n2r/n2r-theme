@@ -105,6 +105,9 @@ $content-max: 48rem;
   flex-grow: 1;
 
   a {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
     padding: 0.5rem 0.6rem;
     border-radius: var(--radius);
     color: var(--text-muted);
@@ -122,6 +125,14 @@ $content-max: 48rem;
     &[aria-current] {
       color: var(--link);
       background: var(--accent-wash);
+    }
+
+    // A fixed box keeps every label on the same left edge, whatever the glyph's own width.
+    svg {
+      flex: 0 0 auto;
+      width: 1.05rem;
+      height: 1.05rem;
+      opacity: 0.85;
     }
   }
 }

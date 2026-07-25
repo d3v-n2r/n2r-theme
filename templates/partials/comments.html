@@ -1,0 +1,32 @@
+{#
+  Comments.
+
+  Nothing renders unless the site configures a provider, so a site that wants none loads no
+  third-party script at all — which is the point: comments are the one part of this site where
+  someone else's server stores the content and someone else's code runs in the reader's browser.
+
+  giscus is loaded with `defer`, below the article, so it never delays the post itself.
+#}
+{% if site.comments and site.comments.provider == "giscus" %}
+  <section id="comments" aria-label="Comments">
+    <h2>Comments</h2>
+    <script
+      src="https://giscus.app/client.js"
+      data-repo="{{ site.comments.repo }}"
+      data-repo-id="{{ site.comments.repo_id }}"
+      data-category="{{ site.comments.category }}"
+      data-category-id="{{ site.comments.category_id }}"
+      data-mapping="{{ site.comments.mapping }}"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="top"
+      {# Starts on whatever the reader is already using; theme.js re-syncs it on every toggle. #}
+      data-theme="preferred_color_scheme"
+      data-lang="en"
+      data-loading="lazy"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <noscript>Comments need JavaScript, which is why they are the only part of this site that does.</noscript>
+  </section>
+{% endif %}

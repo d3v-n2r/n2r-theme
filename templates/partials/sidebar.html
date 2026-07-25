@@ -22,16 +22,23 @@
     </div>
   </div>
 
-{# Home doubles as About; one entry covers résumé, CV, and portfolio. #}
+{#
+    Home doubles as About; one entry covers résumé, CV, and portfolio.
+
+    Each entry carries an icon, as Chirpy's does — but drawn inline rather than pulled from Font
+    Awesome, so the sidebar costs no icon font and the glyphs follow the palette by inheriting
+    `currentColor`. They are decorative: the label is the accessible name, so the SVGs are hidden
+    from assistive technology.
+  #}
   <nav class="sidebar-nav" aria-label="Sections">
-    <a href="/">Home</a>
-    <a href="/portfolio/">Résumé</a>
-    <a href="{{ site.blog_url | safe }}">Blog</a>
-    <a href="/categories/">Categories</a>
-    <a href="/tags/">Tags</a>
-    <a href="/archives/">Archives</a>
-    <a href="/gallery/">Gallery</a>
-    <a href="/contact/">Contact</a>
+    <a href="/">{{ icons.icon("home") }}<span>Home</span></a>
+    <a href="/portfolio/">{{ icons.icon("resume") }}<span>Résumé</span></a>
+    <a href="{{ site.blog_url | safe }}">{{ icons.icon("blog") }}<span>Blog</span></a>
+    <a href="/categories/">{{ icons.icon("categories") }}<span>Categories</span></a>
+    <a href="/tags/">{{ icons.icon("tags") }}<span>Tags</span></a>
+    <a href="/archives/">{{ icons.icon("archives") }}<span>Archives</span></a>
+    <a href="/gallery/">{{ icons.icon("gallery") }}<span>Gallery</span></a>
+    <a href="/contact/">{{ icons.icon("mail") }}<span>Contact</span></a>
   </nav>
 
 {#
