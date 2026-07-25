@@ -272,10 +272,17 @@
 
 // ---------------------------------------------------------------- search
 
+// Appearance and search, pinned together at the top right of every page.
+#topbar-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-left: auto;
+}
+
 #search {
   display: flex;
   align-items: center;
-  margin-left: auto;
 }
 
 #search-input {
@@ -319,6 +326,20 @@
   .card-title {
     font-size: 0.95rem;
     font-weight: 620;
+  }
+}
+
+// ---------------------------------------------------------------- front page
+
+.recent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+
+  h2 {
+    font-size: 1.05rem;
   }
 }
 
@@ -504,15 +525,17 @@
   }
 }
 
-// ---------------------------------------------------------------- theme toggle
+// ---------------------------------------------------------------- appearance toggle
 
 #mode-toggle {
   display: inline-grid;
   place-items: center;
+  flex: 0 0 auto;
   width: 2rem;
   height: 2rem;
   border-radius: var(--radius);
   color: var(--text-muted);
+  font-size: 1rem;
 
   &:hover {
     background: var(--accent-wash);

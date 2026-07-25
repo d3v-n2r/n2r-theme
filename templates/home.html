@@ -1,0 +1,27 @@
+{#
+  The front page.
+
+  Its prose comes from `pages/index.md`, so the introduction is content the author writes rather
+  than strings buried in a template. The engine also hands over the newest posts, which saves the
+  reader a hop to the blog to see whether anything is new.
+#}
+{% extends "base.html" %}
+{% import "partials/macros.html" as m %}
+
+{% block title %}{{ site.title }}{% endblock %}
+{% block topbar_title %}{{ site.title }}{% endblock %}
+
+{% block content %}
+  <article>
+    <h1>{{ page.title }}</h1>
+    <div class="content">{{ page.content | safe }}</div>
+  </article>
+
+  {% if recent %}
+    <section class="recent">
+      <h2>Latest posts</h2>
+      {{ m.post_list(recent) }}
+      <p><a href="{{ site.blog_url | safe }}">All posts →</a></p>
+    </section>
+  {% endif %}
+{% endblock %}

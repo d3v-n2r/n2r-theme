@@ -4,20 +4,37 @@
   </button>
   <span id="topbar-title">{% block topbar_title %}{{ site.title }}{% endblock %}</span>
 
-  {#
-    Search is a static index the browser fetches and filters, so it works on any host with no
-    server behind it. The index is only fetched once the reader actually types.
-  #}
-  <search id="search">
-    <label class="visually-hidden" for="search-input">Search this site</label>
-    <input
-      id="search-input"
-      type="search"
-      placeholder="Search"
-      autocomplete="off"
-      spellcheck="false"
-    />
-  </search>
+  <div id="topbar-tools">
+    {#
+      Appearance and search sit together at the top right, present on every page and in the same
+      place regardless of scroll. The toggle starts in "system" — no `data-mode` attribute — so a
+      reader who has never touched it follows their operating system.
+    #}
+    <button
+      id="mode-toggle"
+      type="button"
+      aria-label="Switch between system, light, and dark appearance"
+    >
+      <span class="icon icon-system" aria-hidden="true">◐</span>
+      <span class="icon icon-light" aria-hidden="true">☀</span>
+      <span class="icon icon-dark" aria-hidden="true">☾</span>
+    </button>
+
+    {#
+      Search is a static index the browser fetches and ranks, so it works on any host with no
+      server behind it. The index is only fetched once the reader actually types.
+    #}
+    <search id="search">
+      <label class="visually-hidden" for="search-input">Search this site</label>
+      <input
+        id="search-input"
+        type="search"
+        placeholder="Search"
+        autocomplete="off"
+        spellcheck="false"
+      />
+    </search>
+  </div>
 </header>
 
 <div id="search-results" hidden>

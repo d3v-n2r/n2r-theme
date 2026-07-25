@@ -1,0 +1,21 @@
+{#
+  A page that is not a post: about, contact, resume, /now, /uses. No date, no taxonomy, not in the
+  feed — just a title and a body, with a contents list when it is long enough to want one.
+#}
+{% extends "base.html" %}
+
+{% block title %}{{ page.title }} · {{ site.title }}{% endblock %}
+{% block topbar_title %}{{ page.title }}{% endblock %}
+
+{% block content %}
+  <article>
+    <h1>{{ page.title }}</h1>
+    <div class="content">{{ page.content | safe }}</div>
+  </article>
+{% endblock %}
+
+{% block panel %}
+  {% with headings = page.headings %}
+    {% include "partials/toc.html" %}
+  {% endwith %}
+{% endblock %}

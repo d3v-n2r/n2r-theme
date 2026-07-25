@@ -1,6 +1,9 @@
 {#
   The sidebar. Fixed beside the content from `lg` upwards, and slid off-canvas below that by the
   topbar's button, which sets `data-sidebar` on the root element.
+
+  The appearance toggle lives in the topbar rather than down here, so it stays reachable without
+  opening the sidebar on a narrow screen.
 #}
 <aside id="sidebar" aria-label="Site navigation">
   <div class="profile">
@@ -20,23 +23,17 @@
 
   <nav class="sidebar-nav" aria-label="Sections">
     <a href="/">Home</a>
+    <a href="/resume/">Résumé</a>
+    <a href="/projects/">Portfolio</a>
+    <a href="{{ site.blog_url | safe }}">Blog</a>
     <a href="/categories/">Categories</a>
     <a href="/tags/">Tags</a>
     <a href="/archives/">Archives</a>
-    <a href="/projects/">Portfolio</a>
     <a href="/gallery/">Gallery</a>
+    <a href="/contact/">Contact</a>
   </nav>
 
   <div class="sidebar-bottom">
-    <button
-      id="mode-toggle"
-      type="button"
-      aria-label="Switch between light, dark, and system appearance"
-    >
-      <span class="icon icon-system" aria-hidden="true">◐</span>
-      <span class="icon icon-light" aria-hidden="true">☀</span>
-      <span class="icon icon-dark" aria-hidden="true">☾</span>
-    </button>
     <a href="/feed.xml" aria-label="RSS feed">RSS</a>
   </div>
 </aside>

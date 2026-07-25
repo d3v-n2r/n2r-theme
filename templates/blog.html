@@ -1,14 +1,11 @@
 {% extends "base.html" %}
 {% import "partials/macros.html" as m %}
 
+{% block title %}Blog · {{ site.title }}{% endblock %}
+{% block topbar_title %}Blog{% endblock %}
+
 {% block content %}
+  <h1>Blog</h1>
   {{ m.post_list(pages) }}
   {{ m.pager(pagination) }}
-{% endblock %}
-
-{% block panel %}
-  <section>
-    <p class="panel-heading">About</p>
-    <p>{{ site.description }}</p>
-  </section>
 {% endblock %}
