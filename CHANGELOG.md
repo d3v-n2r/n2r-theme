@@ -27,6 +27,12 @@ All notable changes to this theme are documented here. The format follows
   using the View Transitions API, with an instant swap where the API is missing or the reader has
   asked for reduced motion. Card hover wash, avatar scale, back-to-top, and a footnote flash on
   `:target`.
+- **M3** — table of contents, rendered at build time from the headings the engine reports. The only
+  script is a scroll spy marking the current entry; Chirpy ships tocbot to build the list in the
+  browser, which is unnecessary when the engine already knows the headings.
+- **M3** — related posts, an archive grouped by year, and site search. Search filters a static
+  index the engine writes, fetched on the first keystroke rather than on page load, so visits that
+  never search pay nothing for it.
 - **M3** — site-supplied avatar with a monogram fallback.
 - **M0** — `theme.toml` manifest (name, version, license, `min_engine_version`, directory map) and
   the directory layout that maps Chirpy's `_layouts`/`_includes`/`_sass`/`_javascript`/`_data` onto

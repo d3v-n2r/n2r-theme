@@ -1,0 +1,24 @@
+{#
+  Table of contents.
+
+  Chirpy fills an empty `<nav>` with tocbot at run time, which means shipping a library and building
+  the list in the browser. The engine already knows every heading, so the list is rendered at build
+  time and the only script needed is the scroll spy that marks which entry is current.
+
+  `h1` is skipped — the page title is already an `h1`, so including it would put a duplicate at the
+  top of every contents list.
+#}
+{% set entries = headings | selectattr("level", "ge", 2) | selectattr("level", "le", 4) | list %}
+
+{% if entries | length > 1 %}
+  <nav id="toc" aria-labelledby="toc-heading">
+    <p class="panel-heading" id="toc-heading">On this page</p>
+    <ul>
+      {% for heading in entries %}
+        <li class="toc-level-{{ heading.level }}">
+          <a href="#{{ heading.id | safe }}">{{ heading.text }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </nav>
+{% endif %}

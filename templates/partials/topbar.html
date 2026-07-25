@@ -3,4 +3,24 @@
     <span aria-hidden="true">☰</span>
   </button>
   <span id="topbar-title">{% block topbar_title %}{{ site.title }}{% endblock %}</span>
+
+  {#
+    Search is a static index the browser fetches and filters, so it works on any host with no
+    server behind it. The index is only fetched once the reader actually types.
+  #}
+  <search id="search">
+    <label class="visually-hidden" for="search-input">Search this site</label>
+    <input
+      id="search-input"
+      type="search"
+      placeholder="Search"
+      autocomplete="off"
+      spellcheck="false"
+    />
+  </search>
 </header>
+
+<div id="search-results" hidden>
+  <p class="panel-heading" id="search-summary" role="status"></p>
+  <div id="search-hits"></div>
+</div>

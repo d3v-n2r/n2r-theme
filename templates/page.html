@@ -52,14 +52,11 @@
 {% endblock %}
 
 {% block panel %}
-  {% if page.tags %}
-    <section>
-      <p class="panel-heading">Tagged</p>
-      <div class="tags">
-        {% for tag in page.tags %}
-          <a class="tag" href="{{ tag.url | safe }}">{{ tag.name }}</a>
-        {% endfor %}
-      </div>
-    </section>
-  {% endif %}
+  {% with headings = page.headings %}
+    {% include "partials/toc.html" %}
+  {% endwith %}
+{% endblock %}
+
+{% block tail %}
+  {% include "partials/related.html" %}
 {% endblock %}

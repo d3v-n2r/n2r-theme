@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Archives · {{ site.title }}{% endblock %}
+{% block topbar_title %}Archives{% endblock %}
+
+{% block content %}
+  <h1>Archives</h1>
+  <p class="post-meta">{{ total }} post{% if total != 1 %}s{% endif %}</p>
+
+  {% for year in years %}
+    <section class="archive-year">
+      <h2>{{ year.year }}</h2>
+      <ul class="archive-list">
+        {% for page in year.pages %}
+          <li>
+            {# Dates are tabular so the column of days lines up down the page. #}
+            <time datetime="{{ page.date.iso }}">{{ page.date.human }}</time>
+            <a href="{{ page.url | safe }}">{{ page.title }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+  {% endfor %}
+{% endblock %}

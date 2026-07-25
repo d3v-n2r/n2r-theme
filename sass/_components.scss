@@ -190,6 +190,187 @@
   }
 }
 
+// ---------------------------------------------------------------- table of contents
+
+#toc {
+  ul {
+    list-style: none;
+    margin: 0.6rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  a {
+    display: block;
+    padding: 0.2rem 0 0.2rem 0.7rem;
+    font-size: 0.84rem;
+    line-height: 1.45;
+    color: var(--text-muted);
+    text-decoration: none;
+
+    // A rail down the left that fills in for the entry you are reading. Borrowed from
+    // chirping-astro, and the cheapest possible "you are here" — no layout shift, one property.
+    border-left: 2px solid transparent;
+    margin-left: -2px;
+    transition:
+      color motion.$quick ease,
+      border-color motion.$quick ease;
+
+    &:hover {
+      color: var(--text);
+    }
+
+    &[data-active='true'] {
+      color: var(--link);
+      border-left-color: var(--link);
+    }
+  }
+
+  .toc-level-3 a {
+    padding-left: 1.5rem;
+  }
+
+  .toc-level-4 a {
+    padding-left: 2.3rem;
+  }
+}
+
+// ---------------------------------------------------------------- related posts
+
+#related-posts {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem 0 0;
+  border-top: 1px solid var(--border);
+
+  h2 {
+    font-size: 1.05rem;
+  }
+}
+
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  gap: 0.75rem;
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 0.85rem 1rem;
+  }
+
+  .card-title {
+    font-size: 0.95rem;
+    font-weight: 620;
+    margin: 0;
+  }
+}
+
+// ---------------------------------------------------------------- search
+
+#search {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+#search-input {
+  width: clamp(7rem, 22vw, 13rem);
+  padding: 0.3rem 0.7rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  color: var(--text);
+  font-size: 0.85rem;
+  transition: border-color motion.$quick ease;
+
+  &::placeholder {
+    color: var(--text-muted);
+  }
+
+  &:focus {
+    border-color: var(--link);
+    outline: none;
+  }
+}
+
+#search-results {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.25rem 0 0;
+}
+
+#search-hits {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 0.75rem;
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .card-title {
+    font-size: 0.95rem;
+    font-weight: 620;
+  }
+}
+
+// ---------------------------------------------------------------- archives
+
+.archive-year {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding-top: 1.25rem;
+
+  h2 {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.archive-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  li {
+    display: flex;
+    gap: 0.9rem;
+    align-items: baseline;
+  }
+
+  time {
+    flex: 0 0 auto;
+    min-width: 6.5rem;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+}
+
+// Visible to screen readers, not on screen.
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 // ---------------------------------------------------------------- back to top
 
 #back-to-top {

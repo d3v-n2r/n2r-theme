@@ -1,0 +1,19 @@
+{#
+  Posts sharing categories or tags with this one. The engine scores them; a page with no relatives
+  gets an empty list and this section disappears entirely rather than showing an empty heading.
+#}
+{% if page.related %}
+  <aside id="related-posts" aria-labelledby="related-heading">
+    <h2 id="related-heading">Related</h2>
+    <div class="related-grid">
+      {% for other in page.related %}
+        <a class="card" href="{{ other.url | safe }}">
+          <span class="card-title">{{ other.title }}</span>
+          {% if other.date %}
+            <time class="post-meta" datetime="{{ other.date.iso }}">{{ other.date.human }}</time>
+          {% endif %}
+        </a>
+      {% endfor %}
+    </div>
+  </aside>
+{% endif %}
