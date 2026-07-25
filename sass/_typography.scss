@@ -174,6 +174,20 @@ time {
   font-variant-numeric: tabular-nums;
 }
 
+// Maths is typeset to MathML by the engine, so this is the whole of the theme's involvement — no
+// KaTeX, no MathJax, no CDN, and nothing to load before a formula becomes readable.
+math {
+  font-size: 1.05em;
+
+  // A long derivation scrolls inside its own box rather than widening the page.
+  &[display="block"] {
+    display: block;
+    overflow-x: auto;
+    padding: 0.4rem 0;
+    text-align: center;
+  }
+}
+
 // A footnote flashes when jumped to, then fades back over nearly two seconds — long enough to
 // notice where you landed without the page feeling like it is doing something.
 :target {
