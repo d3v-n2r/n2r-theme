@@ -4,6 +4,9 @@
 
   The appearance toggle lives in the topbar rather than down here, so it stays reachable without
   opening the sidebar on a narrow screen.
+
+  Everything identifying — the name, the picture, the profiles — comes from the site's own
+  configuration. The theme carries none of it.
 #}
 {% import "partials/icons.html" as icons %}
 <aside id="sidebar" aria-label="Site navigation">
@@ -22,26 +25,36 @@
     </div>
   </div>
 
-{#
-    Home doubles as About; one entry covers résumé, CV, and portfolio.
-
-    Each entry carries an icon, as Chirpy's does — but drawn inline rather than pulled from Font
-    Awesome, so the sidebar costs no icon font and the glyphs follow the palette by inheriting
-    `currentColor`. They are decorative: the label is the accessible name, so the SVGs are hidden
-    from assistive technology.
+  {#
+    Two levels. Résumé and Blog are landing pages in their own right, and the entries beneath each
+    are ways into the same material — so they are nested rather than listed as eight equal siblings,
+    which would imply eight unrelated destinations.
   #}
   <nav class="sidebar-nav" aria-label="Sections">
     <a href="/">{{ icons.icon("home") }}<span>Home</span></a>
-    <a href="/portfolio/">{{ icons.icon("resume") }}<span>Résumé</span></a>
-    <a href="{{ site.blog_url | safe }}">{{ icons.icon("blog") }}<span>Blog</span></a>
-    <a href="/categories/">{{ icons.icon("categories") }}<span>Categories</span></a>
-    <a href="/tags/">{{ icons.icon("tags") }}<span>Tags</span></a>
-    <a href="/archives/">{{ icons.icon("archives") }}<span>Archives</span></a>
+
+    <div class="nav-group">
+      <a href="/resume/">{{ icons.icon("resume") }}<span>Résumé</span></a>
+      <div class="nav-children">
+        <a href="/experience/"><span>Experience</span></a>
+        <a href="/portfolio/"><span>Projects</span></a>
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <a href="{{ site.blog_url | safe }}">{{ icons.icon("blog") }}<span>Blog</span></a>
+      <div class="nav-children">
+        <a href="/categories/"><span>Categories</span></a>
+        <a href="/tags/"><span>Tags</span></a>
+        <a href="/archives/"><span>Archives</span></a>
+      </div>
+    </div>
+
     <a href="/gallery/">{{ icons.icon("gallery") }}<span>Gallery</span></a>
     <a href="/contact/">{{ icons.icon("mail") }}<span>Contact</span></a>
   </nav>
 
-{#
+  {#
     Profile links first, feed last, so adding or removing a profile never moves the feed. Every one
     is icon-only, so the row stays the same height however many there are — with an accessible label,
     since an icon alone tells a screen reader nothing.

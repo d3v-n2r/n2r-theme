@@ -8,8 +8,12 @@
 {% extends "base.html" %}
 {% import "partials/macros.html" as m %}
 
-{% block title %}{{ site.title }}{% endblock %}
-{% block topbar_title %}{{ site.title }}{% endblock %}
+{#
+  The topbar names the page you are on; the sidebar carries the site's own name. Repeating the site
+  title in both would waste the one line that could tell a reader where they are.
+#}
+{% block title %}Home · {{ site.title }}{% endblock %}
+{% block topbar_title %}Home{% endblock %}
 
 {% block content %}
   <article>

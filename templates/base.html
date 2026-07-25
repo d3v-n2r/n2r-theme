@@ -61,7 +61,56 @@
 
     <div id="main-wrapper">
       <div class="container">
-        {% include "partials/topbar.html" %}
+        {#
+          The topbar lives here rather than in a partial because it carries a block. Jinja blocks
+          only travel through `{% extends %}`; one defined inside an `{% include %}` cannot be
+          overridden by a child template, so every page's title silently fell back to the default.
+        #}
+        <header id="topbar">
+          <button id="sidebar-trigger" type="button" aria-label="Open navigation" aria-expanded="false">
+            <span aria-hidden="true">☰</span>
+          </button>
+
+          {# The topbar names the page; the sidebar carries the site's name. #}
+          <span id="topbar-title">{% block topbar_title %}{{ site.title }}{% endblock %}</span>
+
+          <div id="topbar-tools">
+            {#
+              Appearance and search sit together at the top right, in the same place on every page.
+              The toggle starts in "system" — no `data-mode` attribute — so a reader who has never
+              touched it follows their operating system.
+            #}
+            <button
+              id="mode-toggle"
+              type="button"
+              aria-label="Switch between system, light, and dark appearance"
+            >
+              <span class="icon icon-system" aria-hidden="true">◐</span>
+              <span class="icon icon-light" aria-hidden="true">☀</span>
+              <span class="icon icon-dark" aria-hidden="true">☾</span>
+            </button>
+
+            {#
+              Search filters a static index the engine writes, so it works on any host with no
+              server behind it. The index is only fetched once the reader actually types.
+            #}
+            <search id="search">
+              <label class="visually-hidden" for="search-input">Search this site</label>
+              <input
+                id="search-input"
+                type="search"
+                placeholder="Search"
+                autocomplete="off"
+                spellcheck="false"
+              />
+            </search>
+          </div>
+        </header>
+
+        <div id="search-results" hidden>
+          <p class="panel-heading" id="search-summary" role="status"></p>
+          <div id="search-hits"></div>
+        </div>
 
         <div class="columns">
           <main>{% block content %}{% endblock %}</main>

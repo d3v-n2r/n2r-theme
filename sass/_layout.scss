@@ -137,6 +137,29 @@ $content-max: 48rem;
   }
 }
 
+// Second-level entries. They are indented to line up with their parent's label rather than its
+// icon, so the hierarchy reads from the text column alone and no second set of glyphs is needed.
+.nav-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-children {
+  display: flex;
+  flex-direction: column;
+  margin-left: 1.65rem;
+  border-left: 1px solid var(--border);
+
+  a {
+    padding-block: 0.35rem;
+    padding-left: 0.75rem;
+    font-size: 0.76rem;
+    letter-spacing: 0.04em;
+    text-transform: none;
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+}
+
 // A row of icon-only links: profiles first, feed last.
 .sidebar-bottom {
   display: flex;
