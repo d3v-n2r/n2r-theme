@@ -1,11 +1,37 @@
+{#
+  Categories and tags share this template but not their presentation, because Chirpy gives them
+  different jobs: categories are a small, deliberate set, so each gets a card with its count;
+  tags are many and disposable, so they form a cloud you scan rather than read.
+#}
 {% extends "base.html" %}
-{% import "partials/macros.html" as m %}
 
 {% block title %}{{ kind | capitalize }} · {{ site.title }}{% endblock %}
 {% block topbar_title %}{{ kind | capitalize }}{% endblock %}
 
 {% block content %}
   <h1>{{ kind | capitalize }}</h1>
-  <p class="post-meta">{{ terms | length }} in total</p>
-  {{ m.tag_list(terms) }}
+  <p class="post-meta">
+    {{ terms | length }} {{ kind }}
+  </p>
+
+  {% if kind == "categories" %}
+    <div class="category-cards">
+      {% for term in terms %}
+        <a class="category-card" href="{{ term.url | safe }}">
+          <span class="name">{{ term.name }}</span>
+          <span class="count">
+            {{ term.count }} post{% if term.count != 1 %}s{% endif %}
+          </span>
+        </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div id="tags">
+      {% for term in terms %}
+        <a class="tag" href="{{ term.url | safe }}">
+          {{ term.name }}<span class="count">{{ term.count }}</span>
+        </a>
+      {% endfor %}
+    </div>
+  {% endif %}
 {% endblock %}

@@ -1,3 +1,11 @@
+{#
+  The archive, as a timeline — Chirpy's most distinctive page.
+
+  Chirpy draws the spine as a separate segment per row, each 1.6px taller than its line box so the
+  segments overlap into a continuous line. That works, but it can only stay continuous while every
+  row is exactly the height it assumed. One line spanning the whole list cannot develop gaps, so
+  that is what this does; the dots sit on top of it.
+#}
 {% extends "base.html" %}
 
 {% block title %}Archives · {{ site.title }}{% endblock %}
@@ -7,18 +15,18 @@
   <h1>Archives</h1>
   <p class="post-meta">{{ total }} post{% if total != 1 %}s{% endif %}</p>
 
-  {% for year in years %}
-    <section class="archive-year">
-      <h2>{{ year.year }}</h2>
-      <ul class="archive-list">
+  <div id="archives">
+    {% for year in years %}
+      <time class="year" datetime="{{ year.year }}">{{ year.year }}</time>
+      <ul>
         {% for page in year.pages %}
           <li>
-            {# Dates are tabular so the column of days lines up down the page. #}
-            <time datetime="{{ page.date.iso }}">{{ page.date.human }}</time>
+            <span class="date day">{{ page.date.day }}</span>
+            <span class="date month">{{ page.date.month }}</span>
             <a href="{{ page.url | safe }}">{{ page.title }}</a>
           </li>
         {% endfor %}
       </ul>
-    </section>
-  {% endfor %}
+    {% endfor %}
+  </div>
 {% endblock %}

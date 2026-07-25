@@ -75,9 +75,10 @@ a {
   }
 }
 
+// Chirpy: `border-left: 0.125rem solid; padding-left: 1rem; margin-top: 0.5rem`.
 blockquote {
   padding-left: 1rem;
-  border-left: 3px solid var(--border);
+  border-left: 0.125rem solid var(--border);
   color: var(--text-muted);
 }
 
@@ -89,28 +90,56 @@ hr {
 }
 
 // Long-form content: the reading column, and the vertical rhythm inside it.
+//
+// The rhythm is Chirpy's, value for value. It is margin-based rather than a flex `gap` because the
+// spacing is deliberately uneven — a heading takes far more room above it than a paragraph does,
+// which binds it to the text it introduces. A single `gap` cannot express that.
 .content {
-  display: flex;
-  flex-direction: column;
-  gap: 1.3rem;
-
   // Monospace runs wider per character, so the column is narrower than it would be for a
   // proportional face to land in the same 65–70 character range.
   max-width: 40rem;
+  line-height: 1.75;
 
-  // A heading belongs to what follows it, so it gets air above and stays close to its own text.
-  > h2,
-  > h3,
-  > h4 {
-    margin-top: 1rem;
+  // Chirpy: `main h2 { margin: 2.5rem 0 1.25rem }`, h3/h4 `2rem 0 1rem`.
+  h2 {
+    margin: 2.5rem 0 1.25rem;
   }
 
+  h3,
+  h4 {
+    margin: 2rem 0 1rem;
+  }
+
+  // Chirpy inherits Bootstrap Reboot's `p { margin: 0 0 1rem }`.
+  p,
+  figure,
+  pre,
+  blockquote,
+  .markdown-alert {
+    margin: 0 0 1rem;
+  }
+
+  // Chirpy: `padding-inline-start: 1.75rem`, items `margin: 0.25rem 0; padding-left: 0.25rem`.
   ul,
   ol {
-    padding-left: 1.35rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
+    margin: 0 0 1rem;
+    padding-inline-start: 1.75rem;
+
+    li {
+      margin: 0.25rem 0;
+      padding-left: 0.25rem;
+    }
+
+    // Nested lists tighten up: Chirpy uses `padding-inline-start: 1.25rem; margin: 0.5rem 0`.
+    ul,
+    ol {
+      margin: 0.5rem 0;
+      padding-inline-start: 1.25rem;
+    }
+  }
+
+  > :last-child {
+    margin-bottom: 0;
   }
 
   img {

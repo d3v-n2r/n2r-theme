@@ -26,20 +26,12 @@
   </div>
 
   {#
-    Two levels. Résumé and Blog are landing pages in their own right, and the entries beneath each
-    are ways into the same material — so they are nested rather than listed as eight equal siblings,
-    which would imply eight unrelated destinations.
+    Blog is the only entry with a second level: categories, tags, and archives are all ways into the
+    same posts, so they belong under it rather than beside it. Everything else is a destination in
+    its own right and stays flat.
   #}
   <nav class="sidebar-nav" aria-label="Sections">
     <a href="/">{{ icons.icon("home") }}<span>Home</span></a>
-
-    <div class="nav-group">
-      <a href="/resume/">{{ icons.icon("resume") }}<span>Résumé</span></a>
-      <div class="nav-children">
-        <a href="/experience/"><span>Experience</span></a>
-        <a href="/portfolio/"><span>Projects</span></a>
-      </div>
-    </div>
 
     <div class="nav-group">
       <a href="{{ site.blog_url | safe }}">{{ icons.icon("blog") }}<span>Blog</span></a>
@@ -50,6 +42,7 @@
       </div>
     </div>
 
+    <a href="/projects/">{{ icons.icon("resume") }}<span>Projects</span></a>
     <a href="/gallery/">{{ icons.icon("gallery") }}<span>Gallery</span></a>
     <a href="/contact/">{{ icons.icon("mail") }}<span>Contact</span></a>
   </nav>

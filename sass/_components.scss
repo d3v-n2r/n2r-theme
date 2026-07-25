@@ -496,40 +496,236 @@
   font-size: 0.85rem;
 }
 
-// ---------------------------------------------------------------- archives
+// ---------------------------------------------------------------- categories and tags
+//
+// Two different treatments on purpose, following Chirpy: categories are a small deliberate set and
+// get a card each; tags are many and disposable and form a cloud.
 
-.archive-year {
+.category-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.category-card {
   display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  padding-top: 1.25rem;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.8rem 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  color: var(--text);
+  transition: border-color motion.$quick ease;
 
-  h2 {
-    font-size: 1.1rem;
+  &:hover {
+    border-color: var(--link);
+    color: var(--link);
+  }
+
+  .count {
+    flex: 0 0 auto;
+    font-size: 0.76rem;
     color: var(--text-muted);
     font-variant-numeric: tabular-nums;
   }
 }
 
-.archive-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+// The cloud. Chirpy gets its row rhythm from `line-height: 3rem` on the tags themselves rather than
+// a gap, which is what keeps wrapped rows evenly spaced no matter how the tags break.
+#tags {
   display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+  line-height: 3rem;
+
+  .tag {
+    margin-right: 0.8rem;
+    padding: 6px 8px 7px;
+    border-radius: 0.7em;
+    box-shadow: 0 0 3px 0 var(--border);
+
+    .count {
+      margin-left: 0.6em;
+      font-size: 0.7em;
+      font-variant-numeric: tabular-nums;
+    }
+  }
+}
+
+// ---------------------------------------------------------------- one term's posts
+
+.term-count {
+  margin-left: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.term-list {
+  list-style: none;
+  margin: 1.5rem 0 0;
+  padding: 0;
 
   li {
     display: flex;
-    gap: 0.9rem;
     align-items: baseline;
+    padding: 0.6rem 0;
+    line-height: 1.5rem;
+  }
+
+  a {
+    text-decoration: none;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &:hover {
+      color: var(--link);
+    }
+  }
+
+  // The dotted leader between title and date, which is what makes the column of dates readable.
+  .leader {
+    flex: 1 1 auto;
+    margin: 0 0.5rem 0.35rem;
+    border-bottom: 2px dotted var(--border);
   }
 
   time {
     flex: 0 0 auto;
-    min-width: 6.5rem;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     color: var(--text-muted);
+    white-space: nowrap;
+  }
+}
+
+// ---------------------------------------------------------------- archives
+//
+// The timeline. Everything hangs off one vertical axis: the date columns sit to its left, the dots
+// sit on it, the titles sit to its right.
+
+$spine: 5rem;
+$spine-width: 2px;
+
+#archives {
+  position: relative;
+  margin-top: 1.5rem;
+
+  // One continuous line for the whole list. Chirpy builds it from per-row segments that overlap by
+  // 1.6px; that only stays seamless while every row is exactly the height it assumed.
+  &::before {
+    content: '';
+    position: absolute;
+    top: 2rem;
+    bottom: 1.5rem;
+    left: $spine;
+    width: $spine-width;
+    transform: translateX(-50%);
+    background: var(--border);
+  }
+
+  ul {
+    list-style: none;
+    margin: 0 0 0.5rem;
+    padding: 0;
+  }
+
+  li {
+    position: relative;
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    line-height: 2.6rem;
+    white-space: nowrap;
+
+    // Chirpy stripes alternate rows with a gradient that fades out at both edges, so the band has
+    // no hard vertical edge to catch the eye.
+    &:nth-child(odd) {
+      background-image: linear-gradient(
+        to right,
+        transparent,
+        var(--surface) 12%,
+        var(--surface) 88%,
+        transparent
+      );
+    }
+  }
+
+  // The date columns are fixed width so every day and month lines up down the page.
+  .date {
+    display: inline-block;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+
+    &.day {
+      width: 1.6rem;
+      text-align: right;
+      font-size: 0.85rem;
+    }
+
+    &.month {
+      width: 2rem;
+      text-align: center;
+      font-size: 0.78rem;
+    }
+  }
+
+  li a {
+    margin-left: 1.6rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-decoration: none;
+    color: var(--text);
+
+    &:hover {
+      color: var(--link);
+    }
+
+    // The dot marking this post on the spine.
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: $spine;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      transform: translate(-50%, -50%);
+    }
+  }
+}
+
+.year {
+  position: relative;
+  display: block;
+  margin: 1.75rem 0 0.35rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+
+  // A ring rather than a filled dot, so a year reads as a heavier marker than a post.
+  //
+  // Positioned absolutely rather than nudged inline as Chirpy does: its `left: 21.5px` is tuned to
+  // one font at one size and has to be re-tuned whenever either changes.
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: $spine;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 3px solid var(--text-muted);
+    transform: translate(-50%, -50%);
   }
 }
 

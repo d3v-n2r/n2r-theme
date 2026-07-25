@@ -150,12 +150,13 @@ $content-max: 48rem;
   margin-left: 1.65rem;
   border-left: 1px solid var(--border);
 
+  // Uppercase like their parent, and only slightly smaller — enough to read as subordinate without
+  // becoming a different kind of thing.
   a {
-    padding-block: 0.35rem;
-    padding-left: 0.75rem;
-    font-size: 0.76rem;
-    letter-spacing: 0.04em;
-    text-transform: none;
+    padding-block: 0.4rem;
+    padding-left: 0.8rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
     border-radius: 0 var(--radius) var(--radius) 0;
   }
 }

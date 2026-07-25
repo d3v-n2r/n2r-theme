@@ -1,3 +1,9 @@
+{#
+  The posts carrying one category or tag.
+
+  Chirpy's treatment: title on the left, date on the right, a dotted leader running between them.
+  No excerpt and no tags — this is a page you scan for a title, and anything else is noise.
+#}
 {% extends "base.html" %}
 {% import "partials/macros.html" as m %}
 
@@ -5,11 +11,22 @@
 {% block topbar_title %}{{ term.name }}{% endblock %}
 
 {% block content %}
-  <h1>{{ term.name }}</h1>
-  <p class="post-meta">
-    {{ term.count }} post{% if term.count != 1 %}s{% endif %} in
-    <a href="/{{ kind }}/">{{ kind }}</a>
-  </p>
-  {{ m.post_list(pages) }}
+  <h1>
+    {{ term.name }}
+    <span class="term-count">{{ term.count }}</span>
+  </h1>
+
+  <ul class="term-list">
+    {% for page in pages %}
+      <li>
+        <a href="{{ page.url | safe }}">{{ page.title }}</a>
+        <span class="leader"></span>
+        {% if page.date %}
+          <time datetime="{{ page.date.iso }}">{{ page.date.human }}</time>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+
   {{ m.pager(pagination) }}
 {% endblock %}
