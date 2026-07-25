@@ -1,85 +1,93 @@
 // Design tokens: the whole palette in one place, as custom properties.
 //
-// Colours are custom properties rather than Sass variables on purpose. Sass variables resolve at
-// build time, so a single compiled stylesheet could only carry one theme; custom properties resolve
-// in the browser, which is what lets one stylesheet serve both light and dark and lets the toggle
-// switch between them without a second request.
+// The palette is [Catppuccin](https://catppuccin.com/palette/) — **Latte** for light and **Mocha**
+// for dark, with **mauve** as the accent. Mauve keeps the purple identity the site started with
+// (#6E3272, the author's handle read as hex) while inheriting a palette that has already solved the
+// hard part: every colour has a counterpart in the other flavour at matching contrast, so dark mode
+// is a token swap rather than a re-design.
 //
-// The accent is #6E3272, read from the author's handle `0x6E3272`. Dark mode lightens it to #c491cf
-// rather than reusing it: the same plum that reads as a confident link on near-white fails contrast
-// on a near-black ground.
+// Colours are custom properties rather than Sass variables on purpose. Sass variables resolve at
+// build time, so a single compiled stylesheet could only carry one flavour; custom properties
+// resolve in the browser, which is what lets one stylesheet serve both and lets the toggle switch
+// between them without a second request.
+//
+// Catppuccin names are noted against each token, so anyone who knows the palette can follow the
+// mapping and swap in Frappé or Macchiato by replacing one block.
 
 :root {
   color-scheme: light;
 
-  // Ground and ink
-  --bg: #fdfcfd;
-  --surface: #f5f1f6;
-  --text: #1b1a1d;
-  --text-muted: #6c6571;
-  --border: #e7e1e9;
+  // Ground and ink — Latte
+  --bg: #eff1f5; // base
+  --surface: #e6e9ef; // mantle
+  --text: #4c4f69; // text
+  --text-muted: #6c6f85; // subtext0
+  --border: #ccd0da; // surface0
 
-  // Accent
-  --link: #6e3272;
-  --link-hover: #501f54;
-  --accent-wash: rgba(110, 50, 114, 0.08);
-  --accent-contrast: #ffffff;
+  // Accent — Latte mauve
+  --link: #8839ef;
+  --link-hover: #7526d3;
+  --accent-wash: rgb(136 57 239 / 10%);
+  --accent-contrast: #eff1f5; // Latte mauve is dark, so light text sits on it
 
   // Code
-  --code-bg: #f3eef5;
-  --code-inline-bg: rgba(110, 50, 114, 0.07);
+  --code-bg: #dce0e8; // crust
+  --code-inline-bg: rgb(136 57 239 / 9%);
 
-  // Syntax highlighting. Class names come from syntect's scope-derived output, so the engine emits
-  // what a token *is* and this file decides what it looks like.
-  --syn-comment: #7c7484;
-  --syn-keyword: #8c2f7a;
-  --syn-string: #2f6b52;
-  --syn-number: #9a4a1e;
-  --syn-function: #4c3a8f;
-  --syn-type: #2b6b6b;
-  --syn-punctuation: #6c6571;
+  // Syntax highlighting, following Catppuccin's own editor mappings. Class names come from
+  // syntect's scope-derived output, so the engine emits what a token *is* and this decides how it
+  // looks.
+  --syn-comment: #9ca0b0; // overlay0
+  --syn-keyword: #8839ef; // mauve
+  --syn-string: #40a02b; // green
+  --syn-number: #fe640b; // peach
+  --syn-function: #1e66f5; // blue
+  --syn-type: #df8e1d; // yellow
+  --syn-punctuation: #6c6f85; // subtext0
 
   // Feedback
-  --good: #1f6b45;
-  --warn: #8a5a12;
-  --bad: #9a2c3c;
+  --good: #40a02b; // green
+  --warn: #df8e1d; // yellow
+  --bad: #d20f39; // red
 
   // Shape and depth
   --radius: 0.4rem;
   --radius-lg: 0.75rem;
-  --shadow: 0 1px 2px rgba(27, 26, 29, 0.05), 0 8px 24px rgba(27, 26, 29, 0.04);
+  --shadow: 0 1px 2px rgb(76 79 105 / 6%), 0 8px 24px rgb(76 79 105 / 5%);
 }
 
 @mixin dark-tokens {
   color-scheme: dark;
 
-  --bg: #161318;
-  --surface: #1e1a20;
-  --text: #e8e4ea;
-  --text-muted: #9c93a2;
-  --border: #2d2732;
+  // Ground and ink — Mocha
+  --bg: #1e1e2e; // base
+  --surface: #181825; // mantle
+  --text: #cdd6f4; // text
+  --text-muted: #a6adc8; // subtext0
+  --border: #313244; // surface0
 
-  --link: #c491cf;
-  --link-hover: #dbb4e3;
-  --accent-wash: rgba(196, 145, 207, 0.12);
-  --accent-contrast: #161318;
+  // Accent — Mocha mauve
+  --link: #cba6f7;
+  --link-hover: #dcc2fa;
+  --accent-wash: rgb(203 166 247 / 14%);
+  --accent-contrast: #1e1e2e; // Mocha mauve is light, so dark text sits on it
 
-  --code-bg: #1c181f;
-  --code-inline-bg: rgba(196, 145, 207, 0.12);
+  --code-bg: #11111b; // crust
+  --code-inline-bg: rgb(203 166 247 / 14%);
 
-  --syn-comment: #8b8394;
-  --syn-keyword: #e08fd0;
-  --syn-string: #7fd0a8;
-  --syn-number: #e0a06a;
-  --syn-function: #a99bf0;
-  --syn-type: #6fc9c9;
-  --syn-punctuation: #9c93a2;
+  --syn-comment: #6c7086; // overlay0
+  --syn-keyword: #cba6f7; // mauve
+  --syn-string: #a6e3a1; // green
+  --syn-number: #fab387; // peach
+  --syn-function: #89b4fa; // blue
+  --syn-type: #f9e2af; // yellow
+  --syn-punctuation: #a6adc8; // subtext0
 
-  --good: #6fc98d;
-  --warn: #d8a95c;
-  --bad: #e08a95;
+  --good: #a6e3a1; // green
+  --warn: #f9e2af; // yellow
+  --bad: #f38ba8; // red
 
-  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.28);
+  --shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 8px 24px rgb(0 0 0 / 28%);
 }
 
 // Follow the operating system by default...

@@ -1,7 +1,15 @@
-{# One line. The year comes from the build, so nobody has to remember it in January. #}
+{#
+  One centred line. The year comes from the build, and the name and its link come from the site's
+  own configuration — the theme never carries anyone's personal details.
+#}
 <footer aria-label="Site information">
   <p>
-    &copy; {{ site.year }} {{ site.author }} &middot; Vibe-coded on Linux. Hand-rolled site,
-    store-bought crypto.
+    &copy; {{ site.year }}
+    {%- if site.author_url %}
+      <a href="{{ site.author_url | safe }}">{{ site.author }}</a>
+    {%- else %}
+      {{ site.author }}
+    {%- endif %}
+    &middot; <code>systemctl enable --now vibes.service</code>
   </p>
 </footer>
