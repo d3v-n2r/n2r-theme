@@ -14,8 +14,9 @@
         <header>
           <h2><a href="{{ project.url | safe }}">{{ project.title }}</a></h2>
           {% if project.status %}
-            {# The status is a closed set in the engine, so the class name is always one of four. #}
-            <span class="status status-{{ project.status | lower }}">{{ project.status }}</span>
+            {# The engine returns a key, so the class name and the label are no longer the same string
+               wearing two hats — translating one cannot silently rename the other. #}
+            <span class="status status-{{ project.status }}">{{ site.text.status[project.status] }}</span>
           {% endif %}
         </header>
 
@@ -30,7 +31,7 @@
         {% if project.links %}
           <div class="project-links">
             {% for link in project.links %}
-              <a href="{{ link.url | safe }}" rel="noopener">{{ link.kind }}</a>
+              <a href="{{ link.url | safe }}" rel="noopener">{{ site.text.link[link.kind] }}</a>
             {% endfor %}
           </div>
         {% endif %}

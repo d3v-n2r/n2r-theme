@@ -13,7 +13,17 @@
   var root = document.documentElement;
   var STORAGE_KEY = 'mode';
 
+  // The strings this script writes onto the page, handed over as attributes by the template — a
+  // `.js` file is copied verbatim, so a literal inside one is in whatever language it was written.
+  var settings = (document.currentScript && document.currentScript.dataset) || {};
+
+  /** One of those strings, or a plain English fallback. */
+  function text(name, fallback) {
+    return settings[name] || fallback;
+  }
+
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var toggle = document.getElementById('mode-toggle');
 
   // ---------------------------------------------------------------- appearance
 
@@ -32,6 +42,19 @@
       delete root.dataset.mode;
       localStorage.removeItem(STORAGE_KEY);
     }
+    announceMode(mode);
+  }
+
+  /**
+   * Says which of the three appearances the toggle is now in.
+   *
+   * One static label on a three-state control tells a screen-reader user nothing: they press it,
+   * something changes for everyone else, and they hear the same sentence they heard before.
+   */
+  function announceMode(mode) {
+    if (!toggle) return;
+    var label = toggle.dataset['label' + (mode ? mode[0].toUpperCase() + mode.slice(1) : 'System')];
+    if (label) toggle.setAttribute('aria-label', label);
   }
 
   /** Whether the mode we are moving to paints darker than the one we are leaving. */
@@ -115,9 +138,10 @@
     );
   }
 
-  var toggle = document.getElementById('mode-toggle');
   if (toggle) {
     toggle.addEventListener('click', switchMode);
+    // The stored choice was applied before first paint, so the label starts out of step with it.
+    announceMode(root.dataset.mode || null);
   }
 
   // A reader following the system gets the whole page re-themed at sunset by CSS alone. The comment
@@ -293,16 +317,20 @@
       // still works there, and either way the button now says what happened instead of appearing
       // to do nothing.
       if (!navigator.clipboard) {
-        report(legacyCopy(button.dataset.share) ? 'Copied' : 'Copy failed');
+        report(
+        legacyCopy(button.dataset.share)
+          ? text('copied', 'Copied')
+          : text('copyFailed', 'Copy failed')
+      );
         return;
       }
 
       navigator.clipboard.writeText(button.dataset.share).then(
         function () {
-          report('Copied');
+          report(text('copied', 'Copied'));
         },
         function () {
-          report('Copy failed');
+          report(text('copyFailed', 'Copy failed'));
         }
       );
     });

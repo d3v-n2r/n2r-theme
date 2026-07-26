@@ -1,0 +1,124 @@
+# Interface strings.
+#
+# Every word the theme puts on a page that did not come from the site's content. A site overrides
+# one of them by writing that one key into its own `locales/en.yml` — the merge is key by key, so
+# nobody has to copy this file to change a heading.
+#
+# The vocabulary is this port's, not Chirpy's. Where the two differ the port wins: it says "On this
+# page" where Chirpy says "Contents", and "Related" where Chirpy says "Further Reading". Copying
+# Chirpy's values into a port that says something else is the usual way these files go wrong.
+#
+# Keys for features this theme does not ship — page views, per-network sharing, Mermaid — are absent
+# rather than present and unused.
+
+post:
+  by: By
+  posted: Posted
+  updated: Updated
+  read_time: min read
+  words: words
+  pinned: Pinned
+  share: Copy link
+  share_done: Copied
+  share_failed: Copy failed
+  edit: Found a mistake? Edit this page
+  licence: This post is licensed under
+  licence_by: by
+  # A series banner reads "Part 2 of 5 in <name>"; the pieces are separate so a language that
+  # orders them differently can.
+  series_part: Part
+  series_of: of
+  series_in: in
+
+# Two directions, named once. The pager, the post navigation and the series navigation were each
+# calling the same idea something different — Newer/Older, Previous/Next, Previous part/Next part.
+nav:
+  older: Older
+  newer: Newer
+  nothing_older: Nothing older
+  nothing_newer: Nothing newer
+  previous_part: Previous part
+  next_part: Next part
+  breadcrumb: Breadcrumb
+  sections: Sections
+  open_menu: Open navigation
+  back_to_top: Back to top
+
+panel:
+  toc: On this page
+  recent: Recently updated
+  trending: Trending tags
+  related: Related
+
+search:
+  label: Search this site
+  placeholder: Search
+  cancel: Cancel
+  searching: Searching…
+  unavailable: Search is unavailable right now.
+  # `:QUERY` is replaced with what was typed. A placeholder rather than concatenation, so a language
+  # that puts the query first can.
+  no_results: No matches for “:QUERY”
+  hints: Trending tags
+
+# Counted things. Both forms are given rather than an "s" being appended, because that rule is
+# English's and not every language's.
+count:
+  post_one: post
+  post_many: posts
+  match_one: match
+  match_many: matches
+  category_one: category
+  category_many: categories
+  tag_one: tag
+  tag_many: tags
+  part_one: part
+  part_many: parts
+  # "Page 3 of 12" — placeholders, not fragments to concatenate around a number.
+  page_of: Page :NUMBER of :TOTAL
+
+page:
+  blog: Blog
+  categories: Categories
+  tags: Tags
+  archives: Archives
+  projects: Projects
+  gallery: Gallery
+  home: Home
+  undated: Undated
+  empty: Nothing published yet.
+  nothing_tagged: Nothing tagged yet.
+  comments: Comments
+  comments_noscript: Comments need JavaScript, which is why they are the only part of this site that does.
+
+not_found:
+  title: Not found
+  heading: No such file or directory
+  body: The page you asked for is not here. It may have been renamed, or it may never have existed — from out here the two look identical.
+
+# The appearance toggle cycles system → light → dark. A screen reader hears the label change, which
+# is the only way to tell which of the three it is now in.
+theme:
+  system: Appearance follows your system. Activate for light.
+  light: Appearance is light. Activate for dark.
+  dark: Appearance is dark. Activate to follow your system.
+
+# The engine returns stable keys for these rather than English words, so the CSS class and the label
+# are no longer the same string.
+status:
+  active: Active
+  shipped: Shipped
+  paused: Paused
+  archived: Archived
+
+link:
+  repo: Source
+  demo: Demo
+  docs: Docs
+
+image:
+  full_size: View full size
+
+code:
+  copy: Copy
+  copy_done: Copied

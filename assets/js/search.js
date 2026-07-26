@@ -12,8 +12,13 @@
 
   // Read before anything else: `document.currentScript` is only this element while the script is
   // executing, and is null from any callback later on.
-  var INDEX_URL =
-    (document.currentScript && document.currentScript.dataset.index) || '/search-index.json';
+  var settings = (document.currentScript && document.currentScript.dataset) || {};
+  var INDEX_URL = settings.index || '/search-index.json';
+
+  /** One of the interface strings the template handed over, or a plain English fallback. */
+  function text(name, fallback) {
+    return settings[name] || fallback;
+  }
 
   var input = document.getElementById('search-input');
   var results = document.getElementById('search-results');
@@ -199,7 +204,7 @@
     // so saying so here also announces it.
     if (!ready()) {
       showResults(true);
-      summary.textContent = 'Searching…';
+      summary.textContent = text('searching', 'Searching…');
       hits.replaceChildren();
     }
 
@@ -210,14 +215,19 @@
         showResults(true);
         summary.textContent =
           found.length === 0
-            ? 'No matches for “' + query + '”'
-            : found.length + (found.length === 1 ? ' match' : ' matches');
+            ? // `:QUERY` rather than concatenation, so a language that puts the query first can.
+              text('noResults', 'No matches for “:QUERY”').replace(':QUERY', query)
+            : found.length +
+              ' ' +
+              (found.length === 1
+                ? text('matchOne', 'match')
+                : text('matchMany', 'matches'));
 
         render(found);
       })
       .catch(function () {
         showResults(true);
-        summary.textContent = 'Search is unavailable right now.';
+        summary.textContent = text('unavailable', 'Search is unavailable right now.');
         hits.replaceChildren();
       });
   }

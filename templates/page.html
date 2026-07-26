@@ -31,7 +31,7 @@
           Linked only when the byline is the site's own author: a guest post names someone the
           site's `author_url` does not point at, and linking their name to it would be wrong.
         #}
-        <span>By
+        <span>{{ site.text.post.by }}
           {% if site.author_url and page.author == site.author %}
             <a href="{{ site.author_url | safe }}" rel="author">{{ page.author }}</a>
           {% else %}
@@ -45,15 +45,15 @@
         #}
         {% if page.date %}
           <span class="sep">·</span>
-          <span>Posted <time datetime="{{ page.date.rfc3339 }}">{{ page.date.human }}</time></span>
+          <span>{{ site.text.post.posted }} <time datetime="{{ page.date.rfc3339 }}">{{ page.date.human }}</time></span>
         {% endif %}
         {% if page.updated %}
           <span class="sep">·</span>
-          <span>Updated <time datetime="{{ page.updated.rfc3339 }}">{{ page.updated.human }}</time></span>
+          <span>{{ site.text.post.updated }} <time datetime="{{ page.updated.rfc3339 }}">{{ page.updated.human }}</time></span>
         {% endif %}
         <span class="sep">·</span>
         {# The exact count on hover, since the minutes are an estimate and the words are not. #}
-        <span title="{{ page.words }} words">{{ page.read_time }} min read</span>
+        <span title="{{ page.words }} {{ site.text.post.words }}">{{ page.read_time }} {{ site.text.post.read_time }}</span>
       </div>
 
       {#
@@ -84,7 +84,7 @@
 
     {% if page.series %}
       <p class="series-banner">
-        Part {{ page.series.number }} of {{ page.series.total }} in
+        {{ site.text.post.series_part }} {{ page.series.number }} {{ site.text.post.series_of }} {{ page.series.total }} {{ site.text.post.series_in }}
         <a href="{{ page.series.url | safe }}">{{ page.series.name }}</a>
       </p>
     {% endif %}
@@ -122,7 +122,7 @@
           {{ icons.icon("pencil") }}
           {# The prefix is the site's own config; the path is a filename off disk, so only the
              first is marked safe. #}
-          <a href="{{ site.edit.url | safe }}{{ page.source_path }}" rel="noopener">Found a mistake? Edit this page</a>
+          <a href="{{ site.edit.url | safe }}{{ page.source_path }}" rel="noopener">{{ site.text.post.edit }}</a>
         </p>
       {% endif %}
 
@@ -137,9 +137,9 @@
             {% if site.license.statement %}
               {{ site.license.statement }}
             {% else %}
-              This post is licensed under
+              {{ site.text.post.licence }}
               <a href="{{ site.license.url | safe }}" rel="license">{{ site.license.name }}</a>
-              by {{ page.author }}.
+              {{ site.text.post.licence_by }} {{ page.author }}.
             {% endif %}
           </span>
         {% else %}
@@ -150,7 +150,7 @@
           trackers wearing an icon, and this one works for every destination.
         #}
         <button class="share" type="button" data-share="{{ site.base_url | safe }}{{ page.url | safe }}">
-          Copy link
+          {{ site.text.post.share }}
         </button>
       </div>
     </footer>
@@ -158,12 +158,12 @@
     {% if page.series and (page.series.previous or page.series.next) %}
       <nav class="series-nav" aria-label="Series navigation">
         {% if page.series.previous %}
-          <a href="{{ page.series.previous | safe }}" rel="prev">← Previous part</a>
+          <a href="{{ page.series.previous | safe }}" rel="prev">← {{ site.text.nav.previous_part }}</a>
         {% else %}
           <span></span>
         {% endif %}
         {% if page.series.next %}
-          <a href="{{ page.series.next | safe }}" rel="next">Next part →</a>
+          <a href="{{ page.series.next | safe }}" rel="next">{{ site.text.nav.next_part }} →</a>
         {% endif %}
       </nav>
     {% endif %}
@@ -191,24 +191,24 @@
     <nav class="post-nav" aria-label="Post navigation">
       {% if page.previous %}
         <a class="card" href="{{ page.previous.url | safe }}" rel="prev">
-          <span class="direction">Older</span>
+          <span class="direction">{{ site.text.nav.older }}</span>
           <span class="card-title">{{ page.previous.title }}</span>
         </a>
       {% else %}
         <span class="card disabled" aria-hidden="true">
-          <span class="direction">Older</span>
-          <span class="card-title">Nothing older</span>
+          <span class="direction">{{ site.text.nav.older }}</span>
+          <span class="card-title">{{ site.text.nav.nothing_older }}</span>
         </span>
       {% endif %}
       {% if page.next %}
         <a class="card next" href="{{ page.next.url | safe }}" rel="next">
-          <span class="direction">Newer</span>
+          <span class="direction">{{ site.text.nav.newer }}</span>
           <span class="card-title">{{ page.next.title }}</span>
         </a>
       {% else %}
         <span class="card next disabled" aria-hidden="true">
-          <span class="direction">Newer</span>
-          <span class="card-title">Nothing newer</span>
+          <span class="direction">{{ site.text.nav.newer }}</span>
+          <span class="card-title">{{ site.text.nav.nothing_newer }}</span>
         </span>
       {% endif %}
     </nav>

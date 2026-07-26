@@ -13,8 +13,8 @@
 #}
 {% if site.comments and site.comments.provider == "giscus" %}
   <section id="comments" aria-label="Comments">
-    <h2>Comments</h2>
-    <noscript>Comments need JavaScript, which is why they are the only part of this site that does.</noscript>
+    <h2>{{ site.text.page.comments }}</h2>
+    <noscript>{{ site.text.page.comments_noscript }}</noscript>
     <script>
       (function () {
         var mode = document.documentElement.dataset.mode;

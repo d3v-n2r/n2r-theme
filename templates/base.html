@@ -122,7 +122,7 @@
           overridden by a child template, so every page's title silently fell back to the default.
         #}
         <header id="topbar">
-          <button id="sidebar-trigger" type="button" aria-label="Open navigation" aria-expanded="false">
+          <button id="sidebar-trigger" type="button" aria-label="{{ site.text.nav.open_menu }}" aria-expanded="false">
             <span aria-hidden="true">☰</span>
           </button>
 
@@ -131,7 +131,7 @@
             for a screen with room for it; the short label is for one without. On a term page the
             trail is the only route up to `/categories/` that is not the sidebar.
           #}
-          <nav id="breadcrumb" aria-label="Breadcrumb">
+          <nav id="breadcrumb" aria-label="{{ site.text.nav.breadcrumb }}">
             <a href="/">Home</a>
             {% block breadcrumb %}{% endblock %}
           </nav>
@@ -147,7 +147,10 @@
             <button
               id="mode-toggle"
               type="button"
-              aria-label="Switch between system, light, and dark appearance"
+              data-label-system="{{ site.text.theme.system }}"
+              data-label-light="{{ site.text.theme.light }}"
+              data-label-dark="{{ site.text.theme.dark }}"
+              aria-label="{{ site.text.theme.system }}"
             >
               <span class="icon icon-system" aria-hidden="true">◐</span>
               <span class="icon icon-light" aria-hidden="true">☀</span>
@@ -163,22 +166,22 @@
               hamburger, no page title. Opening it takes over the bar instead, and the cancel button
               is the way back: Escape closes it on a keyboard, and a touch device has no Escape.
             #}
-            <button id="search-trigger" type="button" aria-label="Search" aria-expanded="false">
+            <button id="search-trigger" type="button" aria-label="{{ site.text.search.placeholder }}" aria-expanded="false">
               {{ icons.icon("search") }}
             </button>
 
             <search id="search">
-              <label class="visually-hidden" for="search-input">Search this site</label>
+              <label class="visually-hidden" for="search-input">{{ site.text.search.label }}</label>
               <input
                 id="search-input"
                 type="search"
-                placeholder="Search"
+                placeholder="{{ site.text.search.placeholder }}"
                 autocomplete="off"
                 spellcheck="false"
               />
             </search>
 
-            <button id="search-cancel" type="button">Cancel</button>
+            <button id="search-cancel" type="button">{{ site.text.search.cancel }}</button>
           </div>
         </header>
 
@@ -192,7 +195,7 @@
           #}
           {% if site.trending %}
             <div id="search-hints">
-              <p class="panel-heading">Trending tags</p>
+              <p class="panel-heading">{{ site.text.search.hints }}</p>
               {{ m.tag_list(site.trending) }}
             </div>
           {% endif %}
@@ -229,18 +232,38 @@
       <img alt="" />
     </dialog>
 
-    <button id="back-to-top" type="button" aria-label="Back to top">
+    <button id="back-to-top" type="button" aria-label="{{ site.text.nav.back_to_top }}">
       <span aria-hidden="true">↑</span>
     </button>
 
-    <script src="/assets/js/theme.js" defer></script>
+    <script
+      src="/assets/js/theme.js"
+      data-copied="{{ site.text.post.share_done }}"
+      data-copy-failed="{{ site.text.post.share_failed }}"
+      data-copy-code="{{ site.text.code.copy }}"
+      defer
+    ></script>
     {#
       Where the search index lives is the template's business, not the script's. Hardcoding the
       path meant a site serving from anywhere but the root got "search is unavailable" with no
       explanation; a site can now change it by overriding this file rather than editing the theme's
       JavaScript.
     #}
-    <script src="/assets/js/search.js" data-index="/search-index.json" defer></script>
+    {#
+      The strings the script puts on the page, handed to it as attributes. A `.js` file is copied
+      verbatim by the engine, so no amount of locale loading reaches a literal inside one — the
+      template is the only place that knows what language the site is in.
+    #}
+    <script
+      src="/assets/js/search.js"
+      data-index="/search-index.json"
+      data-searching="{{ site.text.search.searching }}"
+      data-unavailable="{{ site.text.search.unavailable }}"
+      data-no-results="{{ site.text.search.no_results }}"
+      data-match-one="{{ site.text.count.match_one }}"
+      data-match-many="{{ site.text.count.match_many }}"
+      defer
+    ></script>
     <script src="/assets/js/toc.js" defer></script>
 
     {% if site.pwa %}

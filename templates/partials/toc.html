@@ -19,7 +19,7 @@
   {# One heading is not a contents list, it is a heading. #}
   {% if entries | length > 1 %}
     <nav id="{{ id }}" class="toc" aria-labelledby="{{ id }}-heading">
-      <p class="panel-heading" id="{{ id }}-heading">On this page</p>
+      <p class="panel-heading" id="{{ id }}-heading">{{ site.text.panel.toc }}</p>
       <ul>
         {% for heading in entries %}
           <li class="toc-level-{{ heading.level }}">
@@ -47,14 +47,14 @@
 
   {% if entries | length > 1 %}
     <button id="toc-solo-trigger" class="toc-trigger" type="button" aria-haspopup="dialog">
-      <span>On this page</span>
+      <span>{{ site.text.panel.toc }}</span>
       <span class="chevron" aria-hidden="true">▾</span>
     </button>
 
     <div id="toc-bar" hidden>
       <button class="toc-trigger" type="button" aria-haspopup="dialog">
         {# The scroll spy writes the current section here; this is what shows before scrolling. #}
-        <span id="toc-bar-label">On this page</span>
+        <span id="toc-bar-label">{{ site.text.panel.toc }}</span>
         <span class="chevron" aria-hidden="true">▾</span>
       </button>
     </div>

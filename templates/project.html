@@ -13,7 +13,7 @@
 
       <div class="post-meta">
         {% if project.status %}
-          <span class="status status-{{ project.status | lower }}">{{ project.status }}</span>
+          <span class="status status-{{ project.status }}">{{ site.text.status[project.status] }}</span>
         {% endif %}
         {% if project.date %}
           <time datetime="{{ project.date.iso }}">{{ project.date.human }}</time>
@@ -29,7 +29,7 @@
       {% if project.links %}
         <div class="project-links">
           {% for link in project.links %}
-            <a href="{{ link.url | safe }}" rel="noopener">{{ link.kind }}</a>
+            <a href="{{ link.url | safe }}" rel="noopener">{{ site.text.link[link.kind] }}</a>
           {% endfor %}
         </div>
       {% endif %}

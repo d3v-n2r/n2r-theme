@@ -52,7 +52,7 @@
     `aria-current` marks where you are. The rule styling it has been in the stylesheet since the
     sidebar was written and could never match, because nothing emitted the attribute.
   #}
-  <nav class="sidebar-nav" aria-label="Sections">
+  <nav class="sidebar-nav" aria-label="{{ site.text.nav.sections }}">
     {% for item in site.nav %}
       {% if item.children %}
         <div class="nav-group">
