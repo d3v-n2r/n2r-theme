@@ -1,0 +1,127 @@
+{#
+  The résumé.
+
+  One source, two forms. The page and the PDF are the same `data/resume.yml`, so they cannot drift
+  the way a hand-maintained pair always does — and the PDF is this page printed, not a second
+  document to keep in step. `_print.scss` is what makes that presentable: it drops the sidebar, the
+  top bar and the footer, un-inverts dark mode, and prints link targets after the text that carried
+  them, since a link is worth nothing on paper.
+
+  Every section is optional. A résumé with no publications should not print a heading with nothing
+  under it, so each one asks first.
+#}
+{% extends "base.html" %}
+{% set cv = site.data.resume %}
+
+{% block title %}{{ cv.name or site.author }} · {{ site.title }}{% endblock %}
+{% block topbar_title %}{{ site.text.page.resume or "Résumé" }}{% endblock %}
+{% block breadcrumb %}<span>{{ site.text.page.resume or "Résumé" }}</span>{% endblock %}
+{% block description %}{{ cv.summary or site.description }}{% endblock %}
+
+{% block content %}
+  <article id="resume">
+    <header class="resume-head">
+      <h1>{{ cv.name or site.author }}</h1>
+      {% if cv.headline %}<p class="resume-headline">{{ cv.headline }}</p>{% endif %}
+
+      {% if cv.contact %}
+        <ul class="resume-contact">
+          {% for entry in cv.contact %}
+            <li>
+              {% if entry.url %}
+                <a href="{{ entry.url | safe }}" rel="noopener">{{ entry.value }}</a>
+              {% else %}
+                {{ entry.value }}
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      {#
+        Hidden when printing: on paper the page *is* the document, so an invitation to download it
+        is noise. The print stylesheet removes it.
+      #}
+      <p class="resume-actions no-print">
+        <button class="share" type="button" onclick="window.print()">Download as PDF</button>
+      </p>
+    </header>
+
+    {% if cv.summary %}
+      <section>
+        <h2>Summary</h2>
+        <p>{{ cv.summary }}</p>
+      </section>
+    {% endif %}
+
+    {% if cv.experience %}
+      <section>
+        <h2>Experience</h2>
+        {% for role in cv.experience %}
+          <div class="resume-entry">
+            <div class="resume-entry-head">
+              <h3>{{ role.title }}{% if role.company %} · {{ role.company }}{% endif %}</h3>
+              {% if role.dates %}<span class="resume-dates">{{ role.dates }}</span>{% endif %}
+            </div>
+            {% if role.summary %}<p>{{ role.summary }}</p>{% endif %}
+            {% if role.highlights %}
+              <ul>
+                {% for point in role.highlights %}<li>{{ point }}</li>{% endfor %}
+              </ul>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </section>
+    {% endif %}
+
+    {% if cv.projects %}
+      <section>
+        <h2>Projects</h2>
+        {% for item in cv.projects %}
+          <div class="resume-entry">
+            <div class="resume-entry-head">
+              <h3>
+                {% if item.url %}
+                  <a href="{{ item.url | safe }}" rel="noopener">{{ item.name }}</a>
+                {% else %}
+                  {{ item.name }}
+                {% endif %}
+              </h3>
+              {% if item.dates %}<span class="resume-dates">{{ item.dates }}</span>{% endif %}
+            </div>
+            {% if item.summary %}<p>{{ item.summary }}</p>{% endif %}
+          </div>
+        {% endfor %}
+      </section>
+    {% endif %}
+
+    {% if cv.skills %}
+      <section>
+        <h2>Skills</h2>
+        <dl class="resume-skills">
+          {% for group in cv.skills %}
+            <dt>{{ group.name }}</dt>
+            <dd>{{ group.items | join(", ") }}</dd>
+          {% endfor %}
+        </dl>
+      </section>
+    {% endif %}
+
+    {% if cv.education %}
+      <section>
+        <h2>Education</h2>
+        {% for item in cv.education %}
+          <div class="resume-entry">
+            <div class="resume-entry-head">
+              <h3>{{ item.qualification }}{% if item.institution %} · {{ item.institution }}{% endif %}</h3>
+              {% if item.dates %}<span class="resume-dates">{{ item.dates }}</span>{% endif %}
+            </div>
+            {% if item.summary %}<p>{{ item.summary }}</p>{% endif %}
+          </div>
+        {% endfor %}
+      </section>
+    {% endif %}
+  </article>
+{% endblock %}
+
+{% block panel %}{% include "partials/panel.html" %}{% endblock %}

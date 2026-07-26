@@ -1,0 +1,91 @@
+// Printing.
+//
+// The résumé's PDF is this stylesheet, not a second document. A single YAML file renders to a web
+// page; printing that page is what produces the PDF, so the two cannot drift the way a
+// hand-maintained pair always does — and adding a typesetting engine to the build to produce a
+// second copy of the same facts would be a large dependency for a worse guarantee.
+//
+// Everything here is about the fact that paper is not a screen: it has no links, no dark mode, no
+// scrolling, and no navigation.
+
+@media print {
+  // Dark mode on paper is a solid block of toner and a page nobody can read.
+  :root,
+  :root[data-mode='dark'] {
+    --bg: #fff;
+    --surface: #fff;
+    --text: #000;
+    --text-muted: #333;
+    --border: #bbb;
+    --link: #000;
+    --link-hover: #000;
+    --accent-wash: transparent;
+    --shadow: none;
+  }
+
+  // Navigation is what a reader uses to get somewhere else, and paper goes nowhere.
+  #sidebar,
+  #topbar,
+  #panel,
+  #mask,
+  #back-to-top,
+  #search-results,
+  #comments,
+  #related-posts,
+  .post-nav,
+  .pager,
+  .no-print,
+  .toc-trigger,
+  #toc-bar,
+  #toc-popup,
+  .code-copy {
+    display: none !important;
+  }
+
+  #main-wrapper {
+    padding-left: 0;
+  }
+
+  .container {
+    max-width: none;
+    padding: 0;
+  }
+
+  body {
+    font-size: 10.5pt;
+    line-height: 1.4;
+  }
+
+  // A link's target is invisible on paper, so it is printed after the text that carried it —
+  // except where the text is already the URL, or the link goes nowhere but this same page.
+  a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.85em;
+    color: #444;
+    word-break: break-all;
+  }
+
+  // A page break through the middle of a job is the one thing a résumé must not do.
+  .resume-entry,
+  #resume section {
+    break-inside: avoid;
+  }
+
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+
+  // Printers drop backgrounds by default, which would take a code block's frame with them.
+  pre,
+  .table-wrapper {
+    border: 1px solid #999;
+  }
+
+  // Images at full bleed waste a page; capped, they sit in the column like everything else.
+  img {
+    max-width: 100%;
+    max-height: 9cm;
+  }
+}
