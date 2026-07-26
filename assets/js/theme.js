@@ -384,6 +384,48 @@
     wrapper.appendChild(button);
   });
 
+  // ---------------------------------------------------------------- image popup
+
+  // The engine wraps each content image in an anchor to its full-size copy, so this degrades to an
+  // ordinary link when script is off — the image still opens, just in a new page rather than over
+  // this one. That is why the anchor is in the markup rather than being added here.
+  var imagePopup = document.getElementById('image-popup');
+
+  if (imagePopup && typeof imagePopup.showModal === 'function') {
+    var popupImage = imagePopup.querySelector('img');
+
+    document.querySelectorAll('a.img-popup').forEach(function (link) {
+      link.addEventListener('click', function (event) {
+        // Modified clicks are the reader asking for a new tab or a download, which is the link's
+        // ordinary behaviour and not ours to intercept.
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
+
+        event.preventDefault();
+        popupImage.src = link.getAttribute('href');
+        // The image inside the link already describes the picture; naming it twice would have a
+        // screen reader read the same sentence on open.
+        popupImage.alt = link.querySelector('img')
+          ? link.querySelector('img').getAttribute('alt') || ''
+          : '';
+        imagePopup.showModal();
+        root.dataset.popupOpen = '';
+      });
+    });
+
+    imagePopup.addEventListener('close', function () {
+      delete root.dataset.popupOpen;
+      // Dropped so a large image is not held in memory for the rest of the visit.
+      popupImage.removeAttribute('src');
+    });
+
+    // Anywhere outside the picture closes it, which is what a full-screen overlay implies. The
+    // image is the only child, so a click that lands on the dialog itself is a click on the ground
+    // around it.
+    imagePopup.addEventListener('click', function (event) {
+      if (event.target !== popupImage) imagePopup.close();
+    });
+  }
+
   // ---------------------------------------------------------------- back to top
 
   var backToTop = document.getElementById('back-to-top');

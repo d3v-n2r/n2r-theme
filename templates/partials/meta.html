@@ -21,8 +21,8 @@
   it is attacker-controlled as far as the theme is concerned. Escaping renders `/` as `&#x2f;`,
   which every HTML parser decodes back — the scrapers all use one.
 -#}
-{%- set cover = page.image.path if (page is defined and page and page.image) else none -%}
-{%- set share_image = cover or site.social_preview_image -%}
+{%- set cover = page.image if (page is defined and page and page.image) else none -%}
+{%- set share_image = cover.url if cover else site.social_preview_image -%}
 
 <link rel="canonical" href="{{ canonical | safe }}" />
 <meta property="og:url" content="{{ canonical | safe }}" />
@@ -52,7 +52,15 @@
 
 {% if share_image %}
   <meta property="og:image" content="{{ share_image | absolute(site.base_url) }}" />
-  <meta property="og:image:alt" content="{{ page.image.alt or meta_title if cover else site.title }}" />
+  <meta property="og:image:alt" content="{{ cover.alt or meta_title if cover else site.title }}" />
+  {#
+    Deliberately skipped until the cover went through the image pipeline: a scraper crops to these,
+    so a guess is worse than saying nothing.
+  #}
+  {% if cover and cover.width %}
+    <meta property="og:image:width" content="{{ cover.width }}" />
+    <meta property="og:image:height" content="{{ cover.height }}" />
+  {% endif %}
   {#
     The large card is only claimed when there is actually an image to fill it. Claiming it without
     one gets the whole card downgraded rather than falling back gracefully.

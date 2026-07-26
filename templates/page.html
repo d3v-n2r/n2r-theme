@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% import "partials/icons.html" as icons %}
 {% import "partials/toc.html" as contents %}
+{% import "partials/macros.html" as m %}
 
 {% block title %}{{ page.title }} · {{ site.title }}{% endblock %}
 {% block description %}{{ page.description or site.description }}{% endblock %}
@@ -54,12 +55,24 @@
         <span title="{{ page.words }} words">{{ page.read_time }} min read</span>
       </div>
 
+      {#
+        The cover is above the fold, so it loads eagerly and is given fetch priority — it is the
+        largest thing on the page and usually the one the reader is waiting for.
+
+        `no-bg` drops the frame for a cover that is not a photograph: a logo or a transparent PNG in
+        a bordered, shadowed box looks like a mistake rather than a decision.
+      #}
       {% if page.image %}
-        <figure class="cover">
+        <figure class="cover{% if page.image.no_bg %} no-bg{% endif %}">
           <img
-            src="{{ page.image.path | safe }}"
+            src="{{ page.image.url | safe }}"
+            {% set set = m.srcset(page.image) %}
+            {% if set %}srcset="{{ set }}" sizes="(max-width: 850px) 100vw, 48rem"{% endif %}
+            {% if page.image.width %}width="{{ page.image.width }}" height="{{ page.image.height }}"{% endif %}
+            {% if page.image.placeholder %}style="background-image: url('{{ page.image.placeholder | safe }}'); background-size: cover"{% endif %}
             alt="{{ page.image.alt or page.title }}"
             loading="eager"
+            fetchpriority="high"
           />
           {% if page.image.alt %}<figcaption>{{ page.image.alt }}</figcaption>{% endif %}
         </figure>

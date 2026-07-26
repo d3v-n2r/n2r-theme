@@ -554,7 +554,15 @@
 
   img {
     width: 100%;
+    height: auto;
     border-radius: var(--radius);
+  }
+
+  // A cover that is not a photograph — a logo, a transparent PNG — in a rounded, framed box looks
+  // like a mistake rather than a decision, so it gets neither.
+  &.no-bg img {
+    border-radius: 0;
+    background: none !important;
   }
 
   figcaption {
@@ -1454,4 +1462,45 @@ $spine-width: 2px;
   p {
     color: var(--text-muted);
   }
+}
+
+// ---------------------------------------------------------------- image popup
+
+// A content image opened over the page. The dialog fills the viewport and the picture sits in the
+// middle of it, so the ground around the image is the close target.
+#image-popup {
+  width: 100vw;
+  max-width: 100vw;
+  height: 100vh;
+  max-height: 100vh;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  // A dialog is `display: none` until opened; `flex` is what centres the image once it is.
+  &[open] {
+    display: flex;
+  }
+  align-items: center;
+  justify-content: center;
+
+  &::backdrop {
+    background: rgb(0 0 0 / 80%);
+  }
+
+  img {
+    // Contained rather than covering: the point is to see the whole picture, which is the one thing
+    // the column could not give it.
+    max-width: 94vw;
+    max-height: 94vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    cursor: zoom-out;
+  }
+}
+
+// The page behind an open overlay does not scroll. A modal dialog makes it inert but not still.
+:root[data-popup-open] {
+  overflow: hidden;
 }

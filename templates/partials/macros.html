@@ -8,6 +8,19 @@
 {% import "partials/icons.html" as icons %}
 
 {#
+  A processed image's `srcset`, or nothing when the engine could not measure the file — a cover
+  hosted elsewhere has no variants, and the browser is better off with a plain `src` than with a
+  `srcset` naming one copy.
+#}
+{% macro srcset(image) %}
+  {%- if image.variants | length > 1 -%}
+    {%- for variant in image.variants -%}
+      {{ variant.url | safe }} {{ variant.width }}w{% if not loop.last %}, {% endif %}
+    {%- endfor -%}
+  {%- endif -%}
+{% endmacro %}
+
+{#
   The post list.
 
   Each entry is an `<article>` with the link inside its heading rather than an `<a>` wrapped around
@@ -24,10 +37,23 @@
           {#
             Decorative here: the title beside it already says what the post is, so announcing the
             cover's description as well would just be the same page twice.
+
+            The placeholder sits behind the image as a background, so the card holds its colour from
+            first paint rather than flashing the surface colour and then the photograph.
           #}
-          <div class="preview-img">
-            <img src="{{ page.image.path | safe }}" alt="" loading="lazy" decoding="async" />
-          </div>
+          <div
+            class="preview-img"
+            {% if page.image.placeholder %}style="background-image: url('{{ page.image.placeholder | safe }}')"{% endif %}
+          >
+            <img
+              src="{{ page.image.url | safe }}"
+              {% set set = srcset(page.image) %}
+              {% if set %}srcset="{{ set }}" sizes="(min-width: 768px) 12rem, 100vw"{% endif %}
+              {% if page.image.width %}width="{{ page.image.width }}" height="{{ page.image.height }}"{% endif %}
+              alt=""
+              loading="lazy"
+              decoding="async"
+            /></div>
         {% endif %}
 
         <div class="card-body">

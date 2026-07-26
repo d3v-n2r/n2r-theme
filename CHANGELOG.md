@@ -8,6 +8,16 @@ All notable changes to this theme are documented here. The format follows
 
 ### Added
 
+- **M3** — covers and listing thumbnails carry `srcset`, intrinsic dimensions and the engine's inline
+  placeholder, so a card holds its colour from first paint and nothing moves when the picture
+  arrives. `og:image:width` and `og:image:height` are finally emitted too — they were deliberately
+  left out until the cover was measured, because a scraper crops to those and a guess is worse than
+  silence. A `.cover.no-bg` variant drops the frame for a logo or a transparent PNG.
+- **M3** — content images open full size over the page, in a native `<dialog>` reusing the pattern
+  from the contents popup. No lightbox library. The engine puts a real link in the markup, so with
+  script off the image still opens, just in its own page.
+- **M3** — captions: an image followed by emphasis on the next line, Chirpy's convention, which
+  needs no markup of its own and no engine involvement.
 - **M3** — **a table of contents below 1200px, where there was none at all.** The side panel only
   exists above `xl`, so every phone, every tablet and any laptop window that was not near-maximised
   had no contents list — and lost trending tags and recently-updated with it. There is now an inline

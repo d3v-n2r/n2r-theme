@@ -173,6 +173,28 @@ hr {
 
   img {
     border-radius: var(--radius);
+    // The engine stamps intrinsic dimensions, which is what reserves the space; this keeps the
+    // aspect ratio while the image scales down to the column.
+    max-width: 100%;
+    height: auto;
+  }
+
+  // Chirpy's caption convention: an image followed by emphasis on the next line of the same
+  // paragraph. It costs no markup and no engine involvement — the shape is already in the HTML.
+  img + em {
+    display: block;
+    margin-top: 0.4rem;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    font-style: normal;
+    text-align: center;
+  }
+
+  // An image the engine made openable. The cursor is the only affordance: a border or a hover wash
+  // on every figure would be noise on a page that is mostly prose.
+  a.img-popup {
+    display: block;
+    cursor: zoom-in;
   }
 
   figure {

@@ -207,6 +207,19 @@
 
     <div id="mask"></div>
 
+    {#
+      One dialog for every image on the page, filled in on open. A screenshot capped at a 48rem
+      monospace column is often unreadable, and with Mermaid deliberately not shipped, a static
+      diagram carries more of the load here than it does in Chirpy.
+
+      Native `<dialog>` again, for the same reasons as the contents popup: Escape, focus trapping
+      and inertness for the rest of the page come from the element rather than from script. No
+      lightbox library.
+    #}
+    <dialog id="image-popup" aria-label="Full size image">
+      <img alt="" />
+    </dialog>
+
     <button id="back-to-top" type="button" aria-label="Back to top">
       <span aria-hidden="true">↑</span>
     </button>

@@ -26,7 +26,7 @@
     "author": person,
     "publisher": person,
     "keywords": page.tags | map(attribute="name") | list,
-    "image": (page.image.path | absolute(site.base_url)) if page.image else none,
+    "image": (page.image.url | absolute(site.base_url)) if page.image else none,
   } -%}
 {%- elif url == "/" -%}
   {%- set doc = {
