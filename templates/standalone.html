@@ -3,23 +3,21 @@
   feed — just a title and a body, with a contents list when it is long enough to want one.
 #}
 {% extends "base.html" %}
+{% import "partials/toc.html" as contents %}
 
 {% block title %}{{ page.title }} · {{ site.title }}{% endblock %}
 {% block topbar_title %}{{ page.title }}{% endblock %}
 {% block description %}{{ page.description or site.description }}{% endblock %}
 
 {% block content %}
-  <article>
+  <article data-toc="{{ 'true' if page.toc and page.headings else 'false' }}">
     <h1>{{ page.title }}</h1>
+    {% if page.toc %}{{ contents.toc_mobile(page.headings) }}{% endif %}
     <div class="content">{{ page.content | safe }}</div>
   </article>
 {% endblock %}
 
 {% block panel %}
   {% include "partials/panel.html" %}
-  {% if page.toc %}
-    {% with headings = page.headings %}
-      {% include "partials/toc.html" %}
-    {% endwith %}
-  {% endif %}
+  {% if page.toc %}{{ contents.toc(page.headings, "toc") }}{% endif %}
 {% endblock %}

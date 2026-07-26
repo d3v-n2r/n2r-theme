@@ -197,6 +197,53 @@
     }
   });
 
+  // ---------------------------------------------------------------- search bar
+
+  // Which parts of the top bar are showing is top-bar state, so it lives here beside the sidebar
+  // toggle rather than in the script that does the ranking.
+
+  var searchTrigger = document.getElementById('search-trigger');
+  var searchCancel = document.getElementById('search-cancel');
+  var searchInput = document.getElementById('search-input');
+
+  function setSearch(open) {
+    if (open) {
+      root.dataset.search = 'open';
+    } else {
+      delete root.dataset.search;
+    }
+    if (searchTrigger) {
+      searchTrigger.setAttribute('aria-expanded', String(open));
+    }
+  }
+
+  if (searchTrigger && searchInput) {
+    searchTrigger.addEventListener('click', function () {
+      setSearch(true);
+      searchInput.focus();
+      // An empty query with the field expanded shows the starting points rather than a blank
+      // screen; search.js decides that, and an input event is how it hears about the change.
+      searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  }
+
+  if (searchCancel && searchInput) {
+    searchCancel.addEventListener('click', function () {
+      searchInput.value = '';
+      searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+      setSearch(false);
+      searchInput.blur();
+    });
+  }
+
+  if (searchInput) {
+    // Escape is the keyboard's cancel button. search.js clears the query on the same key; this only
+    // puts the top bar back, so neither script needs to know what the other does.
+    searchInput.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') setSearch(false);
+    });
+  }
+
   // ---------------------------------------------------------------- copy link
 
   /**

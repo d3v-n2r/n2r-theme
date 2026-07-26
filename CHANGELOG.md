@@ -8,6 +8,23 @@ All notable changes to this theme are documented here. The format follows
 
 ### Added
 
+- **M3** — **a table of contents below 1200px, where there was none at all.** The side panel only
+  exists above `xl`, so every phone, every tablet and any laptop window that was not near-maximised
+  had no contents list — and lost trending tags and recently-updated with it. There is now an inline
+  trigger with the article, a sticky bar that takes over once that scrolls away and names the
+  section being read, and a native `<dialog>` holding the list. The dialog is native because focus
+  trapping, Escape and making the rest of the page inert all come from the element rather than from
+  script. No library: the headings were already server-rendered.
+- **M3** — search fits a phone. The field is collapsed behind a magnifier below `lg` and expands
+  over the whole top bar, because a 7rem input open at all times left room for the input and nothing
+  else — no hamburger, no page title. Cancel is the way back; Escape only ever worked for readers
+  with a keyboard. Results now take over the page rather than being wedged between the top bar and
+  the article, which used to push the page down on every keystroke.
+- **M3** — trending tags reachable on a phone at all, as starting points inside the search results.
+  The panel that normally carries them is the thing being replaced there.
+- **M3** — search results show the date and tags the index has always carried and the results threw
+  away, and say "Searching…" while the index is being fetched — the lazy fetch is right, but it puts
+  the wait at the one moment a reader is watching for a response.
 - **M3** — the post footer finished: a linked byline where the post is the site author's own, an
   "edit this page" link, a glyph on the tags row pairing it with the categories row above, and
   placeholders at both ends of the previous/next control so it keeps its shape at the ends of the

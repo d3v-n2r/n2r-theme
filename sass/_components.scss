@@ -2,6 +2,7 @@
 // and the theme toggle.
 
 @use 'breakpoints' as bp;
+@use 'layout';
 @use 'motion';
 @use 'typography' as type;
 
@@ -354,7 +355,9 @@
 
 // ---------------------------------------------------------------- table of contents
 
-#toc {
+// Class rather than id: the list is rendered twice — once in the panel, once inside the popup that
+// stands in for the panel below `xl` — and both need these rules.
+.toc {
   ul {
     list-style: none;
     margin: 0.6rem 0 0;
@@ -397,6 +400,140 @@
   .toc-level-4 a {
     padding-left: 2.3rem;
   }
+}
+
+// ---------------------------------------------------------------- contents, below xl
+//
+// The side panel only exists above `xl`, so on every narrower viewport — most phones, every tablet,
+// any laptop window that is not near-maximised — there was no contents list at all. These three
+// pieces are that list, and none of them exists where the panel does.
+
+#toc-solo-trigger,
+#toc-bar,
+#toc-popup {
+  @include bp.from('xl') {
+    display: none !important;
+  }
+}
+
+.toc-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--link) 45%, var(--border));
+    color: var(--text);
+  }
+
+  .chevron {
+    flex: 0 0 auto;
+    font-size: 0.7rem;
+  }
+}
+
+// The inline one sits with the article, where a reader looking for the outline looks first.
+#toc-solo-trigger {
+  margin-bottom: 1.5rem;
+}
+
+// The sticky one takes over once that has scrolled away, so the outline stays a tap away without
+// permanently occupying a phone's viewport.
+#toc-bar {
+  position: sticky;
+  top: layout.$topbar-height;
+  z-index: 9;
+  padding: 0.4rem 0;
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(8px);
+
+  // The current section, written in by the scroll spy, so the bar answers "where am I" rather than
+  // repeating what the button below it already said.
+  #toc-bar-label {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}
+
+#toc-popup {
+  width: min(26rem, 100vw - 2rem);
+  max-height: 70vh;
+  margin: auto auto 0;
+  padding: 1rem 1.25rem 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: var(--surface);
+  color: var(--text);
+  overflow-y: auto;
+
+  &::backdrop {
+    background: rgb(0 0 0 / 45%);
+  }
+
+  .toc-popup-head {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .toc-close {
+    padding: 0.2rem 0.4rem;
+    color: var(--text-muted);
+    font-size: 1rem;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--text);
+    }
+  }
+
+  // Roomier than the panel's copy: this is a touch target, not a dense sidebar.
+  .toc a {
+    padding-block: 0.45rem;
+    font-size: 0.92rem;
+  }
+}
+
+// Rising from the bottom edge, which is where a sheet anchored to the bottom of the screen comes
+// from and where a thumb is.
+@media (prefers-reduced-motion: no-preference) {
+  #toc-popup[open] {
+    animation: toc-in 0.2s ease-out;
+  }
+
+  #toc-popup[data-closing] {
+    animation: toc-out 0.18s ease-in forwards;
+  }
+
+  @keyframes toc-in {
+    from {
+      transform: translateY(1.5rem);
+      opacity: 0;
+    }
+  }
+
+  @keyframes toc-out {
+    to {
+      transform: translateY(1.5rem);
+      opacity: 0;
+    }
+  }
+}
+
+// A modal dialog makes the rest of the page inert but does not stop it scrolling underneath, which
+// on a phone means the article slides around behind the sheet as a thumb drags over it.
+:root[data-toc-open] {
+  overflow: hidden;
 }
 
 // ---------------------------------------------------------------- post header and tail
@@ -624,6 +761,82 @@
   align-items: center;
 }
 
+#search-trigger {
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius);
+  color: var(--text-muted);
+
+  svg {
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+
+  &:hover {
+    background: var(--accent-wash);
+    color: var(--text);
+  }
+}
+
+#search-cancel {
+  padding: 0.25rem 0.2rem;
+  color: var(--link);
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+// The magnifier and the cancel button exist only where the field is closed by default. Above `lg`
+// there is room for the input itself and neither is needed.
+//
+// This has to come *after* the rules above: a media query adds no specificity, so an earlier
+// `display: none` would simply lose to the later `display: inline-grid`.
+@include bp.from('lg') {
+  #search-trigger,
+  #search-cancel {
+    display: none;
+  }
+}
+
+// Below `lg` the field is closed. A 7rem input open at all times leaves a phone's top bar with room
+// for the input and nothing else — no hamburger, no page title — so opening it takes the bar over
+// instead, and everything it displaced comes back on cancel.
+@include bp.below('lg') {
+  // Collapsed only where script can expand it again.
+  :root[data-js] #search,
+  #search-cancel {
+    display: none;
+  }
+
+  :root[data-search='open'] {
+    #sidebar-trigger,
+    #topbar-title,
+    #mode-toggle,
+    #search-trigger {
+      display: none;
+    }
+
+    #topbar-tools {
+      flex: 1;
+      margin-left: 0;
+    }
+
+    #search {
+      display: flex;
+      flex: 1;
+    }
+
+    #search-cancel {
+      display: block;
+    }
+
+    #search-input {
+      width: 100%;
+    }
+  }
+}
+
 #search-input {
   // Fixed rather than flexible: the topbar title now shrinks instead, so the search box keeps a
   // usable width at every viewport.
@@ -668,6 +881,41 @@
   .card-title {
     font-size: 0.95rem;
     font-weight: 620;
+  }
+
+  // A grid of cards reads as rows only while the rows are level, and an excerpt runs to whatever
+  // length the page happened to open with.
+  .card-summary {
+    @include clamp-lines(3);
+  }
+
+  .term::before {
+    content: '·';
+    margin-right: 0.4rem;
+    color: var(--border);
+  }
+}
+
+// Somewhere to start before there is a query, and an alternative when a query found nothing. Shown
+// only while there are no hits to show instead.
+#search-hints {
+  display: none;
+}
+
+#search-results:has(#search-hits:empty) #search-hints {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+// Controls that do nothing without script are hidden when there is none. Written as the negative
+// case on purpose: the positive form, `:root[data-js] #search-trigger`, carries an id *and* an
+// attribute, which outranks the plain `#search-trigger` inside the media query that hides it above
+// `lg` — so the magnifier would have come back on desktop, beside the field it stands in for.
+:root:not([data-js]) {
+  .toc-trigger,
+  #search-trigger {
+    display: none;
   }
 }
 

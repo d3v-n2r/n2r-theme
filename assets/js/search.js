@@ -31,6 +31,11 @@
   var index = null;
   var loading = null;
 
+  /** Whether the index is already in hand, so a query can be answered without waiting. */
+  function ready() {
+    return index !== null;
+  }
+
   function load() {
     if (index) return Promise.resolve(index);
     if (loading) return loading;
@@ -137,22 +142,72 @@
       body.textContent = document_.excerpt;
 
       link.append(title, body);
+
+      // The index has carried the date and the terms all along and the results threw both away —
+      // which are exactly what tells two similarly-titled posts apart.
+      if (document_.date || (document_.terms && document_.terms.length)) {
+        var meta = document.createElement('span');
+        meta.className = 'post-meta';
+
+        if (document_.date) {
+          var time = document.createElement('time');
+          time.dateTime = document_.date;
+          time.textContent = document_.date;
+          meta.append(time);
+        }
+
+        (document_.terms || []).slice(0, 3).forEach(function (term) {
+          var chip = document.createElement('span');
+          chip.className = 'term';
+          chip.textContent = term;
+          meta.append(chip);
+        });
+
+        link.append(meta);
+      }
+
       hits.append(link);
     });
   }
 
+  /** Shows or hides the results region, and tells the page to step aside while it is up. */
+  function showResults(visible) {
+    results.hidden = !visible;
+    // Without this the results are wedged between the top bar and the article, which then jumps on
+    // every debounced keystroke. The page is not what the reader is looking at right now.
+    if (visible) {
+      document.documentElement.dataset.searching = '';
+    } else {
+      delete document.documentElement.dataset.searching;
+    }
+  }
+
   function search(query) {
     if (query.length === 0) {
-      results.hidden = true;
+      // With the field expanded over the whole top bar there is nothing else on screen, so an empty
+      // query offers somewhere to start rather than a blank page. Read, never written: whether the
+      // bar is expanded belongs to theme.js.
+      var expanded = document.documentElement.dataset.search === 'open';
+      showResults(expanded);
       hits.replaceChildren();
+      summary.textContent = '';
       return;
+    }
+
+    // The lazy fetch is the right call — most visits never search — but it moves the wait to the
+    // one moment the reader is watching for a response. `role="status"` is already on the summary,
+    // so saying so here also announces it.
+    if (!ready()) {
+      showResults(true);
+      summary.textContent = 'Searching…';
+      hits.replaceChildren();
     }
 
     load()
       .then(function () {
         var found = rank(query);
 
-        results.hidden = false;
+        showResults(true);
         summary.textContent =
           found.length === 0
             ? 'No matches for “' + query + '”'
@@ -161,7 +216,7 @@
         render(found);
       })
       .catch(function () {
-        results.hidden = false;
+        showResults(true);
         summary.textContent = 'Search is unavailable right now.';
         hits.replaceChildren();
       });

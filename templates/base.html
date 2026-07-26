@@ -6,6 +6,8 @@
   inheritance. Jinja2 does, so those become real blocks: a child template overrides `panel` or
   `tail` directly instead of naming partials in YAML.
 #}
+{% import "partials/icons.html" as icons %}
+{% import "partials/macros.html" as m %}
 <!doctype html>
 {# The language is the site's to declare: it drives screen-reader pronunciation, `og:locale`, and
    the interface language the comment embed loads. #}
@@ -94,6 +96,10 @@
         if (mode === 'dark' || mode === 'light') {
           document.documentElement.dataset.mode = mode;
         }
+        // Marks that script is running at all, so controls that only work through script — the
+        // contents popup, the collapsed search field — can be hidden rather than offered as
+        // buttons that do nothing.
+        document.documentElement.dataset.js = '';
       })();
     </script>
 
@@ -142,7 +148,16 @@
             {#
               Search filters a static index the engine writes, so it works on any host with no
               server behind it. The index is only fetched once the reader actually types.
+
+              Below `lg` the field is closed and the magnifier stands in for it. A permanently open
+              7rem input leaves a phone's top bar with room for the input and nothing else — no
+              hamburger, no page title. Opening it takes over the bar instead, and the cancel button
+              is the way back: Escape closes it on a keyboard, and a touch device has no Escape.
             #}
+            <button id="search-trigger" type="button" aria-label="Search" aria-expanded="false">
+              {{ icons.icon("search") }}
+            </button>
+
             <search id="search">
               <label class="visually-hidden" for="search-input">Search this site</label>
               <input
@@ -153,11 +168,26 @@
                 spellcheck="false"
               />
             </search>
+
+            <button id="search-cancel" type="button">Cancel</button>
           </div>
         </header>
 
         <div id="search-results" hidden>
           <p class="panel-heading" id="search-summary" role="status"></p>
+
+          {#
+            Somewhere to start before a query exists. These only appear where the panel does not,
+            which is every viewport under 1200px — otherwise trending tags never reach a phone at
+            all, since the panel that normally carries them is the thing being replaced here.
+          #}
+          {% if site.trending %}
+            <div id="search-hints">
+              <p class="panel-heading">Trending tags</p>
+              {{ m.tag_list(site.trending) }}
+            </div>
+          {% endif %}
+
           <div id="search-hits"></div>
         </div>
 

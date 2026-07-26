@@ -312,6 +312,12 @@ article {
   }
 }
 
+// While a search is showing, the page steps aside. Otherwise up to twelve result cards are wedged
+// between the top bar and the article, and the article jumps down the screen on every keystroke.
+:root[data-searching] .columns {
+  display: none;
+}
+
 #panel {
   display: none;
   flex-direction: column;

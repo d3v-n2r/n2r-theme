@@ -5,20 +5,66 @@
   the list in the browser. The engine already knows every heading, so the list is rendered at build
   time and the only script needed is the scroll spy that marks which entry is current.
 
+  Macros rather than an include, because the list is rendered twice: once in the side panel, which
+  exists only above `xl`, and once inside the dialog that stands in for it everywhere else. Same
+  markup, different ids.
+
   `h1` is skipped — the page title is already an `h1`, so including it would put a duplicate at the
   top of every contents list.
 #}
-{% set entries = headings | selectattr("level", "ge", 2) | selectattr("level", "le", 4) | list %}
 
-{% if entries | length > 1 %}
-  <nav id="toc" aria-labelledby="toc-heading">
-    <p class="panel-heading" id="toc-heading">On this page</p>
-    <ul>
-      {% for heading in entries %}
-        <li class="toc-level-{{ heading.level }}">
-          <a href="#{{ heading.id | safe }}">{{ heading.text }}</a>
-        </li>
-      {% endfor %}
-    </ul>
-  </nav>
-{% endif %}
+{% macro toc(headings, id) %}
+  {% set entries = headings | selectattr("level", "ge", 2) | selectattr("level", "le", 4) | list %}
+
+  {# One heading is not a contents list, it is a heading. #}
+  {% if entries | length > 1 %}
+    <nav id="{{ id }}" class="toc" aria-labelledby="{{ id }}-heading">
+      <p class="panel-heading" id="{{ id }}-heading">On this page</p>
+      <ul>
+        {% for heading in entries %}
+          <li class="toc-level-{{ heading.level }}">
+            <a href="#{{ heading.id | safe }}">{{ heading.text }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </nav>
+  {% endif %}
+{% endmacro %}
+
+{#
+  The contents list everywhere the side panel does not exist — which is every viewport under 1200px,
+  so most phones, every tablet, and any laptop window that is not near-maximised. Those readers had
+  no contents list at all.
+
+  Three parts. An inline trigger sits with the article, where someone looking for the outline looks
+  first. A sticky bar takes over once that has scrolled away, naming the section being read, so the
+  outline stays one tap away without permanently occupying a phone's viewport. Both open the same
+  `<dialog>`, which is native: focus trapping, Escape, and making the rest of the page inert all
+  come from the element rather than from script.
+#}
+{% macro toc_mobile(headings) %}
+  {% set entries = headings | selectattr("level", "ge", 2) | selectattr("level", "le", 4) | list %}
+
+  {% if entries | length > 1 %}
+    <button id="toc-solo-trigger" class="toc-trigger" type="button" aria-haspopup="dialog">
+      <span>On this page</span>
+      <span class="chevron" aria-hidden="true">▾</span>
+    </button>
+
+    <div id="toc-bar" hidden>
+      <button class="toc-trigger" type="button" aria-haspopup="dialog">
+        {# The scroll spy writes the current section here; this is what shows before scrolling. #}
+        <span id="toc-bar-label">On this page</span>
+        <span class="chevron" aria-hidden="true">▾</span>
+      </button>
+    </div>
+
+    <dialog id="toc-popup" aria-labelledby="toc-popup-list-heading">
+      {# A dialog form with `method="dialog"` closes it on submit with no script at all. #}
+      <form method="dialog" class="toc-popup-head">
+        <button class="toc-close" type="submit" aria-label="Close contents">✕</button>
+      </form>
+      {{ toc(headings, "toc-popup-list") }}
+    </dialog>
+  {% endif %}
+{% endmacro %}

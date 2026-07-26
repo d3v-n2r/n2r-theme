@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% import "partials/icons.html" as icons %}
+{% import "partials/toc.html" as contents %}
 
 {% block title %}{{ page.title }} · {{ site.title }}{% endblock %}
 {% block description %}{{ page.description or site.description }}{% endblock %}
@@ -64,6 +65,8 @@
         </figure>
       {% endif %}
     </header>
+
+    {% if page.toc %}{{ contents.toc_mobile(page.headings) }}{% endif %}
 
     {% if page.series %}
       <p class="series-banner">
@@ -154,11 +157,7 @@
 {% endblock %}
 
 {% block panel %}
-  {% if page.toc %}
-    {% with headings = page.headings %}
-      {% include "partials/toc.html" %}
-    {% endwith %}
-  {% endif %}
+  {% if page.toc %}{{ contents.toc(page.headings, "toc") }}{% endif %}
   {% include "partials/panel.html" %}
 {% endblock %}
 
