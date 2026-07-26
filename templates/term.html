@@ -12,6 +12,7 @@
 
 {% block title %}{{ term.name }}{% if pagination.number > 1 %} · page {{ pagination.number }}{% endif %} · {{ site.title }}{% endblock %}
 {% block topbar_title %}{{ term.name }}{% endblock %}
+{% block breadcrumb %}<a href="/{{ kind }}/">{{ kind | capitalize }}</a><span>{{ term.name }}</span>{% endblock %}
 {% block description %}{{ term.count }} post{% if term.count != 1 %}s{% endif %} filed under the {{ label }} “{{ term.name }}”{% if pagination.number > 1 %} — page {{ pagination.number }} of {{ pagination.total }}{% endif %}.{% endblock %}
 
 {% block head_links %}

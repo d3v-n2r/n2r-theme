@@ -7,6 +7,7 @@
 
 {% block title %}{{ kind | capitalize }} · {{ site.title }}{% endblock %}
 {% block topbar_title %}{{ kind | capitalize }}{% endblock %}
+{% block breadcrumb %}<span>{{ kind | capitalize }}</span>{% endblock %}
 {% block description %}Every {{ "category" if kind == "categories" else "tag" }} used on {{ site.title }}, {{ terms | length }} in all.{% endblock %}
 
 {% block content %}

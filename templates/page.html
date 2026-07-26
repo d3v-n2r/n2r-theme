@@ -6,6 +6,7 @@
 {% block title %}{{ page.title }} · {{ site.title }}{% endblock %}
 {% block description %}{{ page.description or site.description }}{% endblock %}
 {% block topbar_title %}{{ page.title }}{% endblock %}
+{% block breadcrumb %}<a href="{{ site.blog_url | safe }}">Blog</a><span>{{ page.title }}</span>{% endblock %}
 
 {% block content %}
   {#

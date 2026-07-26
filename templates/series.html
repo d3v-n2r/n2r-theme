@@ -2,6 +2,7 @@
 
 {% block title %}{{ series.name }} · {{ site.title }}{% endblock %}
 {% block topbar_title %}{{ series.name }}{% endblock %}
+{% block breadcrumb %}<a href="{{ site.blog_url | safe }}">Blog</a><span>{{ series.name }}</span>{% endblock %}
 {% block description %}“{{ series.name }}”, a series in {{ series.count }} part{% if series.count != 1 %}s{% endif %}, in reading order.{% endblock %}
 
 {% block content %}

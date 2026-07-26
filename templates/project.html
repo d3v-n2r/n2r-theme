@@ -2,6 +2,7 @@
 
 {% block title %}{{ project.title }} · {{ site.title }}{% endblock %}
 {% block topbar_title %}{{ project.title }}{% endblock %}
+{% block breadcrumb %}<a href="/projects/">Projects</a><span>{{ project.title }}</span>{% endblock %}
 {% block description %}{{ project.summary or site.description }}{% endblock %}
 
 {% block content %}

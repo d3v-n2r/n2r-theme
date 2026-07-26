@@ -126,7 +126,16 @@
             <span aria-hidden="true">☰</span>
           </button>
 
-          {# The topbar names the page; the sidebar carries the site's name. #}
+          {#
+            Two ways of saying where you are, and exactly one of them shows at a time. The trail is
+            for a screen with room for it; the short label is for one without. On a term page the
+            trail is the only route up to `/categories/` that is not the sidebar.
+          #}
+          <nav id="breadcrumb" aria-label="Breadcrumb">
+            <a href="/">Home</a>
+            {% block breadcrumb %}{% endblock %}
+          </nav>
+
           <span id="topbar-title">{% block topbar_title %}{{ site.title }}{% endblock %}</span>
 
           <div id="topbar-tools">

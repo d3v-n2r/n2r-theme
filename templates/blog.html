@@ -3,6 +3,7 @@
 
 {% block title %}Blog{% if pagination.number > 1 %} · page {{ pagination.number }}{% endif %} · {{ site.title }}{% endblock %}
 {% block topbar_title %}Blog{% endblock %}
+{% block breadcrumb %}<span>Blog</span>{% endblock %}
 
 {#
   The page number is part of the description as well as the title. Without it every numbered page
