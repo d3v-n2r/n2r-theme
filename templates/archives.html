@@ -16,8 +16,16 @@
   <p class="post-meta">{{ total }} post{% if total != 1 %}s{% endif %}</p>
 
   <div id="archives">
+    {% if not years %}
+      <p class="post-meta">Nothing published yet.</p>
+    {% endif %}
     {% for year in years %}
-      <time class="year" datetime="{{ year.year }}">{{ year.year }}</time>
+      {# The final group carries no year: those are pages published without a date. #}
+      {% if year.year %}
+        <time class="year" datetime="{{ year.year }}">{{ year.year }}</time>
+      {% else %}
+        <span class="year">Undated</span>
+      {% endif %}
       <ul>
         {% for page in year.pages %}
           <li>

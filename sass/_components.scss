@@ -1,6 +1,7 @@
 // Reusable pieces: post cards, metadata, tags, pagination, the series banner, the gallery grid,
 // and the theme toggle.
 
+@use 'breakpoints' as bp;
 @use 'motion';
 @use 'typography' as type;
 
@@ -419,6 +420,9 @@
 }
 
 #search-input {
+  // Fixed rather than flexible: the topbar title now shrinks instead, so the search box keeps a
+  // usable width at every viewport.
+  flex: 0 0 auto;
   width: clamp(7rem, 22vw, 13rem);
   padding: 0.3rem 0.7rem;
   background: var(--bg);
@@ -671,6 +675,11 @@
   margin-top: 1.5rem;
   line-height: 3rem;
 
+  // A ragged left edge reads badly when the cloud is the whole page.
+  @include bp.below('lg') {
+    justify-content: center;
+  }
+
   .tag {
     margin-right: 0.8rem;
     padding: 6px 8px 7px;
@@ -707,15 +716,33 @@
     line-height: 1.5rem;
   }
 
+  // Chirpy marks each entry with a small dot, which is what stops the dotted leaders reading as a
+  // single ruled table.
+  li::before {
+    content: '';
+    flex: 0 0 auto;
+    width: 5px;
+    height: 5px;
+    margin-right: 0.5rem;
+    border-radius: 50%;
+    background: var(--text-muted);
+  }
+
   a {
+    font-size: 1.05rem;
     text-decoration: none;
     color: var(--text);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 
     &:hover {
       color: var(--link);
+    }
+
+    // Truncation is only right where there is genuinely no room; on a wide screen a long title
+    // should wrap rather than lose its ending.
+    @include bp.below('sm') {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 

@@ -10,7 +10,9 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {# `viewport-fit=cover` lets the background reach a notched screen's edges. Chirpy also sets
+       `user-scalable=no`; that one is an accessibility regression and is deliberately not copied. #}
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
     <title>{% block title %}{{ site.title }}{% endblock %}</title>
     <meta name="description" content="{% block description %}{{ site.description }}{% endblock %}" />

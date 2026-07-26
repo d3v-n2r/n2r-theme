@@ -57,4 +57,27 @@ pre {
   .storage.type.function {
     color: var(--syn-keyword);
   }
+
+  // A ```diff block emitted no colour at all: these scopes were simply unstyled, so added and
+  // removed lines looked identical.
+  .markup.inserted {
+    color: var(--good);
+  }
+
+  .markup.deleted {
+    color: var(--bad);
+  }
+
+  .meta.diff.header {
+    color: var(--syn-function);
+  }
+
+  .variable {
+    color: var(--syn-punctuation);
+  }
+
+  // Whatever the grammar could not parse, so it should look wrong rather than ordinary.
+  .invalid {
+    color: var(--bad);
+  }
 }

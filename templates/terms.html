@@ -10,9 +10,12 @@
 
 {% block content %}
   <h1>{{ kind | capitalize }}</h1>
-  <p class="post-meta">
-    {{ terms | length }} {{ kind }}
-  </p>
+  {% if terms %}
+    <p class="post-meta">{{ terms | length }} {{ kind }}</p>
+  {% else %}
+    {# A site with no posts otherwise ships a heading above an empty box. #}
+    <p class="post-meta">Nothing tagged yet.</p>
+  {% endif %}
 
   {% if kind == "categories" %}
     <div class="category-cards">

@@ -53,6 +53,12 @@ h3 {
 h4 {
   font-size: 1.05rem;
 }
+// Without these the browser's defaults (0.83em / 0.67em) render a heading *smaller* than the prose
+// it introduces.
+h5,
+h6 {
+  font-size: 1rem;
+}
 
 p,
 ul,
@@ -80,6 +86,11 @@ blockquote {
   padding-left: 1rem;
   border-left: 0.125rem solid var(--border);
   color: var(--text-muted);
+
+  // The same guard the callouts already had: without it the quote's rule runs a line past its text.
+  > :last-child {
+    margin-bottom: 0;
+  }
 }
 
 hr {
@@ -106,7 +117,9 @@ hr {
   }
 
   h3,
-  h4 {
+  h4,
+  h5,
+  h6 {
     margin: 2rem 0 1rem;
   }
 
@@ -115,8 +128,24 @@ hr {
   figure,
   pre,
   blockquote,
-  .markdown-alert {
+  .markdown-alert,
+  // Both of these reset their margin globally above, so without naming them here a table butts
+  // against the next paragraph and a rule reads as underlining the one before it. Chirpy got these
+  // from Bootstrap Reboot, which this theme does not load.
+  .table-wrapper {
     margin: 0 0 1rem;
+  }
+
+  hr {
+    margin: 2rem 0;
+  }
+
+  // Monospace is full-width per character in a 40rem column, so an unbroken URL or hash pushes the
+  // grid sideways rather than merely looking untidy.
+  overflow-wrap: break-word;
+
+  ::marker {
+    color: var(--text-muted);
   }
 
   // Chirpy: `padding-inline-start: 1.75rem`, items `margin: 0.25rem 0; padding-left: 0.25rem`.
@@ -166,7 +195,9 @@ hr {
 
   table {
     border-collapse: collapse;
-    width: 100%;
+    // `min-width`, not `width`: a table pinned to 100% can never be wider than the box meant to
+    // scroll it, so `.table-wrapper { overflow-x: auto }` never had anything to do.
+    min-width: 100%;
     font-size: 0.94rem;
 
     th,
@@ -174,6 +205,17 @@ hr {
       padding: 0.45rem 0.7rem;
       border-bottom: 1px solid var(--border);
       text-align: left;
+      white-space: nowrap;
+    }
+
+    thead {
+      border-bottom: 2px solid var(--border);
+    }
+
+    // Striping matters more here than in Chirpy: the column is narrower in characters, so rows are
+    // taller and the eye loses its place more easily.
+    tbody tr:nth-child(even) {
+      background: var(--surface);
     }
 
     th {
@@ -189,14 +231,17 @@ hr {
 
 code {
   font-family: $font-mono;
-  font-size: 0.88em;
 }
 
-// Inline code only — fenced blocks are styled in `_syntax.scss`.
+// Inline code only. The size lives here rather than on `code`, because an unscoped `0.88em` also
+// matched `pre > code` and multiplied with the block's own `0.85rem` — fenced code was rendering
+// around twelve pixels.
 :not(pre) > code {
   padding: 0.1em 0.35em;
   background: var(--code-inline-bg);
   border-radius: 0.25rem;
+  font-size: 0.88em;
+  overflow-wrap: break-word;
 }
 
 time {
@@ -257,4 +302,93 @@ p:has(> math[display='block']) {
   to {
     background-color: transparent;
   }
+}
+
+// ---------------------------------------------------------------- heading anchors
+//
+// comrak already appends `<a class="anchor">` to every heading, but with no content — so section
+// permalinks existed in the markup and were invisible and unclickable. Revealed on hover, and on
+// keyboard focus so they are reachable without a pointer.
+.content {
+  :is(h2, h3, h4, h5, h6) {
+    position: relative;
+
+    .anchor {
+      position: absolute;
+      right: 100%;
+      padding-right: 0.35rem;
+      text-decoration: none;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+
+      &::after {
+        content: '#';
+        color: var(--text-muted);
+      }
+
+      &:focus-visible {
+        opacity: 1;
+      }
+    }
+
+    @media (hover: hover) {
+      &:hover .anchor {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+// ---------------------------------------------------------------- footnotes
+//
+// kramdown emits a rule before the footnote section, which is where Chirpy's separation comes from;
+// comrak does not, so without this the notes read as a final paragraph of the article.
+.footnotes {
+  margin-top: 3rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+
+  // Each note is a list item wrapping a paragraph; the content rule would otherwise space them a
+  // full line apart.
+  li > p {
+    margin: 0;
+  }
+}
+
+.footnote-backref {
+  font-size: 0.8em;
+  text-decoration: none;
+}
+
+// ---------------------------------------------------------------- description lists
+//
+// The engine enables comrak's description lists, so the theme needs an opinion — otherwise `dd`
+// keeps the browser's 40px indent, which lands nowhere near the prose column's own indents.
+.content {
+  dt {
+    font-weight: 620;
+  }
+
+  dd {
+    margin: 0.25rem 0 0.75rem 1.25rem;
+    color: var(--text-muted);
+  }
+}
+
+// ---------------------------------------------------------------- keycaps
+
+kbd {
+  display: inline-block;
+  min-width: 1.6rem;
+  padding: 0.1rem 0.4rem;
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  border-radius: 0.25rem;
+  background: var(--surface);
+  font-family: $font-mono;
+  font-size: 0.8em;
+  line-height: 1.4;
+  text-align: center;
 }

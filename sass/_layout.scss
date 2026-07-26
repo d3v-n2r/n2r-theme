@@ -12,6 +12,12 @@ $sidebar-width: 16.25rem; // 260px, Chirpy's $sidebar-width
 $topbar-height: 3rem;
 $content-max: 48rem;
 
+// Anything jumped to — a heading, a footnote, a back-reference — otherwise lands *under* the sticky
+// topbar. One rule covers all of them; Chirpy's per-heading `scroll-margin-top` misses footnotes.
+html {
+  scroll-padding-top: calc(#{$topbar-height} + 1rem);
+}
+
 // ---------------------------------------------------------------- sidebar
 
 #sidebar {
@@ -26,6 +32,17 @@ $content-max: 48rem;
   background: var(--surface);
   border-right: 1px solid var(--border);
   overflow-y: auto;
+
+  // A scrollbar here would run down the middle of the page rather than at its edge, where a reader
+  // expects one. `overscroll-behavior` stops the page behind the mask scrolling once the open
+  // mobile sidebar reaches its end.
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   // Off-canvas on narrow screens; the topbar's button slides it in.
   @include bp.below('lg') {
@@ -231,12 +248,20 @@ $content-max: 48rem;
 #topbar-title {
   font-weight: 600;
   font-size: 0.95rem;
+
+  // A flex item defaults to `min-width: auto`, so a long title refused to shrink and the search
+  // input — the only other flexible sibling — collapsed to nothing instead.
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 // ---------------------------------------------------------------- main
 
 #main-wrapper {
   padding-left: 0;
+  padding-right: env(safe-area-inset-right);
 
   @include bp.from('lg') {
     padding-left: $sidebar-width;
@@ -301,6 +326,16 @@ article {
     align-self: start;
     border-left: 1px solid var(--border);
     padding-left: 1.25rem;
+
+    // Sticky with no height limit meant a long contents list simply ran off the bottom, taking
+    // "recently updated" and "trending tags" with it — unreachable at any scroll position.
+    max-height: calc(100vh - #{$topbar-height} - 3rem);
+    overflow-y: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 }
 
