@@ -1,0 +1,34 @@
+{#
+  The page a host serves for an unknown path.
+
+  Every asset the base template links is referenced from the site root, which matters more here than
+  anywhere else: a host serves this same file for `/a/`, `/a/b/` and `/a/b/c/`, so any relative path
+  would resolve against a different directory each time and the page would arrive unstyled.
+#}
+{% extends "base.html" %}
+
+{% block title %}Not found · {{ site.title }}{% endblock %}
+{% block topbar_title %}Not found{% endblock %}
+{% block description %}This page does not exist.{% endblock %}
+
+{% block head %}
+  {# It is reachable at a real URL, and nothing good comes of that URL being indexed. #}
+  <meta name="robots" content="noindex" />
+{% endblock %}
+
+{% block content %}
+  <article class="not-found">
+    <p class="code" aria-hidden="true">404</p>
+    <h1>No such file or directory</h1>
+    <p>
+      The page you asked for is not here. It may have been renamed, or it may never have
+      existed — from out here the two look identical.
+    </p>
+    <p>
+      Search is in the top bar, and everything ever published is on the
+      <a href="/archives/">archive</a>. Otherwise, start from
+      <a href="/">the beginning</a> or go straight to the
+      <a href="{{ site.blog_url | safe }}">posts</a>.
+    </p>
+  </article>
+{% endblock %}

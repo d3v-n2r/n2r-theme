@@ -1,0 +1,65 @@
+{#
+  Everything about this page that is read by a machine rather than a person: the canonical URL, the
+  Open Graph properties a chat client unfurls with, and the Twitter card.
+
+  This is a partial fed by `{% with %}` rather than a set of blocks each template overrides, because
+  the two facts it needs — the title and the description — are already declared once as blocks. Every
+  template would otherwise repeat its own title four times, and the copies would drift.
+
+  `url` is in every rendering context, so the canonical link is correct on numbered listing pages
+  too. Those are the textbook duplicate-content case: `/blog/page/2/` shares its title, description
+  and most of its markup with `/blog/`, and a canonical pointing at either one alone is wrong.
+#}
+{%- set canonical = site.base_url ~ url -%}
+
+{#
+  A cover image if the page has one, the site-wide fallback otherwise. Absolutised because a scraper
+  fetched this markup out of band — there is no document base for it to resolve a path against, and
+  most of them drop a relative `og:image` without reporting it.
+
+  Not marked safe: unlike the URLs the engine builds, this one came out of a page's front matter, so
+  it is attacker-controlled as far as the theme is concerned. Escaping renders `/` as `&#x2f;`,
+  which every HTML parser decodes back — the scrapers all use one.
+-#}
+{%- set cover = page.image.path if (page is defined and page and page.image) else none -%}
+{%- set share_image = cover or site.social_preview_image -%}
+
+<link rel="canonical" href="{{ canonical | safe }}" />
+<meta property="og:url" content="{{ canonical | safe }}" />
+<meta property="og:site_name" content="{{ site.title }}" />
+<meta property="og:title" content="{{ meta_title }}" />
+<meta property="og:description" content="{{ meta_description }}" />
+
+{#- The Open Graph locale separator is an underscore, not the hyphen a BCP 47 tag uses. -#}
+<meta property="og:locale" content="{{ site.lang | replace('-', '_') }}" />
+
+{% if page is defined and page and page.date %}
+  <meta property="og:type" content="article" />
+  <meta property="article:author" content="{{ page.author }}" />
+  <meta property="article:published_time" content="{{ page.date.rfc3339 }}" />
+  {% if page.updated %}
+    <meta property="article:modified_time" content="{{ page.updated.rfc3339 }}" />
+  {% endif %}
+  {% for category in page.categories %}
+    <meta property="article:section" content="{{ category.name }}" />
+  {% endfor %}
+  {% for tag in page.tags %}
+    <meta property="article:tag" content="{{ tag.name }}" />
+  {% endfor %}
+{% else %}
+  <meta property="og:type" content="website" />
+{% endif %}
+
+{% if share_image %}
+  <meta property="og:image" content="{{ share_image | absolute(site.base_url) }}" />
+  <meta property="og:image:alt" content="{{ page.image.alt or meta_title if cover else site.title }}" />
+  {#
+    The large card is only claimed when there is actually an image to fill it. Claiming it without
+    one gets the whole card downgraded rather than falling back gracefully.
+  #}
+  <meta name="twitter:card" content="summary_large_image" />
+{% else %}
+  <meta name="twitter:card" content="summary" />
+{% endif %}
+<meta name="twitter:title" content="{{ meta_title }}" />
+<meta name="twitter:description" content="{{ meta_description }}" />

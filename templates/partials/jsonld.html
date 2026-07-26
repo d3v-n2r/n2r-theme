@@ -1,0 +1,52 @@
+{#
+  Structured data.
+
+  Built as a value and dumped with `tojson` rather than written out as JSON by hand. A title with a
+  quote or a backslash in it would otherwise produce a block that is not valid JSON, and nothing
+  anywhere would report it — search engines simply drop malformed structured data in silence. The
+  filter also escapes `<`, `>` and `&`, which is what keeps a page title from being able to close
+  this `<script>` element early.
+#}
+{%- set person = {
+  "@type": "Person",
+  "name": site.author,
+  "url": site.author_url or site.base_url,
+} -%}
+
+{%- if page is defined and page and page.date -%}
+  {%- set doc = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": page.title,
+    "description": meta_description,
+    "url": site.base_url ~ url,
+    "mainEntityOfPage": {"@type": "WebPage", "@id": site.base_url ~ url},
+    "datePublished": page.date.rfc3339,
+    "dateModified": (page.updated or page.date).rfc3339,
+    "author": person,
+    "publisher": person,
+    "keywords": page.tags | map(attribute="name") | list,
+    "image": (page.image.path | absolute(site.base_url)) if page.image else none,
+  } -%}
+{%- elif url == "/" -%}
+  {%- set doc = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": site.title,
+    "description": site.description,
+    "url": site.base_url ~ "/",
+    "author": person,
+    "sameAs": site.social | map(attribute="url") | list,
+  } -%}
+{%- else -%}
+  {%- set doc = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": meta_title,
+    "description": meta_description,
+    "url": site.base_url ~ url,
+    "isPartOf": {"@type": "WebSite", "name": site.title, "url": site.base_url ~ "/"},
+  } -%}
+{%- endif -%}
+
+<script type="application/ld+json">{{ doc | tojson | safe }}</script>

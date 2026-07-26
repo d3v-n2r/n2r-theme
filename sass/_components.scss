@@ -964,3 +964,34 @@ $spine-width: 2px;
 :root[data-mode='dark'] #mode-toggle .icon-dark {
   display: block;
 }
+
+// ---------------------------------------------------------------- 404
+
+.not-found {
+  // Centred rather than left-aligned like every other page: there is no content to scan here, only
+  // a short apology and three ways out, and a full measure of text would be pretending otherwise.
+  max-width: 34rem;
+  margin-inline: auto;
+  padding-block: clamp(2rem, 12vh, 6rem);
+  text-align: center;
+
+  .code {
+    margin: 0;
+    color: var(--accent);
+    font-size: clamp(4rem, 18vw, 8rem);
+    font-weight: 700;
+    line-height: 1;
+    // The digits are the whole graphic, so they get to be tight and optically aligned.
+    letter-spacing: -0.04em;
+    opacity: 0.35;
+  }
+
+  h1 {
+    margin-block: 0.5rem 1rem;
+    font-size: 1.5rem;
+  }
+
+  p {
+    color: var(--text-muted);
+  }
+}

@@ -13,8 +13,17 @@
   "display": "standalone",
   "theme_color": {{ (site.pwa.theme_color or "#1e1e2e") | tojson }},
   "background_color": {{ (site.pwa.background_color or "#1e1e2e") | tojson }},
+  {#-
+    A site can list its own icons; when it lists none it gets the theme's. An icon-less manifest is
+    not merely plain — it is one browsers refuse to offer installation from, and they say nothing
+    about why.
+  -#}
+  {%- set icons = site.pwa.icons or [
+    {"src": "/assets/img/favicons/web-app-manifest-192x192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "/assets/img/favicons/web-app-manifest-512x512.png", "sizes": "512x512", "type": "image/png"}
+  ] %}
   "icons": [
-    {%- for icon in site.pwa.icons %}
+    {%- for icon in icons %}
     {
       "src": {{ icon.src | tojson }},
       "sizes": {{ icon.sizes | tojson }},

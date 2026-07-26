@@ -1,10 +1,20 @@
+{#-
+  The sitemap.
+
+  `entries` is recorded by the engine as it writes, so this lists exactly the pages that exist —
+  taxonomy indexes, term pages, numbered listing pages, series, projects, the archive and the
+  gallery, none of which the old hand-written loop over `pages` included. A page whose template the
+  theme does not provide is never written and so never appears here, rather than being advertised to
+  crawlers as a URL that answers 404.
+-#}
 <?xml version="1.0" encoding="utf-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>{{ site.base_url | safe }}/</loc></url>
-  {% for page in pages %}
+{%- for entry in entries %}
   <url>
-    <loc>{{ site.base_url | safe }}{{ page.url | safe }}</loc>
-    {% if page.date %}<lastmod>{{ page.date.iso }}</lastmod>{% endif %}
+    <loc>{{ (site.base_url ~ entry.url) | safe }}</loc>
+    {%- if entry.lastmod %}
+    <lastmod>{{ entry.lastmod }}</lastmod>
+    {%- endif %}
   </url>
-  {% endfor %}
+{%- endfor %}
 </urlset>

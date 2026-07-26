@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Shell prompt">
+  <!--
+    The theme's mark: a shell prompt, drawn as two strokes rather than set in a typeface so it is
+    identical to the rasterised PNGs beside it and needs no font to render.
+
+    Catppuccin Mocha throughout, in both colour schemes on purpose — a favicon sits on browser
+    chrome the page does not control, and the dark tile stays legible against either.
+  -->
+  <rect width="512" height="512" rx="113" fill="#1e1e2e"/>
+  <g fill="none" stroke="#cba6f7" stroke-width="43.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M153.6 148.5 266.2 256 153.6 363.5"/>
+    <path d="M299.5 363.5H399.4"/>
+  </g>
+</svg>

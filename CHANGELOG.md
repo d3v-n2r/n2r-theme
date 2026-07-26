@@ -8,6 +8,28 @@ All notable changes to this theme are documented here. The format follows
 
 ### Added
 
+- **M3** — the `<head>`. Canonical link, Open Graph properties, Twitter card and JSON-LD structured
+  data, on every page rather than only on posts. Until now a link shared anywhere unfurled bare: no
+  title beyond the tab text, no description, no image. Posts declare `article` with published and
+  modified times, their categories as sections and their tags; everything else declares `website`.
+  The large card is only claimed when an image actually resolves, since claiming it without one
+  downgrades the whole card rather than degrading gracefully.
+- **M3** — a favicon set: an SVG monogram of a shell prompt, drawn as two strokes rather than set in
+  a typeface so it needs no font to render, plus the PNG and ICO sizes for everything that does not
+  read SVG icons, and an Apple touch icon. Browsers request `/favicon.ico` whether or not a page
+  declares one, so having none cost a 404 on every navigation.
+- **M3** — `404.html`, extending the base template like any other page, with every asset path
+  absolute: a host serves the same file for `/a/` and `/a/b/c/`, and a relative path would resolve
+  differently at each depth.
+- **M3** — `robots.txt`, whose `Sitemap:` line is the only way a crawler finds the sitemap short of
+  someone submitting it by hand.
+- **M3** — `{% block head %}` as the last element of the head, so a site can add one meta tag by
+  overriding a block instead of forking the theme's most-edited file.
+- **M3** — `rel="prev"` and `rel="next"` on paginated listings, and a page number in the title and
+  description of each, so numbered pages stop describing themselves identically.
+- **M3** — per-page descriptions on the pages that had none: standalone pages, projects, the
+  gallery, the archive, series, and both taxonomy levels. All of them previously advertised the
+  site-wide sentence.
 - **M3** — the theme renders. Page skeleton, sidebar, topbar, footer, post page, paginated index,
   category and tag listings, series pages, and the gallery, all as minijinja templates.
 - **M3** — the palette: accent `#6E3272`, a deep plum, with a full light and dark token set. Dark
@@ -45,6 +67,12 @@ All notable changes to this theme are documented here. The format follows
 
 ### Security
 
+- **M3** — the head interpolates content-derived strings into places that are not ordinary HTML
+  text. Attribute values stay autoescaped; the JSON-LD block goes through `tojson`, which escapes
+  the characters that would let a page title close the `<script>` early; and image URLs go through
+  the engine's `absolute` filter, which escapes for an attribute rather than being marked safe by
+  the template. The rule this batch follows: engine-built URLs may be marked safe, anything that
+  came out of front matter may not.
 - `main` is protected against force-pushes and deletion, and requires signed commits.
 
 ### Changed
@@ -59,8 +87,12 @@ All notable changes to this theme are documented here. The format follows
 - **M3** — system font stacks rather than Chirpy's bundled Source Sans Pro and Lato: nothing
   downloads, so there is no layout shift and no font request leaves the reader's machine.
 
-Still to port for full Chirpy parity: table of contents, search, comment embeds, related posts, the
-archives page, PWA, mermaid and maths, and Chirpy's `refactor-content` HTML post-processing (which
-belongs in the engine, not a template). The portfolio section and social cards are also outstanding.
+Parity against Chirpy was audited in full on 2026-07-25; the findings and the batches that close
+them are recorded outside this repo. Still outstanding, largest first: the mobile layout, which has
+no table of contents at all below 1200px; post listings, which show no summary, no preview image and
+no pinned indicator, and paginate without numbered page links; code blocks, which have neither a
+filename label nor a copy button; config-driven navigation and breadcrumbs; wiring the engine's
+image pipeline to post covers rather than only to the gallery; and the locale catalogue, every
+string being hardcoded English today.
 
 [Unreleased]: https://github.com/d3v-n2r/n2r-theme

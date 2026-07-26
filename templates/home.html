@@ -14,6 +14,7 @@
 #}
 {% block title %}Home · {{ site.title }}{% endblock %}
 {% block topbar_title %}Home{% endblock %}
+{% block description %}{{ page.description or site.description }}{% endblock %}
 
 {% block content %}
   <article>

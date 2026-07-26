@@ -1,8 +1,20 @@
 {% extends "base.html" %}
 {% import "partials/macros.html" as m %}
 
-{% block title %}Blog · {{ site.title }}{% endblock %}
+{% block title %}Blog{% if pagination.number > 1 %} · page {{ pagination.number }}{% endif %} · {{ site.title }}{% endblock %}
 {% block topbar_title %}Blog{% endblock %}
+
+{#
+  The page number is part of the description as well as the title. Without it every numbered page
+  describes itself identically, which is the thing that makes a paginated listing read as duplicate
+  content in the first place.
+#}
+{% block description %}Everything published on {{ site.title }}, newest first{% if pagination.number > 1 %} — page {{ pagination.number }} of {{ pagination.total }}{% endif %}.{% endblock %}
+
+{% block head_links %}
+  {% if pagination.previous %}<link rel="prev" href="{{ pagination.previous | safe }}" />{% endif %}
+  {% if pagination.next %}<link rel="next" href="{{ pagination.next | safe }}" />{% endif %}
+{% endblock %}
 
 {% block content %}
   <h1>Blog</h1>

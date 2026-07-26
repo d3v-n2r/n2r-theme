@@ -7,8 +7,17 @@
 {% extends "base.html" %}
 {% import "partials/macros.html" as m %}
 
-{% block title %}{{ term.name }} · {{ site.title }}{% endblock %}
+{# `kind` is the plural URL segment; the prose wants the singular. #}
+{% set label = "category" if kind == "categories" else "tag" %}
+
+{% block title %}{{ term.name }}{% if pagination.number > 1 %} · page {{ pagination.number }}{% endif %} · {{ site.title }}{% endblock %}
 {% block topbar_title %}{{ term.name }}{% endblock %}
+{% block description %}{{ term.count }} post{% if term.count != 1 %}s{% endif %} filed under the {{ label }} “{{ term.name }}”{% if pagination.number > 1 %} — page {{ pagination.number }} of {{ pagination.total }}{% endif %}.{% endblock %}
+
+{% block head_links %}
+  {% if pagination.previous %}<link rel="prev" href="{{ pagination.previous | safe }}" />{% endif %}
+  {% if pagination.next %}<link rel="next" href="{{ pagination.next | safe }}" />{% endif %}
+{% endblock %}
 
 {% block content %}
   <h1>

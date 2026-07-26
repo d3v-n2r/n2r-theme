@@ -23,23 +23,37 @@ appearance toggle and the mobile sidebar.
 
 ```
 theme.toml              manifest: name, version, min_engine_version, directory map
-templates/              base.html plus one template per page kind
-templates/partials/     sidebar, topbar, footer, shared macros
+templates/              base.html plus one template per page kind, 404.html, robots.txt
+templates/partials/     sidebar, topbar, footer, head metadata, shared macros
 sass/                   styles, compiled by the engine at build time
 assets/js/theme.js      appearance toggle and mobile sidebar
+assets/img/favicons/    the site mark, as SVG, PNG and ICO
 locales/                UI strings, one file per language
 ```
 
 This maps Chirpy's `_layouts`, `_includes`, `_sass`, `_javascript`, and `_data/locales` onto the
 engine's conventions. Chirpy composes its layout from front-matter include lists because Liquid has
-no template inheritance; minijinja does, so `base.html` exposes `content`, `panel`, and `tail`
-blocks and child templates override them directly.
+no template inheritance; minijinja does, so those are real blocks that child templates override.
+
+`base.html` exposes:
+
+| Block | For |
+|---|---|
+| `title`, `description` | the page's own name and summary. Both are read back as values for the canonical link, the social card and the structured data, so declaring them once is enough. |
+| `topbar_title` | what the top bar calls this page, which is usually shorter than the title. |
+| `content`, `panel`, `tail` | the article, the right-hand column, and whatever follows the article. |
+| `head_links`, `head` | sequence links for paginated listings, and a general escape hatch as the last element of the head. |
 
 ## Usage
 
 Place the theme at `themes/n2r-theme/` inside a site and name it in the site's `config.toml`.
 Any template a site puts in its own `templates/` directory shadows the theme's copy of that
-template, so customizing one page never means forking the theme.
+template, so customizing one page never means forking the theme — including the head, which is
+usually the reason people fork one. The same applies to `assets/`, so replacing the favicon means
+putting your own at `assets/img/favicons/favicon.svg` in the site.
+
+The theme reads `lang`, `social_preview_image`, `avatar`, `author_url`, `[[social]]`, `[comments]`
+and `[pwa]` from the site's `config.toml`. Nothing personal is baked in here.
 
 ## Credit and license
 

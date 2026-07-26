@@ -7,7 +7,9 @@
   `tail` directly instead of naming partials in YAML.
 #}
 <!doctype html>
-<html lang="en">
+{# The language is the site's to declare: it drives screen-reader pronunciation, `og:locale`, and
+   the interface language the comment embed loads. #}
+<html lang="{{ site.lang }}">
   <head>
     <meta charset="utf-8" />
     {# `viewport-fit=cover` lets the background reach a notched screen's edges. Chirpy also sets
@@ -16,6 +18,30 @@
 
     <title>{% block title %}{{ site.title }}{% endblock %}</title>
     <meta name="description" content="{% block description %}{{ site.description }}{% endblock %}" />
+    <meta name="author" content="{{ page.author if page is defined and page and page.author else site.author }}" />
+
+    {#
+      The title and description are declared once, as blocks, and then read back as values for the
+      canonical link, the social card and the structured data. A block rendered this way comes back
+      already escaped, so nothing here escapes twice.
+    #}
+    {% with meta_title = self.title(), meta_description = self.description() %}
+      {% include "partials/meta.html" %}
+      {% include "partials/jsonld.html" %}
+    {% endwith %}
+
+    {% include "partials/favicons.html" %}
+
+    {#
+      The browser chrome colour, given for both schemes. This sits outside the PWA block on purpose:
+      a site that never opts into an installable app still has a browser to colour, and mobile
+      Safari and Chrome both read these on an ordinary page.
+
+      The values are the Catppuccin base colours the stylesheet uses for each theme, spelled out
+      rather than derived, because `<meta>` cannot read a custom property.
+    #}
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#eff1f5" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1e1e2e" />
 
     {#
       The regular weight is needed for the first line of text on every page, so fetching it
@@ -32,7 +58,6 @@
     />
     {% if site.pwa %}
       <link rel="manifest" href="/manifest.webmanifest" />
-      <meta name="theme-color" content="{{ site.pwa.theme_color or '#1e1e2e' }}" />
     {% endif %}
 
     <link rel="stylesheet" href="/assets/css/main.css" />
@@ -42,6 +67,12 @@
       href="/feed.xml"
       title="{{ site.title }}"
     />
+
+    {#
+      Sequence links for paginated listings. Overridden by the templates that have a paginator;
+      empty everywhere else.
+    #}
+    {% block head_links %}{% endblock %}
 
     {#
       Applying the stored mode before first paint. This is inline and synchronous on purpose: as an
@@ -56,6 +87,13 @@
         }
       })();
     </script>
+
+    {#
+      The escape hatch, last so it can override anything above it. A site that needs one extra tag —
+      a verification token, an alternate feed — adds it by overriding this block in its own copy of
+      a template, rather than forking the theme's most-edited file to get at the head.
+    #}
+    {% block head %}{% endblock %}
   </head>
 
   <body>

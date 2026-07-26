@@ -22,7 +22,8 @@
       data-input-position="top"
       {# Starts on whatever the reader is already using; theme.js re-syncs it on every toggle. #}
       data-theme="preferred_color_scheme"
-      data-lang="en"
+      {# The embed's own interface follows the site's language rather than defaulting to English. #}
+      data-lang="{{ site.lang }}"
       data-loading="lazy"
       crossorigin="anonymous"
       defer
