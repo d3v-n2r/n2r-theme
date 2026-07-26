@@ -865,6 +865,13 @@
   flex-direction: column;
   gap: 0.75rem;
   padding: 1.25rem 0 0;
+
+  // `hidden` is a UA rule at attribute specificity, and the id above defeats it — so the region has
+  // to opt back out by hand or it renders on every page whether or not anyone is searching. This
+  // went unnoticed while the region was empty: it was displayed all along, just with nothing in it.
+  &[hidden] {
+    display: none;
+  }
 }
 
 #search-hits {

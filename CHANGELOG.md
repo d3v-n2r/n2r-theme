@@ -117,6 +117,10 @@ All notable changes to this theme are documented here. The format follows
 
 ### Fixed
 
+- **M3** — the search results region rendered on every page. `#search-results` sets `display` at id
+  specificity, which defeats the UA rule behind the `hidden` attribute, so the element was displayed
+  all along — invisible only because it had nothing in it. Adding the trending-tag hints gave it
+  content, and it appeared at the top of every page.
 - **M3** — **static assets were cached and never revalidated.** The service worker served `/assets/`
   cache-first under a name that only changes once a year, so the first `main.css` a browser saw was
   the one it kept until January — every rebuilt stylesheet and script after that was invisible, both
