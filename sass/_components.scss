@@ -180,7 +180,18 @@
 .tags {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 0.4rem;
+
+  // The leading glyph, which pairs this row with the categories row above it. Sized and coloured
+  // like the metadata it labels rather than like the pills beside it.
+  > svg {
+    width: 0.95rem;
+    height: 0.95rem;
+    flex: 0 0 auto;
+    margin-right: 0.15rem;
+    color: var(--text-muted);
+  }
 }
 
 .tag {
@@ -485,6 +496,52 @@
     font-size: 0.95rem;
     font-weight: 620;
     line-height: 1.45;
+  }
+
+  // Kept in the grid rather than left as a hole, so the control is the same shape at both ends of
+  // the archive. It is not a link and does not pretend to be one.
+  .disabled {
+    opacity: 0.45;
+
+    .card-title {
+      color: var(--text-muted);
+      font-weight: 400;
+      font-style: italic;
+    }
+
+    // The hover wash and border would suggest something to click.
+    &:hover {
+      border-color: var(--border);
+      box-shadow: none;
+    }
+
+    &::before {
+      display: none;
+    }
+  }
+}
+
+// ---------------------------------------------------------------- edit link
+
+.edit-link {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+
+  svg {
+    width: 0.95rem;
+    height: 0.95rem;
+    flex: 0 0 auto;
+  }
+
+  a {
+    color: inherit;
+
+    &:hover {
+      color: var(--link);
+    }
   }
 }
 

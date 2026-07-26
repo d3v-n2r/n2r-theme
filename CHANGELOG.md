@@ -8,6 +8,11 @@ All notable changes to this theme are documented here. The format follows
 
 ### Added
 
+- **M3** — the post footer finished: a linked byline where the post is the site author's own, an
+  "edit this page" link, a glyph on the tags row pairing it with the categories row above, and
+  placeholders at both ends of the previous/next control so it keeps its shape at the ends of the
+  archive. Those two are labelled Older and Newer rather than Previous and Next, since in a
+  reverse-chronological list the *previous* post in time is the one *after* this in the listing.
 - **M3** — post listings became scannable. Each card now carries the page's summary, the cover image
   where there is one, and a thumbtack on a pinned post — the engine has sorted on `pin` all along
   and nothing said so, which made a two-year-old post at the top read as a broken sort. Related

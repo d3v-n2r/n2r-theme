@@ -6,7 +6,12 @@
 {% block topbar_title %}{{ page.title }}{% endblock %}
 
 {% block content %}
-  <article>
+  {#
+    `data-toc` is one authoritative signal for whether this page has a contents list. The mobile
+    layout needs to know, and inferring it from whether a `<nav>` happens to be in the panel would
+    couple the two templates through the absence of an element.
+  #}
+  <article data-toc="{{ 'true' if page.toc and page.headings else 'false' }}">
     <header>
       <h1>{{ page.title }}</h1>
 
@@ -19,7 +24,17 @@
         third-party analytics script this site does not load.
       #}
       <div class="post-meta">
-        <span>By {{ page.author }}</span>
+        {#
+          Linked only when the byline is the site's own author: a guest post names someone the
+          site's `author_url` does not point at, and linking their name to it would be wrong.
+        #}
+        <span>By
+          {% if site.author_url and page.author == site.author %}
+            <a href="{{ site.author_url | safe }}" rel="author">{{ page.author }}</a>
+          {% else %}
+            {{ page.author }}
+          {% endif %}
+        </span>
         {#
           The `datetime` attribute carries the full timestamp where the author wrote one, so a
           machine reading this page gets the exact instant. The visible text stays the calendar
@@ -36,10 +51,6 @@
         <span class="sep">·</span>
         {# The exact count on hover, since the minutes are an estimate and the words are not. #}
         <span title="{{ page.words }} words">{{ page.read_time }} min read</span>
-        {% if site.edit and page.source_path %}
-          <span class="sep">·</span>
-          <a href="{{ site.edit.url }}{{ page.source_path }}" rel="noopener">Edit this page</a>
-        {% endif %}
       </div>
 
       {% if page.image %}
@@ -75,11 +86,27 @@
       {% endif %}
 
       {% if page.tags %}
+        {# The glyph makes this read as parallel to the categories row above rather than as a
+           loose row of pills that happens to follow it. #}
         <div class="tags">
+          {{ icons.icon("tags") }}
           {% for tag in page.tags %}
             <a class="tag" href="{{ tag.url | safe }}">{{ tag.name }}</a>
           {% endfor %}
         </div>
+      {% endif %}
+
+      {#
+        The cheapest contribution path a technical blog has, and the fastest route from a live page
+        back to the file that produced it. Rendered only when the site says where its source lives.
+      #}
+      {% if site.edit and page.source_path %}
+        <p class="edit-link">
+          {{ icons.icon("pencil") }}
+          {# The prefix is the site's own config; the path is a filename off disk, so only the
+             first is marked safe. #}
+          <a href="{{ site.edit.url | safe }}{{ page.source_path }}" rel="noopener">Found a mistake? Edit this page</a>
+        </p>
       {% endif %}
 
       <div class="post-tail-bottom">
@@ -94,7 +121,7 @@
               {{ site.license.statement }}
             {% else %}
               This post is licensed under
-              <a href="{{ site.license.url }}" rel="license">{{ site.license.name }}</a>
+              <a href="{{ site.license.url | safe }}" rel="license">{{ site.license.name }}</a>
               by {{ page.author }}.
             {% endif %}
           </span>
@@ -137,24 +164,39 @@
 
 {% block tail %}
   {#
-    Previous and next by date, which is a different question from "what else is like this" — so
-    both appear, navigation first.
+    Neighbours by date, which is a different question from "what else is like this" — so both
+    appear, navigation first.
+
+    "Older" and "Newer" rather than "Previous" and "Next": in a reverse-chronological list those two
+    words are ambiguous, because the *previous* post in time is the one *after* this in the listing.
+    Older and newer name what the reader actually gets.
+
+    Both sides always render. An empty branch left the grid holding one card and a hole, so the
+    control changed shape depending on where in the archive you were standing.
   #}
   {% if page.previous or page.next %}
     <nav class="post-nav" aria-label="Post navigation">
       {% if page.previous %}
         <a class="card" href="{{ page.previous.url | safe }}" rel="prev">
-          <span class="direction">Previous</span>
+          <span class="direction">Older</span>
           <span class="card-title">{{ page.previous.title }}</span>
         </a>
       {% else %}
-        <span></span>
+        <span class="card disabled" aria-hidden="true">
+          <span class="direction">Older</span>
+          <span class="card-title">Nothing older</span>
+        </span>
       {% endif %}
       {% if page.next %}
         <a class="card next" href="{{ page.next.url | safe }}" rel="next">
-          <span class="direction">Next</span>
+          <span class="direction">Newer</span>
           <span class="card-title">{{ page.next.title }}</span>
         </a>
+      {% else %}
+        <span class="card next disabled" aria-hidden="true">
+          <span class="direction">Newer</span>
+          <span class="card-title">Nothing newer</span>
+        </span>
       {% endif %}
     </nav>
   {% endif %}

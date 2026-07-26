@@ -33,11 +33,17 @@
           'data-category': {{ site.comments.category | tojson | safe }},
           'data-category-id': {{ site.comments.category_id | tojson | safe }},
           'data-mapping': {{ site.comments.mapping | tojson | safe }},
-          'data-lang': {{ site.lang | tojson | safe }},
+          {#
+            Exact matching. Without it a moved post, or the same URL with and without a trailing
+            slash, can attach to another page's thread or orphan its own — and from the outside that
+            looks like the comments simply vanished, so nobody reports it.
+          #}
+          'data-strict': {{ ('1' if site.comments.strict else '0') | tojson | safe }},
+          'data-lang': {{ (site.comments.lang or site.lang) | tojson | safe }},
           'data-theme': mode,
-          'data-reactions-enabled': '1',
+          'data-reactions-enabled': {{ ('1' if site.comments.reactions_enabled else '0') | tojson | safe }},
           'data-emit-metadata': '0',
-          'data-input-position': 'top',
+          'data-input-position': {{ site.comments.input_position | tojson | safe }},
           'data-loading': 'lazy'
         };
 
