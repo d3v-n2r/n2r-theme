@@ -17,7 +17,9 @@
 
 {% block panel %}
   {% include "partials/panel.html" %}
-  {% with headings = page.headings %}
-    {% include "partials/toc.html" %}
-  {% endwith %}
+  {% if page.toc %}
+    {% with headings = page.headings %}
+      {% include "partials/toc.html" %}
+    {% endwith %}
+  {% endif %}
 {% endblock %}

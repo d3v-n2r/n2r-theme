@@ -30,21 +30,55 @@
   </div>
 {% endmacro %}
 
+{#
+  The pager.
+
+  Numbers, not just two arrows: with arrows alone the only way to reach page five of a tag listing
+  is to visit four other pages first. The engine supplies every page's URL because the numbering
+  scheme is its own — page one keeps the base URL rather than becoming `page/1/`, so a template
+  cannot assemble the addresses by counting.
+
+  Long sequences collapse around the current page, so a site with forty pages does not print forty
+  links. The first and last are always offered, since "jump to the beginning" and "jump to the
+  oldest" are the two most likely destinations after a neighbour.
+#}
 {% macro pager(pagination) %}
   {% if pagination.total > 1 %}
     <nav class="pager" aria-label="Pagination">
       {% if pagination.previous %}
-        <a href="{{ pagination.previous | safe }}" rel="prev">← Newer</a>
+        <a class="step" href="{{ pagination.previous | safe }}" rel="prev">← Newer</a>
       {% else %}
-        <span></span>
+        <span class="step disabled" aria-hidden="true">← Newer</span>
       {% endif %}
 
-      <span class="position">Page {{ pagination.number }} of {{ pagination.total }}</span>
+      <ol class="numbers">
+        {% set window = 2 %}
+        {% set ns = namespace(gap = false) %}
+        {% for entry in pagination.pages %}
+          {% set near = (entry.number - pagination.number) | abs <= window %}
+          {% set edge = entry.number == 1 or entry.number == pagination.total %}
+
+          {% if near or edge %}
+            {% set ns.gap = true %}
+            <li>
+              {% if entry.current %}
+                <span class="current" aria-current="page">{{ entry.number }}</span>
+              {% else %}
+                <a href="{{ entry.url | safe }}">{{ entry.number }}</a>
+              {% endif %}
+            </li>
+          {% elif ns.gap %}
+            {# One ellipsis per run of hidden pages, not one per page. #}
+            {% set ns.gap = false %}
+            <li class="gap" aria-hidden="true">…</li>
+          {% endif %}
+        {% endfor %}
+      </ol>
 
       {% if pagination.next %}
-        <a href="{{ pagination.next | safe }}" rel="next">Older →</a>
+        <a class="step" href="{{ pagination.next | safe }}" rel="next">Older →</a>
       {% else %}
-        <span></span>
+        <span class="step disabled" aria-hidden="true">Older →</span>
       {% endif %}
     </nav>
   {% endif %}

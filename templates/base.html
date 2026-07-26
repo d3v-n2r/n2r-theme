@@ -33,6 +33,15 @@
     {% include "partials/favicons.html" %}
 
     {#
+      Ownership tokens for webmaster tools. Static tags — no script, no request, nothing that
+      reaches a reader beyond a few bytes of markup — and the only way to claim a domain in a
+      search console.
+    #}
+    {% for provider, token in site.verifications | items %}
+      <meta name="{{ provider }}-site-verification" content="{{ token }}" />
+    {% endfor %}
+
+    {#
       The browser chrome colour, given for both schemes. This sits outside the PWA block on purpose:
       a site that never opts into an installable app still has a browser to colour, and mobile
       Safari and Chrome both read these on an ordinary page.

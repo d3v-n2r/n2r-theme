@@ -156,9 +156,62 @@
   border-top: 1px solid var(--border);
   font-size: 0.9rem;
 
-  .position {
+  // Held in place rather than removed at the ends of the sequence, so the numbers do not shift
+  // sideways as a reader pages through.
+  .step.disabled {
     color: var(--text-muted);
+    opacity: 0.4;
+  }
+
+  .numbers {
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    // Digits line up in a row of boxes, which they only do in a tabular face.
     font-variant-numeric: tabular-nums;
+  }
+
+  .numbers a,
+  .numbers .current,
+  .numbers .gap {
+    display: grid;
+    place-items: center;
+    min-width: 1.9rem;
+    height: 1.9rem;
+    border-radius: var(--radius);
+  }
+
+  .numbers a {
+    color: var(--text-muted);
+    text-decoration: none;
+
+    &:hover {
+      background: var(--accent-wash);
+      color: var(--text);
+    }
+  }
+
+  .numbers .current {
+    background: var(--link);
+    color: var(--accent-contrast);
+    font-weight: 600;
+  }
+
+  .numbers .gap {
+    color: var(--text-muted);
+    // Narrower than a number: it is a mark between them, not one of them.
+    min-width: 1rem;
+  }
+
+  // The numbers are the first thing to go on a narrow screen — two arrows still page through, and
+  // the row would otherwise wrap into something that reads as a paragraph of digits.
+  @media (max-width: 30rem) {
+    .numbers {
+      display: none;
+    }
   }
 }
 

@@ -8,6 +8,11 @@ All notable changes to this theme are documented here. The format follows
 
 ### Added
 
+- **M3** — a numbered paginator. With two arrows alone, the only way to reach page five of a tag
+  listing was to visit four other pages first. Long sequences collapse around the current page with
+  the first and last always offered, and the numbers give way to the arrows on a narrow screen.
+- **M3** — an optional "edit this page" link, the exact word count behind the reading-time estimate,
+  and per-page `toc` and `comments` switches honoured where they were previously read and dropped.
 - **M3** — a header bar on every fenced code block, naming the language, or the file where the
   author wrote one on the fence. Drawn from the attributes the engine stamps, with `::before` and no
   wrapper element, so it needs no JavaScript: a reader with scripting off still sees which language
@@ -86,6 +91,11 @@ All notable changes to this theme are documented here. The format follows
 
 ### Security
 
+- **M3** — **the theme no longer states a licence on the site's behalf.** Every post carried "This
+  post is licensed under CC BY 4.0", hardcoded, on any site that installed the theme. That is not a
+  harmless default: it is a false statement about someone else's legal position, printed under their
+  own name on every page they publish. The terms now come from `[license]` in the site's config, and
+  nothing is claimed when it is absent.
 - **M3** — turning the PWA off now unregisters the service worker and clears its caches. A worker
   installed in a reader's browser outlives every deploy that follows and keeps serving its own
   cache; nothing in a later build can reach it, because turning the feature off also stops the

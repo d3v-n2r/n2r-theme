@@ -34,7 +34,12 @@
           <span>Updated <time datetime="{{ page.updated.rfc3339 }}">{{ page.updated.human }}</time></span>
         {% endif %}
         <span class="sep">·</span>
-        <span>{{ page.read_time }} min read</span>
+        {# The exact count on hover, since the minutes are an estimate and the words are not. #}
+        <span title="{{ page.words }} words">{{ page.read_time }} min read</span>
+        {% if site.edit and page.source_path %}
+          <span class="sep">·</span>
+          <a href="{{ site.edit.url }}{{ page.source_path }}" rel="noopener">Edit this page</a>
+        {% endif %}
       </div>
 
       {% if page.image %}
@@ -78,11 +83,24 @@
       {% endif %}
 
       <div class="post-tail-bottom">
-        <span class="licence">
-          This post is licensed under
-          <a href="https://creativecommons.org/licenses/by/4.0/" rel="license">CC BY 4.0</a>
-          by {{ page.author }}.
-        </span>
+        {#
+          Only when the site has said what its terms are. A theme naming a licence on behalf of
+          whoever installs it is not a harmless default — it is a false statement about someone
+          else's legal position, printed under their name on every page.
+        #}
+        {% if site.license %}
+          <span class="licence">
+            {% if site.license.statement %}
+              {{ site.license.statement }}
+            {% else %}
+              This post is licensed under
+              <a href="{{ site.license.url }}" rel="license">{{ site.license.name }}</a>
+              by {{ page.author }}.
+            {% endif %}
+          </span>
+        {% else %}
+          <span></span>
+        {% endif %}
         {#
           A copy-link button rather than share buttons for particular networks: those are outbound
           trackers wearing an icon, and this one works for every destination.
@@ -109,9 +127,11 @@
 {% endblock %}
 
 {% block panel %}
-  {% with headings = page.headings %}
-    {% include "partials/toc.html" %}
-  {% endwith %}
+  {% if page.toc %}
+    {% with headings = page.headings %}
+      {% include "partials/toc.html" %}
+    {% endwith %}
+  {% endif %}
   {% include "partials/panel.html" %}
 {% endblock %}
 
@@ -140,5 +160,5 @@
   {% endif %}
 
   {% include "partials/related.html" %}
-  {% include "partials/comments.html" %}
+  {% if page.comments %}{% include "partials/comments.html" %}{% endif %}
 {% endblock %}
