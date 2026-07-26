@@ -392,3 +392,30 @@ kbd {
   line-height: 1.4;
   text-align: center;
 }
+
+// ---------------------------------------------------------------- task lists
+
+// The engine emits GitHub's class names on checklists. Without styling they render as a disc bullet
+// beside an unstyled native control — the bullet and the checkbox saying the same thing twice.
+.contains-task-list {
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+.task-list-item {
+  // Room for the checkbox, which is pulled back into it below.
+  padding-inline-start: 1.5rem;
+
+  &::marker {
+    content: '';
+  }
+}
+
+.task-list-item-checkbox {
+  margin-inline-start: -1.5rem;
+  margin-inline-end: 0.5rem;
+  // One property gets the palette onto a native checkbox, which is why this needs none of Chirpy's
+  // icon substitution: the control stays the platform's, and only its colour is ours.
+  accent-color: var(--link);
+  vertical-align: middle;
+}

@@ -81,3 +81,99 @@ pre {
     color: var(--bad);
   }
 }
+
+// ---------------------------------------------------------------- code block header
+
+// The language, or the file the block came from when the author wrote `file="..."` on the fence.
+// The engine stamps both as attributes on the `<code>`, so this needs no wrapper element and no
+// JavaScript: a reader with scripting off still sees which language they are looking at.
+//
+// The bar sits inside the `<pre>`, which is also the horizontal scroll container, so a block wider
+// than the column scrolls its header along with the code. Keeping it outside would mean wrapping
+// every block in another element; the copy button below does exactly that, but it is added by
+// script and this has to work without one.
+pre > code[data-lang]::before,
+pre > code[data-file]::before {
+  content: attr(data-lang);
+  display: block;
+  // Out to the padding edge on three sides, so the bar reads as part of the frame rather than as a
+  // line of text that happens to be first.
+  margin: -0.9rem -1.1rem 0.9rem;
+  padding: 0.35rem 1.1rem;
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--border) 25%, transparent);
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  // The label is one token; without this it inherits `pre`'s whitespace handling and its own
+  // leading spaces would be preserved.
+  white-space: nowrap;
+}
+
+// A filename is the more specific answer to "what am I looking at", so it wins where both exist —
+// Chirpy's precedence — and is set as a path rather than as a label.
+pre > code[data-file]::before {
+  content: attr(data-file);
+  color: var(--text);
+  font-family: inherit;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+// ---------------------------------------------------------------- copy button
+
+// The wrapper is created by `theme.js`, which is what lets the button stay put while the code
+// scrolls sideways underneath it: anything positioned inside the `<pre>` scrolls with its content.
+.code-block {
+  position: relative;
+
+  // Reveal on approach rather than permanently, so a page of code blocks is not a page of buttons.
+  // Always visible on touch, where there is no hover to reveal anything, and always visible once
+  // focused so it can be reached from the keyboard.
+  @media (hover: hover) {
+    .code-copy {
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+
+    &:hover .code-copy,
+    .code-copy:focus-visible {
+      opacity: 1;
+    }
+  }
+}
+
+.code-copy {
+  position: absolute;
+  top: 0.3rem;
+  right: 0.4rem;
+  display: inline-grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: var(--code-bg);
+  color: var(--text-muted);
+  cursor: pointer;
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  &:hover {
+    border-color: var(--border);
+    color: var(--text);
+  }
+
+  // Held for a moment after a successful copy, which is the only feedback there is — the clipboard
+  // gives none of its own.
+  &[data-copied] {
+    color: var(--good);
+    border-color: var(--good);
+  }
+}

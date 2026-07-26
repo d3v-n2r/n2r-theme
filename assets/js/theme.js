@@ -261,6 +261,82 @@
     });
   });
 
+  // ---------------------------------------------------------------- copy code
+
+  // The two glyphs live here rather than in `icons.html` because there is no template to put them
+  // in: code blocks come out of markdown, so the button that copies them has to be created at
+  // runtime over markup the engine generated.
+  var CLIPBOARD_ICON =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" ' +
+    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<rect x="9" y="9" width="12" height="12" rx="2" />' +
+    '<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>';
+
+  var CHECK_ICON =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" ' +
+    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<path d="m4 12.5 5.5 5.5L20 7" /></svg>';
+
+  document.querySelectorAll('pre > code').forEach(function (code) {
+    var pre = code.parentNode;
+
+    // The wrapper is what keeps the button still while the code scrolls sideways underneath it.
+    // Anything positioned inside the <pre> is inside its scroll container and travels with the
+    // content.
+    var wrapper = document.createElement('div');
+    wrapper.className = 'code-block';
+    pre.parentNode.insertBefore(wrapper, pre);
+    wrapper.appendChild(pre);
+
+    var button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'code-copy';
+    button.innerHTML = CLIPBOARD_ICON;
+
+    // The label names the language where there is one, so a screen reader hears "copy Rust code"
+    // rather than the same three words beside every block on the page.
+    var what = code.dataset.file || code.dataset.lang;
+    button.setAttribute('aria-label', what ? 'Copy ' + what + ' code' : 'Copy code');
+
+    var restoring = null;
+    function settle(succeeded) {
+      button.innerHTML = succeeded ? CHECK_ICON : CLIPBOARD_ICON;
+      if (succeeded) {
+        button.dataset.copied = '';
+      } else {
+        delete button.dataset.copied;
+      }
+
+      clearTimeout(restoring);
+      restoring = setTimeout(function () {
+        button.innerHTML = CLIPBOARD_ICON;
+        delete button.dataset.copied;
+      }, 2000);
+    }
+
+    button.addEventListener('click', function () {
+      // `innerText` rather than `textContent`: the highlighter wraps every token in a span, and
+      // textContent would run them together without the line breaks that make the code code.
+      var text = code.innerText;
+
+      if (!navigator.clipboard) {
+        settle(legacyCopy(text));
+        return;
+      }
+
+      navigator.clipboard.writeText(text).then(
+        function () {
+          settle(true);
+        },
+        function () {
+          settle(false);
+        }
+      );
+    });
+
+    wrapper.appendChild(button);
+  });
+
   // ---------------------------------------------------------------- back to top
 
   var backToTop = document.getElementById('back-to-top');

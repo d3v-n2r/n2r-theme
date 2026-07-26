@@ -8,6 +8,17 @@ All notable changes to this theme are documented here. The format follows
 
 ### Added
 
+- **M3** — a header bar on every fenced code block, naming the language, or the file where the
+  author wrote one on the fence. Drawn from the attributes the engine stamps, with `::before` and no
+  wrapper element, so it needs no JavaScript: a reader with scripting off still sees which language
+  they are looking at.
+- **M3** — a copy button on code blocks, using the same feedback the copy-link button already had
+  and the same fallback without a secure context. It sits in a wrapper the script adds, which is
+  what keeps it still while wide code scrolls sideways underneath — anything positioned inside the
+  `<pre>` travels with the content. Its label names the language, so a screen reader hears "copy
+  Rust code" rather than the same three words beside every block on the page.
+- **M3** — task-list styling. The bullet goes, since the checkbox already says what it would, and
+  `accent-color` puts the palette on a native control — no icon substitution, unlike Chirpy.
 - **M3** — dates are reformatted to the reader's locale from the `datetime` attribute every `<time>`
   already carried, with the full date on hover, using native `Intl` and no date library. The
   server-rendered text stays as the no-JavaScript fallback, and nothing is rewritten when the
