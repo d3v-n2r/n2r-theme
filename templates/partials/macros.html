@@ -5,25 +5,67 @@
   to [a-z0-9_-], so they contain nothing to escape — without `safe`, every `/` would render as
   `&#x2f;`. Titles, names, and anything else an author typed stay escaped.
 #}
+{% import "partials/icons.html" as icons %}
 
+{#
+  The post list.
+
+  Each entry is an `<article>` with the link inside its heading rather than an `<a>` wrapped around
+  everything. The wrapping version reads to a screen reader as one link whose label is the title,
+  the date, every category and the summary run together — and it leaves the list with no headings to
+  jump between, which is how anyone using a reader navigates a page like this. The anchor is
+  stretched over the card in CSS, so a pointer still gets the whole card as a target.
+#}
 {% macro post_list(pages) %}
   <div id="post-list">
     {% for page in pages %}
-      <a class="card" href="{{ page.url | safe }}">
-        <h2 class="card-title">{{ page.title }}</h2>
-        <div class="post-meta">
-          {% if page.date %}
-            <time datetime="{{ page.date.iso }}">{{ page.date.human }}</time>
+      <article class="card{% if page.image %} has-preview{% endif %}">
+        {% if page.image %}
+          {#
+            Decorative here: the title beside it already says what the post is, so announcing the
+            cover's description as well would just be the same page twice.
+          #}
+          <div class="preview-img">
+            <img src="{{ page.image.path | safe }}" alt="" loading="lazy" decoding="async" />
+          </div>
+        {% endif %}
+
+        <div class="card-body">
+          <h2 class="card-title">
+            <a href="{{ page.url | safe }}">{{ page.title }}</a>
+          </h2>
+
+          {# What makes the list scannable: a title alone gives a reader nothing to decide on. #}
+          {% if page.summary %}
+            <p class="card-summary">{{ page.summary }}</p>
           {% endif %}
-          {% for category in page.categories %}
-            <span class="sep">·</span><span>{{ category.name }}</span>
-          {% endfor %}
-          {% if page.series %}
-            <span class="sep">·</span>
-            <span>Part {{ page.series.number }} of {{ page.series.total }}</span>
-          {% endif %}
+
+          <div class="post-meta">
+            {% if page.date %}
+              <time datetime="{{ page.date.rfc3339 }}">{{ page.date.human }}</time>
+            {% endif %}
+            {% for category in page.categories %}
+              <span class="sep">·</span><span>{{ category.name }}</span>
+            {% endfor %}
+            {% if page.series %}
+              <span class="sep">·</span>
+              <span>Part {{ page.series.number }} of {{ page.series.total }}</span>
+            {% endif %}
+
+            {#
+              Without this a two-year-old post sits above this week's with nothing to explain it,
+              which reads as a broken sort rather than a decision. The label is for readers who
+              cannot see the thumbtack; Chirpy's is icon-only because the locale key it reaches for
+              was never actually defined.
+            #}
+            {% if page.pin %}
+              <span class="pin">
+                {{ icons.icon("pin") }}<span class="visually-hidden">Pinned</span>
+              </span>
+            {% endif %}
+          </div>
         </div>
-      </a>
+      </article>
     {% else %}
       <p>Nothing published yet.</p>
     {% endfor %}
@@ -74,6 +116,12 @@
           {% endif %}
         {% endfor %}
       </ol>
+
+      {#
+        The same information in one line, for a screen too narrow for a strip of numbers. One of the
+        two is always hidden, so a reader never sees both.
+      #}
+      <span class="position">{{ pagination.number }} / {{ pagination.total }}</span>
 
       {% if pagination.next %}
         <a class="step" href="{{ pagination.next | safe }}" rel="next">Older →</a>

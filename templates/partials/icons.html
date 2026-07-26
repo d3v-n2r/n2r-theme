@@ -82,6 +82,13 @@
       <circle cx="8.5" cy="9.5" r="1.5" />
       <path d="m4 17 5-5 4 4 3-2 4 4" />
     </svg>
+  {%- elif name == "pin" -%}
+    {# A thumbtack, seen from the side: a post held in place. #}
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M12 17v5" />
+      <path d="M9 10.76V4h6v6.76a2 2 0 0 0 .55 1.38l1.9 2A1 1 0 0 1 16.72 15H7.28a1 1 0 0 1-.73-1.69l1.9-1.99A2 2 0 0 0 9 10.76Z" />
+    </svg>
   {%- else -%}
     {# Anything unrecognised still gets a mark, so the link is never invisible. #}
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"

@@ -54,18 +54,102 @@
   }
 }
 
+// Cards read as a column only while they are close to the same height, and one long title or five
+// categories is enough to break that. Clamping is shared rather than repeated because the three
+// properties only work together — one of them alone does nothing.
+@mixin clamp-lines($lines) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 .card-title {
   font-size: 1.2rem;
   margin-bottom: 0.4rem;
+
+  // The heading holds the link; the anchor is stretched over the whole card below, so the markup
+  // can stay navigable while a pointer still gets the card as a target.
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 }
 
 .card-summary {
   color: var(--text-muted);
   font-size: 0.94rem;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+  margin-bottom: 0.5rem;
+  @include clamp-lines(2);
+}
+
+// Scoped to the listing: the related-posts and previous/next cards reuse `.card-title`, and a
+// two-line clamp is wrong for those — they are short by construction.
+#post-list {
+  .card-title {
+    @include clamp-lines(2);
+  }
+
+  // The meta row stays one line. It is a caption, and a wrapped caption pushes the card taller than
+  // its neighbours for no gain.
+  .post-meta {
+    flex-wrap: nowrap;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+}
+
+// ---------------------------------------------------------------- card preview image
+
+// Beside the text on a wide screen, above it on a narrow one — a thumbnail squeezed into a phone's
+// width would take the whole viewport and push the title below the fold.
+.card.has-preview {
+  display: grid;
+  gap: 1rem;
+
+  @include bp.from('md') {
+    grid-template-columns: 12rem 1fr;
+    align-items: start;
+  }
+}
+
+.preview-img {
   overflow: hidden;
+  border-radius: var(--radius);
+  // Fixed, so a portrait cover and a landscape one produce the same shaped card.
+  aspect-ratio: 40 / 21;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+// The whole card is the target, without wrapping the markup in an anchor: that would flatten the
+// heading into part of one long link label and leave the list with nothing to navigate by.
+#post-list .card-title a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+// …which only works while the card is the positioned ancestor, and while nothing else in it is
+// competing for the pointer.
+.pin {
+  // The row is flex, so this pushes the thumbtack to the far end of it.
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  color: var(--link);
+  // The row does not wrap and clips what overflows, so without this the thumbtack is the first
+  // thing squeezed out — by the categories it is meant to be explaining.
+  flex: 0 0 auto;
+
+  svg {
+    width: 0.95rem;
+    height: 0.95rem;
+  }
 }
 
 // ---------------------------------------------------------------- metadata
@@ -206,11 +290,22 @@
     min-width: 1rem;
   }
 
-  // The numbers are the first thing to go on a narrow screen — two arrows still page through, and
-  // the row would otherwise wrap into something that reads as a paragraph of digits.
+  .position {
+    display: none;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  // The numbers are the first thing to go on a narrow screen — a nine-page strip does not fit a
+  // phone, and would wrap into something that reads as a paragraph of digits. The compact index
+  // takes their place, so a reader still knows where they are.
   @media (max-width: 30rem) {
     .numbers {
       display: none;
+    }
+
+    .position {
+      display: block;
     }
   }
 }

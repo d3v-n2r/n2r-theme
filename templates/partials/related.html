@@ -9,8 +9,12 @@
       {% for other in page.related %}
         <a class="card" href="{{ other.url | safe }}">
           <span class="card-title">{{ other.title }}</span>
+          {# A title alone is not enough to choose between five posts on the same subject. #}
+          {% if other.summary %}
+            <span class="card-summary">{{ other.summary }}</span>
+          {% endif %}
           {% if other.date %}
-            <time class="post-meta" datetime="{{ other.date.iso }}">{{ other.date.human }}</time>
+            <time class="post-meta" datetime="{{ other.date.rfc3339 }}">{{ other.date.human }}</time>
           {% endif %}
         </a>
       {% endfor %}

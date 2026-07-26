@@ -8,6 +8,10 @@ All notable changes to this theme are documented here. The format follows
 
 ### Added
 
+- **M3** — post listings became scannable. Each card now carries the page's summary, the cover image
+  where there is one, and a thumbtack on a pinned post — the engine has sorted on `pin` all along
+  and nothing said so, which made a two-year-old post at the top read as a broken sort. Related
+  posts gained the summary too, since a title alone does not distinguish five posts on one subject.
 - **M3** — a numbered paginator. With two arrows alone, the only way to reach page five of a tag
   listing was to visit four other pages first. Long sequences collapse around the current page with
   the first and last always offered, and the numbers give way to the arrows on a narrow screen.
@@ -113,6 +117,11 @@ All notable changes to this theme are documented here. The format follows
 
 ### Changed
 
+- **M3** — a listing entry is an `<article>` with its link inside the heading, where it used to be
+  an `<a>` wrapped around everything. The wrapping version announced each entry to a screen reader
+  as one link labelled with the title, the date, every category and the summary run together, and
+  left the page with no headings to navigate between — which is how a reader moves through a list
+  like this. The anchor is stretched over the card in CSS, so a pointer still gets the whole card.
 - **M3** — the comment embed is built from script rather than written as a `<script src>` tag, so
   its theme is the one the reader chose here rather than the one their operating system is set to.
   giscus reads `data-theme` once as it loads, and a static tag could only say
