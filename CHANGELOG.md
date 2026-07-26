@@ -115,6 +115,14 @@ All notable changes to this theme are documented here. The format follows
   provenance, and publishes a GitHub release. Verify a release with
   `gh attestation verify n2r-theme.tar.gz --repo d3v-n2r/n2r-theme`.
 
+### Fixed
+
+- **M3** — **static assets were cached and never revalidated.** The service worker served `/assets/`
+  cache-first under a name that only changes once a year, so the first `main.css` a browser saw was
+  the one it kept until January — every rebuilt stylesheet and script after that was invisible, both
+  to readers after a deploy and to the author on every local reload. Assets are now served from the
+  cache and refreshed behind it, so the copy on disk always reaches the browser by the next load.
+
 ### Security
 
 - **M3** — **the theme no longer states a licence on the site's behalf.** Every post carried "This
