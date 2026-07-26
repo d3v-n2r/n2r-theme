@@ -20,13 +20,18 @@
       #}
       <div class="post-meta">
         <span>By {{ page.author }}</span>
+        {#
+          The `datetime` attribute carries the full timestamp where the author wrote one, so a
+          machine reading this page gets the exact instant. The visible text stays the calendar
+          date: a post is published on the 25th, not at 11:33.
+        #}
         {% if page.date %}
           <span class="sep">·</span>
-          <span>Posted <time datetime="{{ page.date.iso }}">{{ page.date.human }}</time></span>
+          <span>Posted <time datetime="{{ page.date.rfc3339 }}">{{ page.date.human }}</time></span>
         {% endif %}
         {% if page.updated %}
           <span class="sep">·</span>
-          <span>Updated <time datetime="{{ page.updated.iso }}">{{ page.updated.human }}</time></span>
+          <span>Updated <time datetime="{{ page.updated.rfc3339 }}">{{ page.updated.human }}</time></span>
         {% endif %}
         <span class="sep">·</span>
         <span>{{ page.read_time }} min read</span>

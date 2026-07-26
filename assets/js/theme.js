@@ -99,8 +99,18 @@
     var frame = document.querySelector('iframe.giscus-frame');
     if (!frame) return;
 
+    var theme = resolves(mode) === 'dark' ? 'dark' : 'light';
+
+    // A frame that has not finished loading has no listener yet, so a message posted to it is
+    // dropped and the comments keep the appearance they started in. Before it is ready the only
+    // thing that works is rewriting the URL it is loading.
+    if (frame.classList.contains('giscus-frame--loading')) {
+      frame.src = frame.src.replace(/([?&]theme=)[^&]*/, '$1' + theme);
+      return;
+    }
+
     frame.contentWindow.postMessage(
-      { giscus: { setConfig: { theme: resolves(mode) === 'dark' ? 'dark' : 'light' } } },
+      { giscus: { setConfig: { theme: theme } } },
       'https://giscus.app'
     );
   }
@@ -109,6 +119,48 @@
   if (toggle) {
     toggle.addEventListener('click', switchMode);
   }
+
+  // A reader following the system gets the whole page re-themed at sunset by CSS alone. The comment
+  // iframe cannot see that media query change, so it has to be told.
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () {
+    if (!root.dataset.mode) syncComments(null);
+  });
+
+  // ---------------------------------------------------------------- dates
+
+  // Every <time> already carries a machine-readable `datetime`, and until now nothing read it: the
+  // rendered text was one locale's conventions for every reader. Native Intl handles this in a
+  // dozen lines — no date library.
+  (function localiseDates() {
+    var pageLang = (root.lang || 'en').toLowerCase();
+    var readerLang = (navigator.language || pageLang).toLowerCase();
+
+    // Nothing to gain from reformatting into the conventions the page was already written in.
+    if (readerLang === pageLang) return;
+
+    var medium;
+    var full;
+    try {
+      medium = new Intl.DateTimeFormat(navigator.language, { dateStyle: 'medium' });
+      full = new Intl.DateTimeFormat(navigator.language, { dateStyle: 'full' });
+    } catch (error) {
+      return;
+    }
+
+    document.querySelectorAll('time[datetime]').forEach(function (element) {
+      var parts = element.getAttribute('datetime').slice(0, 10).split('-');
+      if (parts.length !== 3) return;
+
+      // Built from the parts in local time rather than parsed from the string. `new Date()` reads a
+      // bare `YYYY-MM-DD` as midnight UTC, which is the previous day everywhere west of it — so a
+      // post published on the 25th would be shown to a New York reader as the 24th.
+      var date = new Date(+parts[0], +parts[1] - 1, +parts[2]);
+      if (isNaN(date)) return;
+
+      element.textContent = medium.format(date);
+      element.title = full.format(date);
+    });
+  })();
 
   // ---------------------------------------------------------------- sidebar
 
@@ -147,22 +199,65 @@
 
   // ---------------------------------------------------------------- copy link
 
+  /**
+   * Copies through a hidden textarea and `execCommand`.
+   *
+   * Deprecated, and the only thing that works without a secure context. The textarea is positioned
+   * off-screen rather than hidden, because a `display: none` element cannot hold a selection.
+   */
+  function legacyCopy(text) {
+    var field = document.createElement('textarea');
+    field.value = text;
+    field.setAttribute('readonly', '');
+    field.style.position = 'fixed';
+    field.style.left = '-9999px';
+    document.body.appendChild(field);
+
+    var copied = false;
+    try {
+      field.select();
+      copied = document.execCommand('copy');
+    } catch (error) {
+      copied = false;
+    }
+
+    document.body.removeChild(field);
+    return copied;
+  }
+
   // One button that works for every destination, rather than a row of per-network share links —
   // those are outbound trackers wearing an icon.
   document.querySelectorAll('[data-share]').forEach(function (button) {
-    button.addEventListener('click', function () {
-      var url = button.dataset.share;
-      var done = function () {
-        var original = button.textContent;
-        button.textContent = 'Copied';
-        setTimeout(function () {
-          button.textContent = original;
-        }, 1600);
-      };
+    var original = button.textContent;
+    var restoring = null;
 
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(url).then(done, function () {});
+    /** Says what happened, then goes back to the label it had. */
+    function report(message) {
+      button.textContent = message;
+      clearTimeout(restoring);
+      restoring = setTimeout(function () {
+        button.textContent = original;
+      }, 1600);
+    }
+
+    button.addEventListener('click', function () {
+      // The clipboard API needs a secure context, so it is simply absent over plain http — which is
+      // the LAN-preview case an author hits before any reader does. The old selection-based copy
+      // still works there, and either way the button now says what happened instead of appearing
+      // to do nothing.
+      if (!navigator.clipboard) {
+        report(legacyCopy(button.dataset.share) ? 'Copied' : 'Copy failed');
+        return;
       }
+
+      navigator.clipboard.writeText(button.dataset.share).then(
+        function () {
+          report('Copied');
+        },
+        function () {
+          report('Copy failed');
+        }
+      );
     });
   });
 

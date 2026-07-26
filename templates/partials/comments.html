@@ -5,29 +5,48 @@
   third-party script at all — which is the point: comments are the one part of this site where
   someone else's server stores the content and someone else's code runs in the reader's browser.
 
-  giscus is loaded with `defer`, below the article, so it never delays the post itself.
+  The embed is created from script rather than written as a `<script src>` tag because giscus reads
+  `data-theme` once, as it loads. A static tag could only say `preferred_color_scheme`, which
+  follows the operating system — so a reader whose OS is dark but who chose light *here* would get a
+  dark comment box, and the mismatch would persist for exactly the readers who bothered to express a
+  preference. Building the element lets the appearance already applied to `<html>` be read first.
 #}
 {% if site.comments and site.comments.provider == "giscus" %}
   <section id="comments" aria-label="Comments">
     <h2>Comments</h2>
-    <script
-      src="https://giscus.app/client.js"
-      data-repo="{{ site.comments.repo }}"
-      data-repo-id="{{ site.comments.repo_id }}"
-      data-category="{{ site.comments.category }}"
-      data-category-id="{{ site.comments.category_id }}"
-      data-mapping="{{ site.comments.mapping }}"
-      data-reactions-enabled="1"
-      data-emit-metadata="0"
-      data-input-position="top"
-      {# Starts on whatever the reader is already using; theme.js re-syncs it on every toggle. #}
-      data-theme="preferred_color_scheme"
-      {# The embed's own interface follows the site's language rather than defaulting to English. #}
-      data-lang="{{ site.lang }}"
-      data-loading="lazy"
-      crossorigin="anonymous"
-      defer
-    ></script>
     <noscript>Comments need JavaScript, which is why they are the only part of this site that does.</noscript>
+    <script>
+      (function () {
+        var mode = document.documentElement.dataset.mode;
+        if (!mode) {
+          mode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+
+        var embed = document.createElement('script');
+        embed.src = 'https://giscus.app/client.js';
+        embed.crossOrigin = 'anonymous';
+        embed.async = true;
+
+        var attributes = {
+          'data-repo': {{ site.comments.repo | tojson | safe }},
+          'data-repo-id': {{ site.comments.repo_id | tojson | safe }},
+          'data-category': {{ site.comments.category | tojson | safe }},
+          'data-category-id': {{ site.comments.category_id | tojson | safe }},
+          'data-mapping': {{ site.comments.mapping | tojson | safe }},
+          'data-lang': {{ site.lang | tojson | safe }},
+          'data-theme': mode,
+          'data-reactions-enabled': '1',
+          'data-emit-metadata': '0',
+          'data-input-position': 'top',
+          'data-loading': 'lazy'
+        };
+
+        Object.keys(attributes).forEach(function (name) {
+          embed.setAttribute(name, attributes[name]);
+        });
+
+        document.currentScript.parentNode.appendChild(embed);
+      })();
+    </script>
   </section>
 {% endif %}

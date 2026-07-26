@@ -10,6 +10,11 @@
 (function () {
   'use strict';
 
+  // Read before anything else: `document.currentScript` is only this element while the script is
+  // executing, and is null from any callback later on.
+  var INDEX_URL =
+    (document.currentScript && document.currentScript.dataset.index) || '/search-index.json';
+
   var input = document.getElementById('search-input');
   var results = document.getElementById('search-results');
   var hits = document.getElementById('search-hits');
@@ -30,7 +35,7 @@
     if (index) return Promise.resolve(index);
     if (loading) return loading;
 
-    loading = fetch('/search-index.json')
+    loading = fetch(INDEX_URL)
       .then(function (response) {
         if (!response.ok) throw new Error('search index unavailable');
         return response.json();

@@ -8,6 +8,14 @@ All notable changes to this theme are documented here. The format follows
 
 ### Added
 
+- **M3** — dates are reformatted to the reader's locale from the `datetime` attribute every `<time>`
+  already carried, with the full date on hover, using native `Intl` and no date library. The
+  server-rendered text stays as the no-JavaScript fallback, and nothing is rewritten when the
+  reader's locale matches the page's.
+- **M3** — the copy-link button says what happened. The clipboard API is absent without a secure
+  context, which is the LAN-preview case an author hits before any reader does; there is now a
+  selection-based fallback that works there, and a failure message where nothing at all was said
+  before.
 - **M3** — the `<head>`. Canonical link, Open Graph properties, Twitter card and JSON-LD structured
   data, on every page rather than only on posts. Until now a link shared anywhere unfurled bare: no
   title beyond the tab text, no description, no image. Posts declare `article` with published and
@@ -67,6 +75,13 @@ All notable changes to this theme are documented here. The format follows
 
 ### Security
 
+- **M3** — turning the PWA off now unregisters the service worker and clears its caches. A worker
+  installed in a reader's browser outlives every deploy that follows and keeps serving its own
+  cache; nothing in a later build can reach it, because turning the feature off also stops the
+  engine writing `/sw.js`. The way out therefore has to ship *before* anyone needs it, and until now
+  it did not exist at all. A new worker also claims live tabs mid-session, so the page reloads once
+  when that happens rather than serving one build's HTML against another's assets — but only when a
+  worker was already in control, so a first visit does not load twice.
 - **M3** — the head interpolates content-derived strings into places that are not ordinary HTML
   text. Attribute values stay autoescaped; the JSON-LD block goes through `tojson`, which escapes
   the characters that would let a page title close the `<script>` early; and image URLs go through
@@ -77,6 +92,15 @@ All notable changes to this theme are documented here. The format follows
 
 ### Changed
 
+- **M3** — the comment embed is built from script rather than written as a `<script src>` tag, so
+  its theme is the one the reader chose here rather than the one their operating system is set to.
+  giscus reads `data-theme` once as it loads, and a static tag could only say
+  `preferred_color_scheme` — which meant the appearance mismatched precisely for readers who had
+  expressed a preference. The toggle also now reaches a frame that has not finished loading, by
+  rewriting its URL rather than posting a message nothing is listening for, and a reader following
+  the system gets their comments re-themed at sunset along with the rest of the page.
+- **M3** — the search index path comes from a `data-index` attribute on the script tag instead of
+  being hardcoded, so where it lives is the template's business.
 - **M3** — **Bootstrap is not used.** Chirpy tree-shakes it down to a flex-utility subset, roughly
   six responsive grid rules, and three JS components; writing that slice directly is less code than
   shipping the framework, and it removes the breakpoint conflict Chirpy fights throughout its SCSS

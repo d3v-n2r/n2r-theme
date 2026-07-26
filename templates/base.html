@@ -173,7 +173,13 @@
     </button>
 
     <script src="/assets/js/theme.js" defer></script>
-    <script src="/assets/js/search.js" defer></script>
+    {#
+      Where the search index lives is the template's business, not the script's. Hardcoding the
+      path meant a site serving from anywhere but the root got "search is unavailable" with no
+      explanation; a site can now change it by overriding this file rather than editing the theme's
+      JavaScript.
+    #}
+    <script src="/assets/js/search.js" data-index="/search-index.json" defer></script>
     <script src="/assets/js/toc.js" defer></script>
 
     {% if site.pwa %}
@@ -187,6 +193,41 @@
           addEventListener('load', function () {
             navigator.serviceWorker.register('/sw.js').catch(function () {
               // An unregistered worker costs nothing; the site works without it.
+            });
+          });
+
+          // A new worker calls skipWaiting and claims this page mid-session, which leaves already
+          // rendered HTML fetching assets from a newer build's cache. Reloading once resolves it.
+          // Only when a worker was already in control: on a first visit the change *is* the
+          // install, and reloading there would make every new reader's first page load twice.
+          var controlled = !!navigator.serviceWorker.controller;
+          var reloading = false;
+          navigator.serviceWorker.addEventListener('controllerchange', function () {
+            if (!controlled || reloading) return;
+            reloading = true;
+            location.reload();
+          });
+        }
+      </script>
+    {% else %}
+      {#
+        Turning the PWA off stops the engine writing `/sw.js`, but a worker already installed in a
+        reader's browser outlives every deploy that follows — it keeps serving its own cache, and
+        nothing in a later build can reach it. So the way out has to ship *before* anyone needs it.
+        These few lines are the only thing that can ever undo an install.
+      #}
+      <script>
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then(function (registrations) {
+            registrations.forEach(function (registration) {
+              registration.unregister();
+            });
+          });
+        }
+        if (window.caches) {
+          caches.keys().then(function (names) {
+            names.forEach(function (name) {
+              caches.delete(name);
             });
           });
         }
