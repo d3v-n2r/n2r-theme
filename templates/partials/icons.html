@@ -37,6 +37,26 @@
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
       <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05a3.74 3.74 0 0 1 3.37-1.85c3.6 0 4.27 2.37 4.27 5.46zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12M7.12 20.45H3.55V9h3.57zM22.22 0H1.77C.79 0 0 .78 0 1.75v20.5C0 23.22.79 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.75V1.75C24 .78 23.2 0 22.22 0" />
     </svg>
+  {#
+    The mark is X's; the name `twitter` still works because that is what most configurations and
+    most people call it, and a theme that only answered to the new name would silently fall back to
+    the generic link glyph for every site written before the rename.
+  #}
+  {%- elif name == "twitter" or name == "x" -%}
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M18.9 1.15h3.68l-8.04 9.19L24 22.85h-7.4l-5.8-7.58-6.64 7.58H.48l8.6-9.83L0 1.15h7.59l5.24 6.93zm-1.29 19.5h2.04L6.49 3.24H4.3z" />
+    </svg>
+  {#
+    A speech bubble in this set's own stroke style rather than a reproduction of Signal's mark.
+    Signal's logo is a speech bubble too, so it reads correctly in a row of social icons, and
+    drawing it here honestly beats approximating a trademark from memory and getting it subtly
+    wrong.
+  #}
+  {%- elif name == "signal" -%}
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M12 3.2c-4.86 0-8.8 3.5-8.8 7.8 0 2.4 1.22 4.55 3.15 5.98a.6.6 0 0 1 .23.6l-.55 2.72a.4.4 0 0 0 .56.44l3.02-1.4a.7.7 0 0 1 .48-.04c.61.13 1.25.2 1.91.2 4.86 0 8.8-3.5 8.8-7.8s-3.94-7.8-8.8-7.8Z" />
+    </svg>
   {%- elif name == "home" -%}
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

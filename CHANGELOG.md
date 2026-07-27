@@ -6,6 +6,14 @@ All notable changes to this theme are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **`twitter` and `signal` icons.** `twitter` answers to `x` as well and draws the X mark — a theme
+  that only knew the new name would silently fall back to the generic link glyph for every site
+  written before the rename. Signal is a speech bubble drawn in this set's own stroke style rather
+  than a reproduction of the trademark, which reads correctly in a row of social icons and is
+  honest about not being the official mark.
+
 ### Changed
 
 - **The side panel is now the blog's, not every page's.** "Recently updated" and "Trending tags" are
