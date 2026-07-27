@@ -336,6 +336,15 @@ html {
   // The side panel is the third column, and only appears when there is room for it.
   @include bp.from('xl') {
     grid-template-columns: minmax(0, 1fr) 15rem;
+
+    // …and only when it has something in it. The panel is a block a template fills, so a page that
+    // fills it with nothing still emits the element — and a reserved 15rem gutter beside a page
+    // that has no panel is worse than no panel, because it reads as something that failed to load.
+    //
+    // Matched on element children rather than `:empty`, which whitespace between tags defeats.
+    &:not(:has(#panel > *)) {
+      grid-template-columns: minmax(0, 1fr);
+    }
   }
 }
 
@@ -392,6 +401,15 @@ article {
       display: none;
     }
   }
+}
+
+// An empty panel is removed rather than merely narrowed: with the grid collapsed to one column it
+// would otherwise become a second row under the content.
+//
+// After the rule above, deliberately. `#panel` and `#panel:not(:has(> *))` have the same
+// specificity and a media query adds none, so the later rule is the one that wins.
+#panel:not(:has(> *)) {
+  display: none;
 }
 
 .panel-heading {

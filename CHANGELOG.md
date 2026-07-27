@@ -6,6 +6,22 @@ All notable changes to this theme are documented here. The format follows
 
 ## [Unreleased]
 
+### Changed
+
+- **The side panel is now the blog's, not every page's.** "Recently updated" and "Trending tags" are
+  about the writing, so they appear on the blog, on posts, and on the archive/tag/category pages —
+  and no longer on the front page, the projects list, or a standalone page. A standalone page keeps
+  its table of contents and loses only the blog widgets.
+- **The front page no longer lists the newest posts.** The blog is one click away in the sidebar and
+  is where posts belong; repeating three of them made the front page go stale on its own and gave a
+  reader two places to find the same thing. The engine still offers `recent` to any theme that wants
+  it — this one declines.
+- **An empty panel now collapses its column.** The panel is a block a template fills, so a page that
+  fills it with nothing still emitted the element, and the grid reserved 15rem for it regardless —
+  a dead gutter reads as something that failed to load. `:has()` on element children rather than
+  `:empty`, which whitespace between tags defeats. Browsers without `:has()` fall back to the old
+  reserved gutter rather than breaking.
+
 ### Added
 
 - **The 404 page gained a prominent "Take me home" button**, and an optional cancellable countdown

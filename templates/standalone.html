@@ -33,7 +33,11 @@
   </article>
 {% endblock %}
 
+{#
+  A table of contents and nothing else. "Recently updated" and "Trending tags" are about the blog,
+  and a standalone page — about, contact, uses — is not part of it; carrying them here would
+  advertise the writing from pages that are not writing.
+#}
 {% block panel %}
-  {% include "partials/panel.html" %}
   {% if page.toc %}{{ contents.toc(page.headings, "toc") }}{% endif %}
 {% endblock %}

@@ -2,11 +2,14 @@
   The front page.
 
   Its prose comes from `pages/index.md`, so the introduction is content the author writes rather
-  than strings buried in a template. The engine also hands over the newest posts, which saves the
-  reader a hop to the blog to see whether anything is new.
+  than strings buried in a template.
+
+  No post list and no side panel. The front page introduces the site; the blog is one click away in
+  the sidebar and is where posts belong. Repeating the newest three here makes the front page go
+  stale on its own and gives a reader two places to find the same thing. The engine still offers
+  `recent` to any theme that wants it — this one declines.
 #}
 {% extends "base.html" %}
-{% import "partials/macros.html" as m %}
 
 {#
   The topbar names the page you are on; the sidebar carries the site's own name. Repeating the site
@@ -37,15 +40,4 @@
     {% endif %}
   </article>
 
-  {% if recent %}
-    <section class="recent">
-      <h2>Latest posts</h2>
-      {{ m.post_list(recent) }}
-      <p><a href="{{ site.blog_url | safe }}">All posts →</a></p>
-    </section>
-  {% endif %}
-{% endblock %}
-
-{% block panel %}
-  {% include "partials/panel.html" %}
 {% endblock %}
