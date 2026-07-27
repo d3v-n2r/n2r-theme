@@ -8,6 +8,14 @@ All notable changes to this theme are documented here. The format follows
 
 ### Added
 
+- **The 404 page gained a prominent "Take me home" button**, and an optional cancellable countdown
+  rendered only when the site sets `not_found_redirect_after`. The redirect runs from the page
+  rather than a header or `<meta refresh>`, so the **status code stays 404** — a redirect that
+  changed it would hide broken links and read as a lie about what is there. No script means no
+  redirect, which is the correct failure: the button is still there.
+- `.link-button`, for an action that sits inside a sentence and must read as a link. A `button`
+  element rather than an anchor, because it goes nowhere — an anchor with no destination is a lie
+  to a screen reader and `href="#"` is a lie to everyone.
 - **`page.button`** is rendered under the content on home, standalone and post pages — the theme
   half of the engine's new front-matter field. A page asks for a call to action and the theme
   decides what a button looks like, which is the only arrangement available given that raw HTML in

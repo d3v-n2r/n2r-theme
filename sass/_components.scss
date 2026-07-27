@@ -1713,3 +1713,30 @@ $spine-width: 2px;
 .content-action {
   margin: 2rem 0 0;
 }
+
+// The optional countdown on the 404 page. Quiet on purpose: it is a courtesy, not the message, and
+// the message is that the page is not there.
+.not-found-redirect {
+  margin: 1.25rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+
+// A button that has to read as a link, for an action sitting inside a sentence. `button` rather
+// than an anchor because it goes nowhere — an anchor with no destination is a lie to a screen
+// reader, and one with href="#" is a lie to everyone.
+.link-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--link);
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--link-hover);
+  }
+}

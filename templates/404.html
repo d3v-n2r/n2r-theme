@@ -26,9 +26,61 @@
     </p>
     <p>
       Search is in the top bar, and everything ever published is on the
-      <a href="/archives/">archive</a>. Otherwise, start from
-      <a href="/">the beginning</a> or go straight to the
+      <a href="/archives/">archive</a>. Otherwise, go straight to the
       <a href="{{ site.blog_url | safe }}">posts</a>.
     </p>
+
+    <p class="content-action">
+      <a class="cta-button" href="/">Take me home</a>
+    </p>
+
+    {#
+      An optional, cancellable trip home.
+
+      Only rendered when the site asked for one, because a 404 that redirects by itself is a "soft
+      404": it hides broken links from whoever owns the site, and search engines treat it as a lie
+      about what is there. Two things keep this honest — the status code stays 404, because the
+      redirect happens in the page rather than in a header or a `<meta refresh>`, and the reader can
+      see the clock and stop it.
+
+      No script means no redirect, which is the correct failure: a reader who has scripting off
+      still has the button above, and never sees a promise nothing will keep.
+    #}
+    {% if site.not_found_redirect_after %}
+      <p class="not-found-redirect" hidden>
+        Going <a href="/">home</a> in <span data-countdown>{{ site.not_found_redirect_after }}</span>
+        seconds. <button type="button" class="link-button" data-cancel>Stay here</button>
+      </p>
+
+      <script>
+        (function () {
+          var notice = document.querySelector('.not-found-redirect');
+          if (!notice) {
+            return;
+          }
+          var clock = notice.querySelector('[data-countdown]');
+          var left = {{ site.not_found_redirect_after }};
+
+          notice.hidden = false;
+
+          var timer = setInterval(function () {
+            left -= 1;
+            if (left > 0) {
+              clock.textContent = left;
+              return;
+            }
+            clearInterval(timer);
+            // `replace` rather than `assign`: the page that was not found should not sit in the
+            // history, where Back would land the reader on it again.
+            window.location.replace('/');
+          }, 1000);
+
+          notice.querySelector('[data-cancel]').addEventListener('click', function () {
+            clearInterval(timer);
+            notice.remove();
+          });
+        })();
+      </script>
+    {% endif %}
   </article>
 {% endblock %}
