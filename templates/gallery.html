@@ -20,7 +20,7 @@
           src="{{ image.url | url }}"
           srcset="
             {%- for v in image.variants -%}
-              {{ v.url | safe }} {{ v.width }}w{% if not loop.last %}, {% endif %}
+              {{ v.url | url }} {{ v.width }}w{% if not loop.last %}, {% endif %}
             {%- endfor -%}
           "
           sizes="(max-width: 850px) 100vw, 15rem"
@@ -29,7 +29,7 @@
           alt="{{ image.title }}"
           loading="lazy"
           decoding="async"
-          style="background-image: url('{{ image.placeholder | safe }}')"
+          style="background-image: url('{{ image.placeholder | url }}')"
         />
         <figcaption>
           {{ image.title }}

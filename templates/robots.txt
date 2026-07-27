@@ -10,4 +10,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: {{ (site.base_url ~ "/sitemap.xml") | safe }}
+Sitemap: {{ (site.base_url ~ "/sitemap.xml") | url }}

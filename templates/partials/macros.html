@@ -15,7 +15,7 @@
 {% macro srcset(image) %}
   {%- if image.variants | length > 1 -%}
     {%- for variant in image.variants -%}
-      {{ variant.url | safe }} {{ variant.width }}w{% if not loop.last %}, {% endif %}
+      {{ variant.url | url }} {{ variant.width }}w{% if not loop.last %}, {% endif %}
     {%- endfor -%}
   {%- endif -%}
 {% endmacro %}
@@ -43,7 +43,7 @@
           #}
           <div
             class="preview-img"
-            {% if page.image.placeholder %}style="background-image: url('{{ page.image.placeholder | safe }}')"{% endif %}
+            {% if page.image.placeholder %}style="background-image: url('{{ page.image.placeholder | url }}')"{% endif %}
           >
             <img
               src="{{ page.image.url | url }}"

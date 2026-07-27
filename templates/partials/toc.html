@@ -23,7 +23,7 @@
       <ul>
         {% for heading in entries %}
           <li class="toc-level-{{ heading.level }}">
-            <a href="#{{ heading.id | safe }}">{{ heading.text }}</a>
+            <a href="#{{ heading.id | url }}">{{ heading.text }}</a>
           </li>
         {% endfor %}
       </ul>

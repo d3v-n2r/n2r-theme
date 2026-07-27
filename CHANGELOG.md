@@ -18,6 +18,13 @@ All notable changes to this theme are documented here. The format follows
 
 ### Security
 
+- **The cover placeholder is escaped.** It is written into
+  `style="background-image: url('…')"` — two quoting contexts deep — and a single apostrophe in a
+  front-matter `lqip:` closed the CSS `url()` and appended its own rules. Demonstrated, then fixed.
+- **The feed, sitemap and robots templates** carried `base_url` and page URLs unescaped. Now routed
+  through `url` like everything else, so the sweep is complete: every remaining `| safe` in this
+  theme is either rendered markdown or a value `tojson` already escaped.
+
 - **Every URL in an attribute now goes through the engine's `url` filter instead of `| safe`.** A
   URL that came from `config.toml`, front matter or `data/` could close its own attribute and inject
   an event handler — demonstrated with a `button.url`. 37 attributes across 16 templates. Applied as

@@ -9,8 +9,8 @@
     {% for page in pages %}
     <item>
       <title>{{ page.title }}</title>
-      <link>{{ site.base_url | url }}{{ page.url | safe }}</link>
-      <guid isPermaLink="true">{{ site.base_url | url }}{{ page.url | safe }}</guid>
+      <link>{{ site.base_url | url }}{{ page.url | url }}</link>
+      <guid isPermaLink="true">{{ site.base_url | url }}{{ page.url | url }}</guid>
       {% if page.date %}<pubDate>{{ page.date.rfc2822 }}</pubDate>{% endif %}
       {% for category in page.categories %}<category>{{ category.name }}</category>{% endfor %}
       {# An item's HTML belongs in the description as escaped text, which is what autoescaping gives. #}

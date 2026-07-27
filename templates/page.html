@@ -70,7 +70,7 @@
             {% set set = m.srcset(page.image) %}
             {% if set %}srcset="{{ set }}" sizes="(max-width: 850px) 100vw, 48rem"{% endif %}
             {% if page.image.width %}width="{{ page.image.width }}" height="{{ page.image.height }}"{% endif %}
-            {% if page.image.placeholder %}style="background-image: url('{{ page.image.placeholder | safe }}'); background-size: cover"{% endif %}
+            {% if page.image.placeholder %}style="background-image: url('{{ page.image.placeholder | url }}'); background-size: cover"{% endif %}
             alt="{{ page.image.alt or page.title }}"
             loading="eager"
             fetchpriority="high"
@@ -164,7 +164,7 @@
           A copy-link button rather than share buttons for particular networks: those are outbound
           trackers wearing an icon, and this one works for every destination.
         #}
-        <button class="share" type="button" data-share="{{ site.base_url | url }}{{ page.url | safe }}">
+        <button class="share" type="button" data-share="{{ site.base_url | url }}{{ page.url | url }}">
           {{ site.text.post.share }}
         </button>
       </div>

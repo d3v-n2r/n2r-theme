@@ -11,7 +11,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 {%- for entry in entries %}
   <url>
-    <loc>{{ (site.base_url ~ entry.url) | safe }}</loc>
+    <loc>{{ (site.base_url ~ entry.url) | url }}</loc>
     {%- if entry.lastmod %}
     <lastmod>{{ entry.lastmod }}</lastmod>
     {%- endif %}
