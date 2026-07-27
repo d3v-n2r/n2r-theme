@@ -8,6 +8,12 @@ All notable changes to this theme are documented here. The format follows
 
 ### Added
 
+- **Chirpy's image classes** — `.w-25/.w-50/.w-75/.w-100`, `.normal`, `.left`, `.right`, `.shadow`,
+  and the `.light`/`.dark` pair that shows one screenshot per appearance. Headings `clear: both`, so
+  a floated image does not have the next heading ride up beside it.
+- **`code.filepath`** — a path reads as a location rather than as something to run. Without the
+  distinction `/etc/hosts` and `rm -rf` look identical.
+
 - **`.embed-video`** — the click-to-load player facade the engine now emits. It holds the 16/9 box
   the video will occupy, so pressing play swaps the iframe in without the page moving under the
   reader. The play triangle is drawn in CSS rather than fetched or inlined as SVG. The button names

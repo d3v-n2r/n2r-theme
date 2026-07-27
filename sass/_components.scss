@@ -1819,3 +1819,72 @@ $spine-width: 2px;
   text-align: center;
 }
 
+// ---------------------------------------------------------------- image annotations
+//
+// Chirpy's kramdown classes, honoured because content carried over from a Chirpy site already
+// contains them. Everything here is cosmetic and every one is opt-in: an image that asks for
+// nothing is unchanged.
+.content {
+  img {
+    &.w-25 { width: 25%; }
+    &.w-50 { width: 50%; }
+    &.w-75 { width: 75%; }
+    &.w-100 { width: 100%; }
+
+    // Chirpy centres content images; `.normal` is how a post opts back out of that.
+    &.normal {
+      margin-inline: 0;
+    }
+
+    &.left {
+      float: left;
+      margin: 0.5rem 1.25rem 1rem 0;
+    }
+
+    &.right {
+      float: right;
+      margin: 0.5rem 0 1rem 1.25rem;
+    }
+
+    &.shadow {
+      box-shadow: var(--shadow);
+    }
+  }
+
+  // A floated image is taken out of flow, so without this the next heading rides up beside it.
+  h1, h2, h3, h4, h5, h6 {
+    clear: both;
+  }
+}
+
+// One image per appearance. Chirpy ships a light and a dark screenshot and shows whichever matches;
+// the pair only makes sense together, so each is hidden rather than removed — a reader switching
+// mode gets the other without the page reflowing.
+:root[data-mode='dark'] .content img.light,
+:root[data-mode='light'] .content img.dark {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-mode]) .content img.light {
+    display: none;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-mode]) .content img.dark {
+    display: none;
+  }
+}
+
+// ---------------------------------------------------------------- filepath
+//
+// Chirpy distinguishes a path from a code fragment: same monospace, but it reads as a location
+// rather than something to run. Without the distinction `/etc/hosts` and `rm -rf` look identical.
+.content code.filepath {
+  background: none;
+  padding: 0;
+  color: var(--text);
+  font-weight: 620;
+}
+
