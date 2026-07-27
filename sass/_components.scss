@@ -1598,12 +1598,16 @@ $spine-width: 2px;
   }
 }
 
-// The reference's pill. A link rather than a button because it navigates — a mail client is a
-// destination, and a reader who wants it in another tab should get one.
-.resume-contact-button {
+// A pill for the one action a page is asking for: download this, write to me. A link rather than a
+// button element because it navigates, and a reader who wants it in another tab should get one.
+//
+// Generic on purpose. It began as the résumé's contact pill and is now also what a site's own
+// markdown reaches for, so it is named for what it does rather than where it first appeared.
+.cta-button {
   display: block;
   width: min(16rem, 100%);
   margin: 1.5rem auto 0;
+  box-sizing: border-box;
   padding: 0.7rem 1.25rem;
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -1702,4 +1706,10 @@ $spine-width: 2px;
     margin: 0;
     color: var(--text-muted);
   }
+}
+
+// A call to action closing a page. Centred, and separated from the prose above it — a button that
+// touches the last paragraph reads as part of the sentence.
+.content-action {
+  margin: 2rem 0 0;
 }

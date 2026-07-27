@@ -6,7 +6,17 @@ All notable changes to this theme are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **`page.button`** is rendered under the content on home, standalone and post pages — the theme
+  half of the engine's new front-matter field. A page asks for a call to action and the theme
+  decides what a button looks like, which is the only arrangement available given that raw HTML in
+  markdown is stripped.
+
 ### Changed
+
+- `.resume-contact-button` is now **`.cta-button`**, named for what it does rather than where it
+  first appeared, because a site's own pages now reach for it too.
 
 - **Résumé layout rebuilt** against `jglovier/resume-template`, the reference it now follows: a
   centred avatar and name, a rule under the headline carrying the contact details on the same line,

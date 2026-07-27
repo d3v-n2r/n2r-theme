@@ -15,6 +15,21 @@
     <h1>{{ page.title }}</h1>
     {% if page.toc %}{{ contents.toc_mobile(page.headings) }}{% endif %}
     <div class="content">{{ page.content | safe }}</div>
+
+    {#
+      A page's single call to action, when its front matter asked for one. It lives here rather than
+      in the markdown because raw HTML in content is stripped, deliberately — so a button is
+      something a page requests and the theme draws, not something an author hand-writes.
+    #}
+    {% if page.button %}
+      <p class="content-action">
+        <a
+          class="cta-button"
+          href="{{ page.button.url | safe }}"
+          {%- if page.button.download %} download="{{ page.button.download }}"{% endif %}
+        >{{ page.button.text }}</a>
+      </p>
+    {% endif %}
   </article>
 {% endblock %}
 
