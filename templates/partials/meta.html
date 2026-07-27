@@ -24,8 +24,8 @@
 {%- set cover = page.image if (page is defined and page and page.image) else none -%}
 {%- set share_image = cover.url if cover else site.social_preview_image -%}
 
-<link rel="canonical" href="{{ canonical | safe }}" />
-<meta property="og:url" content="{{ canonical | safe }}" />
+<link rel="canonical" href="{{ canonical | url }}" />
+<meta property="og:url" content="{{ canonical | url }}" />
 <meta property="og:site_name" content="{{ site.title }}" />
 <meta property="og:title" content="{{ meta_title }}" />
 <meta property="og:description" content="{{ meta_description }}" />

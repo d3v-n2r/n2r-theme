@@ -46,7 +46,7 @@
             {% if page.image.placeholder %}style="background-image: url('{{ page.image.placeholder | safe }}')"{% endif %}
           >
             <img
-              src="{{ page.image.url | safe }}"
+              src="{{ page.image.url | url }}"
               {% set set = srcset(page.image) %}
               {% if set %}srcset="{{ set }}" sizes="(min-width: 768px) 12rem, 100vw"{% endif %}
               {% if page.image.width %}width="{{ page.image.width }}" height="{{ page.image.height }}"{% endif %}
@@ -58,7 +58,7 @@
 
         <div class="card-body">
           <h2 class="card-title">
-            <a href="{{ page.url | safe }}">{{ page.title }}</a>
+            <a href="{{ page.url | url }}">{{ page.title }}</a>
           </h2>
 
           {# What makes the list scannable: a title alone gives a reader nothing to decide on. #}
@@ -114,7 +114,7 @@
   {% if pagination.total > 1 %}
     <nav class="pager" aria-label="Pagination">
       {% if pagination.previous %}
-        <a class="step" href="{{ pagination.previous | safe }}" rel="prev">← Newer</a>
+        <a class="step" href="{{ pagination.previous | url }}" rel="prev">← Newer</a>
       {% else %}
         <span class="step disabled" aria-hidden="true">← Newer</span>
       {% endif %}
@@ -132,7 +132,7 @@
               {% if entry.current %}
                 <span class="current" aria-current="page">{{ entry.number }}</span>
               {% else %}
-                <a href="{{ entry.url | safe }}">{{ entry.number }}</a>
+                <a href="{{ entry.url | url }}">{{ entry.number }}</a>
               {% endif %}
             </li>
           {% elif ns.gap %}
@@ -150,7 +150,7 @@
       <span class="position">{{ pagination.number }} / {{ pagination.total }}</span>
 
       {% if pagination.next %}
-        <a class="step" href="{{ pagination.next | safe }}" rel="next">Older →</a>
+        <a class="step" href="{{ pagination.next | url }}" rel="next">Older →</a>
       {% else %}
         <span class="step disabled" aria-hidden="true">Older →</span>
       {% endif %}
@@ -161,7 +161,7 @@
 {% macro tag_list(terms) %}
   <div class="tags">
     {% for term in terms %}
-      <a class="tag" href="{{ term.url | safe }}">
+      <a class="tag" href="{{ term.url | url }}">
         {{ term.name }} <span class="count">{{ term.count }}</span>
       </a>
     {% endfor %}

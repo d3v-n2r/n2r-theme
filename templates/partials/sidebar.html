@@ -29,7 +29,7 @@
     {# The picture belongs to the site, not the theme. Sites without one get a monogram. #}
     <a id="avatar" href="/" aria-label="{{ site.title }} home">
       {% if site.avatar %}
-        <img src="{{ site.avatar | safe }}" alt="{{ site.author }}" width="112" height="112" />
+        <img src="{{ site.avatar | url }}" alt="{{ site.author }}" width="112" height="112" />
       {% else %}
         <span class="monogram">{{ site.title | first }}</span>
       {% endif %}
@@ -56,19 +56,19 @@
     {% for item in site.nav %}
       {% if item.children %}
         <div class="nav-group">
-          <a href="{{ item.url | safe }}" {{ nav_current(item.url, url) }}>
+          <a href="{{ item.url | url }}" {{ nav_current(item.url, url) }}>
             {{ icons.icon(item.icon or item.name | lower) }}<span>{{ item.name }}</span>
           </a>
           <div class="nav-children">
             {% for child in item.children %}
-              <a href="{{ child.url | safe }}" {{ nav_current(child.url, url) }}>
+              <a href="{{ child.url | url }}" {{ nav_current(child.url, url) }}>
                 <span>{{ child.name }}</span>
               </a>
             {% endfor %}
           </div>
         </div>
       {% else %}
-        <a href="{{ item.url | safe }}" {{ nav_current(item.url, url) }}>
+        <a href="{{ item.url | url }}" {{ nav_current(item.url, url) }}>
           {{ icons.icon(item.icon or item.name | lower) }}<span>{{ item.name }}</span>
         </a>
       {% endif %}
@@ -88,7 +88,7 @@
         anything, and these open in one.
       #}
       <a
-        href="{{ profile.url | safe }}"
+        href="{{ profile.url | url }}"
         aria-label="{{ profile.name }}"
         title="{{ profile.name }}"
         target="_blank"

@@ -12,7 +12,7 @@
     {% for project in projects %}
       <article class="project{% if project.featured %} featured{% endif %}">
         <header>
-          <h2><a href="{{ project.url | safe }}">{{ project.title }}</a></h2>
+          <h2><a href="{{ project.url | url }}">{{ project.title }}</a></h2>
           {% if project.status %}
             {# The engine returns a key, so the class name and the label are no longer the same string
                wearing two hats — translating one cannot silently rename the other. #}
@@ -31,7 +31,7 @@
         {% if project.links %}
           <div class="project-links">
             {% for link in project.links %}
-              <a href="{{ link.url | safe }}" rel="noopener">{{ site.text.link[link.kind] }}</a>
+              <a href="{{ link.url | url }}" rel="noopener">{{ site.text.link[link.kind] }}</a>
             {% endfor %}
           </div>
         {% endif %}

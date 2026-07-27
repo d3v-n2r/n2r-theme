@@ -33,7 +33,7 @@
       <p class="content-action">
         <a
           class="cta-button"
-          href="{{ page.button.url | safe }}"
+          href="{{ page.button.url | url }}"
           {%- if page.button.download %} download="{{ page.button.download }}"{% endif %}
         >{{ page.button.text }}</a>
       </p>

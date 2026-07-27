@@ -7,7 +7,7 @@
     <h2 id="related-heading">{{ site.text.panel.related }}</h2>
     <div class="related-grid">
       {% for other in page.related %}
-        <a class="card" href="{{ other.url | safe }}">
+        <a class="card" href="{{ other.url | url }}">
           <span class="card-title">{{ other.title }}</span>
           {# A title alone is not enough to choose between five posts on the same subject. #}
           {% if other.summary %}

@@ -6,7 +6,7 @@
 {% block title %}{{ page.title }} · {{ site.title }}{% endblock %}
 {% block description %}{{ page.description or site.description }}{% endblock %}
 {% block topbar_title %}{{ page.title }}{% endblock %}
-{% block breadcrumb %}<a href="{{ site.blog_url | safe }}">Blog</a><span>{{ page.title }}</span>{% endblock %}
+{% block breadcrumb %}<a href="{{ site.blog_url | url }}">Blog</a><span>{{ page.title }}</span>{% endblock %}
 
 {% block content %}
   {#
@@ -33,7 +33,7 @@
         #}
         <span>{{ site.text.post.by }}
           {% if site.author_url and page.author == site.author %}
-            <a href="{{ site.author_url | safe }}" rel="author">{{ page.author }}</a>
+            <a href="{{ site.author_url | url }}" rel="author">{{ page.author }}</a>
           {% else %}
             {{ page.author }}
           {% endif %}
@@ -66,7 +66,7 @@
       {% if page.image %}
         <figure class="cover{% if page.image.no_bg %} no-bg{% endif %}">
           <img
-            src="{{ page.image.url | safe }}"
+            src="{{ page.image.url | url }}"
             {% set set = m.srcset(page.image) %}
             {% if set %}srcset="{{ set }}" sizes="(max-width: 850px) 100vw, 48rem"{% endif %}
             {% if page.image.width %}width="{{ page.image.width }}" height="{{ page.image.height }}"{% endif %}
@@ -85,7 +85,7 @@
     {% if page.series %}
       <p class="series-banner">
         {{ site.text.post.series_part }} {{ page.series.number }} {{ site.text.post.series_of }} {{ page.series.total }} {{ site.text.post.series_in }}
-        <a href="{{ page.series.url | safe }}">{{ page.series.name }}</a>
+        <a href="{{ page.series.url | url }}">{{ page.series.name }}</a>
       </p>
     {% endif %}
 
@@ -101,7 +101,7 @@
       <p class="content-action">
         <a
           class="cta-button"
-          href="{{ page.button.url | safe }}"
+          href="{{ page.button.url | url }}"
           {%- if page.button.download %} download="{{ page.button.download }}"{% endif %}
         >{{ page.button.text }}</a>
       </p>
@@ -112,7 +112,7 @@
         <div class="post-meta">
           {{ icons.icon("categories") }}
           {% for category in page.categories %}
-            <a href="{{ category.url | safe }}">{{ category.name }}</a>
+            <a href="{{ category.url | url }}">{{ category.name }}</a>
           {% endfor %}
         </div>
       {% endif %}
@@ -123,7 +123,7 @@
         <div class="tags">
           {{ icons.icon("tags") }}
           {% for tag in page.tags %}
-            <a class="tag" href="{{ tag.url | safe }}">{{ tag.name }}</a>
+            <a class="tag" href="{{ tag.url | url }}">{{ tag.name }}</a>
           {% endfor %}
         </div>
       {% endif %}
@@ -137,7 +137,7 @@
           {{ icons.icon("pencil") }}
           {# The prefix is the site's own config; the path is a filename off disk, so only the
              first is marked safe. #}
-          <a href="{{ site.edit.url | safe }}{{ page.source_path }}" rel="noopener">{{ site.text.post.edit }}</a>
+          <a href="{{ site.edit.url | url }}{{ page.source_path }}" rel="noopener">{{ site.text.post.edit }}</a>
         </p>
       {% endif %}
 
@@ -153,7 +153,7 @@
               {{ site.license.statement }}
             {% else %}
               {{ site.text.post.licence }}
-              <a href="{{ site.license.url | safe }}" rel="license">{{ site.license.name }}</a>
+              <a href="{{ site.license.url | url }}" rel="license">{{ site.license.name }}</a>
               {{ site.text.post.licence_by }} {{ page.author }}.
             {% endif %}
           </span>
@@ -164,7 +164,7 @@
           A copy-link button rather than share buttons for particular networks: those are outbound
           trackers wearing an icon, and this one works for every destination.
         #}
-        <button class="share" type="button" data-share="{{ site.base_url | safe }}{{ page.url | safe }}">
+        <button class="share" type="button" data-share="{{ site.base_url | url }}{{ page.url | safe }}">
           {{ site.text.post.share }}
         </button>
       </div>
@@ -173,12 +173,12 @@
     {% if page.series and (page.series.previous or page.series.next) %}
       <nav class="series-nav" aria-label="Series navigation">
         {% if page.series.previous %}
-          <a href="{{ page.series.previous | safe }}" rel="prev">← {{ site.text.nav.previous_part }}</a>
+          <a href="{{ page.series.previous | url }}" rel="prev">← {{ site.text.nav.previous_part }}</a>
         {% else %}
           <span></span>
         {% endif %}
         {% if page.series.next %}
-          <a href="{{ page.series.next | safe }}" rel="next">{{ site.text.nav.next_part }} →</a>
+          <a href="{{ page.series.next | url }}" rel="next">{{ site.text.nav.next_part }} →</a>
         {% endif %}
       </nav>
     {% endif %}
@@ -205,7 +205,7 @@
   {% if page.previous or page.next %}
     <nav class="post-nav" aria-label="Post navigation">
       {% if page.previous %}
-        <a class="card" href="{{ page.previous.url | safe }}" rel="prev">
+        <a class="card" href="{{ page.previous.url | url }}" rel="prev">
           <span class="direction">{{ site.text.nav.older }}</span>
           <span class="card-title">{{ page.previous.title }}</span>
         </a>
@@ -216,7 +216,7 @@
         </span>
       {% endif %}
       {% if page.next %}
-        <a class="card next" href="{{ page.next.url | safe }}" rel="next">
+        <a class="card next" href="{{ page.next.url | url }}" rel="next">
           <span class="direction">{{ site.text.nav.newer }}</span>
           <span class="card-title">{{ page.next.title }}</span>
         </a>

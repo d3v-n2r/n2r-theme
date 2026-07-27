@@ -18,6 +18,12 @@ All notable changes to this theme are documented here. The format follows
 
 ### Security
 
+- **Every URL in an attribute now goes through the engine's `url` filter instead of `| safe`.** A
+  URL that came from `config.toml`, front matter or `data/` could close its own attribute and inject
+  an event handler — demonstrated with a `button.url`. 37 attributes across 16 templates. Applied as
+  a blanket rule rather than case by case: `| url` costs nothing on an engine-built URL, which has
+  no character in it to escape, and case-by-case judgement is how one gets missed.
+
 - Actions pinned to commit SHAs rather than release tags, and the checkout no longer keeps its
   token. A tag is a movable pointer; `@v4` meant whatever that repository decided `v4` was at the
   moment the workflow ran.

@@ -22,7 +22,7 @@
   {% if kind == "categories" %}
     <div class="category-cards">
       {% for term in terms %}
-        <a class="category-card" href="{{ term.url | safe }}">
+        <a class="category-card" href="{{ term.url | url }}">
           <span class="name">{{ term.name }}</span>
           <span class="count">
             {{ term.count }} post{% if term.count != 1 %}s{% endif %}
@@ -33,7 +33,7 @@
   {% else %}
     <div id="tags">
       {% for term in terms %}
-        <a class="tag" href="{{ term.url | safe }}">
+        <a class="tag" href="{{ term.url | url }}">
           {{ term.name }}<span class="count">{{ term.count }}</span>
         </a>
       {% endfor %}

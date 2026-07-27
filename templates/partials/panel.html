@@ -10,7 +10,7 @@
     <p class="panel-heading">Recently updated</p>
     <ul>
       {% for page in site.recent %}
-        <li><a href="{{ page.url | safe }}">{{ page.title }}</a></li>
+        <li><a href="{{ page.url | url }}">{{ page.title }}</a></li>
       {% endfor %}
     </ul>
   </section>
@@ -21,7 +21,7 @@
     <p class="panel-heading">Trending tags</p>
     <div class="tags">
       {% for tag in site.trending %}
-        <a class="tag" href="{{ tag.url | safe }}">{{ tag.name }}</a>
+        <a class="tag" href="{{ tag.url | url }}">{{ tag.name }}</a>
       {% endfor %}
     </div>
   </section>

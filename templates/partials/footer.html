@@ -6,7 +6,7 @@
   <p>
     &copy; {{ site.year }}
     {%- if site.author_url %}
-      <a href="{{ site.author_url | safe }}">{{ site.author }}</a>
+      <a href="{{ site.author_url | url }}">{{ site.author }}</a>
     {%- else %}
       {{ site.author }}
     {%- endif %}

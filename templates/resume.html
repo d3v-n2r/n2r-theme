@@ -38,7 +38,7 @@
       {% if cv.avatar or site.avatar %}
         <img
           class="resume-avatar no-print"
-          src="{{ (cv.avatar or site.avatar) | safe }}"
+          src="{{ (cv.avatar or site.avatar) | url }}"
           alt=""
           width="96"
           height="96"
@@ -58,7 +58,7 @@
             {% for entry in cv.contact %}
               <li>
                 {% if entry.url %}
-                  <a href="{{ entry.url | safe }}" rel="noopener"
+                  <a href="{{ entry.url | url }}" rel="noopener"
                      {%- if entry.url is startingwith "mailto:" %} itemprop="email"{% endif %}>{{ entry.value }}</a>
                 {% else %}
                   {{ entry.value }}
@@ -141,7 +141,7 @@
             <meta itemprop="creator" content="{{ cv.name or site.author }}" />
             <h3 class="resume-entry-title" itemprop="name">
               {%- if item.url -%}
-                <a href="{{ item.url | safe }}" rel="noopener" itemprop="url">{{ item.name }}</a>
+                <a href="{{ item.url | url }}" rel="noopener" itemprop="url">{{ item.name }}</a>
               {%- else -%}
                 {{ item.name }}
               {%- endif -%}
@@ -195,7 +195,7 @@
           <div class="resume-entry" itemscope itemprop="memberOf" itemtype="https://schema.org/Organization">
             <h3 class="resume-entry-title" itemprop="name">
               {%- if item.url -%}
-                <a href="{{ item.url | safe }}" rel="noopener" itemprop="url">{{ item.organization }}</a>
+                <a href="{{ item.url | url }}" rel="noopener" itemprop="url">{{ item.organization }}</a>
               {%- else -%}
                 {{ item.organization }}
               {%- endif -%}
@@ -230,7 +230,7 @@
             {% for item in cv.links %}
               <li>
                 {%- if item.url -%}
-                  <a href="{{ item.url | safe }}" rel="noopener">{{ item.description or item.url }}</a>
+                  <a href="{{ item.url | url }}" rel="noopener">{{ item.description or item.url }}</a>
                 {%- else -%}
                   {{ item.description }}
                 {%- endif -%}

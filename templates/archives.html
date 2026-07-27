@@ -33,7 +33,7 @@
           <li>
             <span class="date day">{{ page.date.day }}</span>
             <span class="date month">{{ page.date.month }}</span>
-            <a href="{{ page.url | safe }}">{{ page.title }}</a>
+            <a href="{{ page.url | url }}">{{ page.title }}</a>
           </li>
         {% endfor %}
       </ul>

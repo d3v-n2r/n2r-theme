@@ -16,8 +16,8 @@
 {% block description %}{{ term.count }} post{% if term.count != 1 %}s{% endif %} filed under the {{ label }} “{{ term.name }}”{% if pagination.number > 1 %} — page {{ pagination.number }} of {{ pagination.total }}{% endif %}.{% endblock %}
 
 {% block head_links %}
-  {% if pagination.previous %}<link rel="prev" href="{{ pagination.previous | safe }}" />{% endif %}
-  {% if pagination.next %}<link rel="next" href="{{ pagination.next | safe }}" />{% endif %}
+  {% if pagination.previous %}<link rel="prev" href="{{ pagination.previous | url }}" />{% endif %}
+  {% if pagination.next %}<link rel="next" href="{{ pagination.next | url }}" />{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -29,7 +29,7 @@
   <ul class="term-list">
     {% for page in pages %}
       <li>
-        <a href="{{ page.url | safe }}">{{ page.title }}</a>
+        <a href="{{ page.url | url }}">{{ page.title }}</a>
         <span class="leader"></span>
         {% if page.date %}
           <time datetime="{{ page.date.iso }}">{{ page.date.human }}</time>

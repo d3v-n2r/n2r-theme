@@ -13,8 +13,8 @@
 {% block description %}Everything published on {{ site.title }}, newest first{% if pagination.number > 1 %} — page {{ pagination.number }} of {{ pagination.total }}{% endif %}.{% endblock %}
 
 {% block head_links %}
-  {% if pagination.previous %}<link rel="prev" href="{{ pagination.previous | safe }}" />{% endif %}
-  {% if pagination.next %}<link rel="next" href="{{ pagination.next | safe }}" />{% endif %}
+  {% if pagination.previous %}<link rel="prev" href="{{ pagination.previous | url }}" />{% endif %}
+  {% if pagination.next %}<link rel="next" href="{{ pagination.next | url }}" />{% endif %}
 {% endblock %}
 
 {% block content %}

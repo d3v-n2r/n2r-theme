@@ -29,7 +29,7 @@
       {% if project.links %}
         <div class="project-links">
           {% for link in project.links %}
-            <a href="{{ link.url | safe }}" rel="noopener">{{ site.text.link[link.kind] }}</a>
+            <a href="{{ link.url | url }}" rel="noopener">{{ site.text.link[link.kind] }}</a>
           {% endfor %}
         </div>
       {% endif %}

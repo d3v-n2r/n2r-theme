@@ -17,7 +17,7 @@
           stays escaped.
         #}
         <img
-          src="{{ image.url | safe }}"
+          src="{{ image.url | url }}"
           srcset="
             {%- for v in image.variants -%}
               {{ v.url | safe }} {{ v.width }}w{% if not loop.last %}, {% endif %}
