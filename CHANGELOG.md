@@ -6,7 +6,28 @@ All notable changes to this theme are documented here. The format follows
 
 ## [Unreleased]
 
+### Changed
+
+- **Résumé layout rebuilt** against `jglovier/resume-template`, the reference it now follows: a
+  centred avatar and name, a rule under the headline carrying the contact details on the same line,
+  an executive summary, an optional "Get in touch" button, and entries of title / details / copy.
+  Its *typography* is deliberately not ported — that theme loads Open Sans and Lora from a webfont
+  host, and this one committed to the system stack, so the proportions come across and the network
+  requests do not. Section rules are drawn with `--border` rather than the reference's fixed grey,
+  so the page works in both modes.
+
 ### Added
+
+- **Résumé sections**: recognition, associations, outside interests, and elsewhere-links, in
+  addition to experience, education, projects and skills. Every one is optional and renders nothing
+  when the site has no data for it.
+- **schema.org `Person` microdata** on the résumé — `jobTitle`, `worksFor`, `alumniOf`, `award`,
+  `memberOf`, `email`, `image`. It costs nothing at render time and is the difference between a
+  search engine reading the page as a person with roles and reading it as a page with words on it.
+- **Résumé print rules**: the page tightens on paper, the avatar and both buttons are dropped, and
+  the details line turns italic — colour is the first thing a printer takes away, so the line under
+  each title must stay distinguishable without depending on grey.
+- Locale strings for every résumé heading, so a translation can move them.
 
 - **M3** — covers and listing thumbnails carry `srcset`, intrinsic dimensions and the engine's inline
   placeholder, so a card holds its colour from first paint and nothing moves when the picture

@@ -1506,73 +1506,183 @@ $spine-width: 2px;
 }
 
 // ---------------------------------------------------------------- résumé
+//
+// Proportions ported from jglovier/resume-template: a centred avatar and name, a heavy rule under
+// the headline, and entries of title / details / copy. Its typography is not ported — that theme
+// loads Open Sans and Lora from a webfont host, and this one committed to the system stack, so the
+// shapes come across and the network requests do not.
+//
+// The rules are drawn with `--border` rather than the reference's fixed grey, so the page works in
+// both modes; a résumé is the page most likely to be read on a laptop at night and printed the next
+// morning.
 
 #resume {
   display: flex;
   flex-direction: column;
-  gap: 1.75rem;
+  gap: 2.25rem;
+}
 
-  h2 {
-    padding-bottom: 0.3rem;
-    border-bottom: 1px solid var(--border);
-    font-size: 1.05rem;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
+.resume-head {
+  display: flex;
+  flex-direction: column;
+}
 
-  section {
-    display: flex;
-    flex-direction: column;
-    gap: 0.9rem;
+.resume-avatar {
+  align-self: center;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.resume-name {
+  margin: 1rem 0 0;
+  font-size: clamp(2rem, 7vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.05;
+  // The reference sets -.15rem at 3rem. Kept proportional rather than absolute so it does not
+  // collapse the name into itself at the small end of the clamp.
+  letter-spacing: -0.03em;
+  text-align: center;
+}
+
+// The rule the reference draws under the title, with the headline on one side and the contact
+// details on the other. Stacked and centred on a narrow screen, because a headline and six links
+// on one line at 360px is neither.
+.resume-title-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.35rem 1.25rem;
+  margin-top: 1.25rem;
+  padding: 0.45rem 0;
+  border-top: 3px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+
+  @include bp.from('sm') {
+    justify-content: space-between;
+    text-align: left;
   }
 }
 
 .resume-headline {
+  margin: 0;
   color: var(--text-muted);
-  font-size: 1.05rem;
+  font-size: 1.15rem;
+  font-weight: 300;
 }
 
 .resume-contact {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem 1.1rem;
-  margin: 0.6rem 0 0;
+  justify-content: center;
+  gap: 0.35rem 1.1rem;
+  margin: 0;
   padding: 0;
   list-style: none;
   font-size: 0.9rem;
   color: var(--text-muted);
 }
 
+.resume-summary {
+  margin-top: 1.25rem;
+
+  p {
+    margin: 0;
+  }
+
+  @include bp.from('sm') {
+    font-size: 1.05rem;
+  }
+}
+
+// The reference's pill. A link rather than a button because it navigates — a mail client is a
+// destination, and a reader who wants it in another tab should get one.
+.resume-contact-button {
+  display: block;
+  width: min(16rem, 100%);
+  margin: 1.5rem auto 0;
+  padding: 0.7rem 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 1.05rem;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+
+  &:hover,
+  &:focus-visible {
+    border-color: var(--link);
+    background: var(--link);
+    color: var(--accent-contrast);
+  }
+}
+
+.resume-actions {
+  margin: 0.75rem 0 0;
+  text-align: center;
+}
+
+.resume-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+// The reference's double rule, which is what makes a section read as a section without a box.
+.resume-section-head {
+  padding: 0.2rem 0 0.35rem;
+  border-top: 3px solid var(--border);
+  border-bottom: 1px solid var(--border);
+
+  h2 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+}
+
 .resume-entry {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-
-  h3 {
-    font-size: 1rem;
-    margin: 0;
-  }
-
-  ul {
-    margin: 0;
-  }
+  gap: 0.3rem;
 }
 
-// The dates sit opposite the title on a wide screen and under it on a narrow one, rather than
-// wrapping into the middle of the job title.
-.resume-entry-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.25rem 1rem;
+.resume-entry-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+// Role and dates on one line under the title, as the reference has them. Empty when an entry gave
+// neither, and `:empty` keeps it from contributing a gap it has nothing to put in.
+.resume-entry-details {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+
+  &:empty {
+    display: none;
+  }
 }
 
 .resume-dates {
-  flex: 0 0 auto;
-  color: var(--text-muted);
-  font-size: 0.85rem;
   font-variant-numeric: tabular-nums;
+}
+
+.resume-entry-copy {
+  margin: 0.15rem 0 0;
+}
+
+.resume-entry-list {
+  margin: 0.15rem 0 0;
+  padding-left: 1.2rem;
 }
 
 .resume-skills {
@@ -1585,11 +1695,11 @@ $spine-width: 2px;
   }
 
   dt {
-    font-weight: 620;
-    color: var(--text-muted);
+    font-weight: 700;
   }
 
   dd {
     margin: 0;
+    color: var(--text-muted);
   }
 }

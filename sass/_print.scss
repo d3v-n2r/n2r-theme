@@ -71,6 +71,56 @@
     break-inside: avoid;
   }
 
+  // A résumé has one page to make its case, so print tightens everything the screen lets breathe.
+  // The reference does the same, and for the same reason.
+  #resume {
+    gap: 0.9rem;
+  }
+
+  .resume-name {
+    margin: 0;
+    font-size: 20pt;
+    letter-spacing: -0.02em;
+  }
+
+  .resume-title-bar {
+    margin-top: 0.4rem;
+    padding: 0.15rem 0;
+    border-top-width: 1px;
+  }
+
+  .resume-headline {
+    font-size: 11pt;
+  }
+
+  .resume-summary {
+    margin-top: 0.5rem;
+  }
+
+  .resume-section {
+    gap: 0.6rem;
+  }
+
+  .resume-section-head {
+    padding: 0.1rem 0;
+    border-top-width: 1px;
+
+    h2 {
+      font-size: 12pt;
+    }
+  }
+
+  .resume-entry-title {
+    font-size: 11pt;
+  }
+
+  // Italic on paper, where colour is the first thing a printer takes away — the details line has to
+  // stay distinguishable from the copy under it without depending on grey.
+  .resume-entry-details {
+    font-size: 9.5pt;
+    font-style: italic;
+  }
+
   h1,
   h2,
   h3 {

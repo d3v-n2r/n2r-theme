@@ -7,8 +7,18 @@
   top bar and the footer, un-inverts dark mode, and prints link targets after the text that carried
   them, since a link is worth nothing on paper.
 
+  Structure follows jglovier/resume-template: a centred avatar and name, a rule under the headline
+  with the links on the same line, an executive summary, and then sections of title / details /
+  copy. What is *not* taken from it is the typography — that theme loads Open Sans and Lora from a
+  webfont host, and this one committed to the system stack, so the proportions are ported and the
+  font requests are not.
+
   Every section is optional. A résumé with no publications should not print a heading with nothing
   under it, so each one asks first.
+
+  The microdata is schema.org Person. It costs nothing at render time and it is the difference
+  between a search engine reading this as a person with roles and qualifications, and reading it as
+  a page with some words on it.
 #}
 {% extends "base.html" %}
 {% set cv = site.data.resume %}
@@ -19,53 +29,80 @@
 {% block description %}{{ cv.summary or site.description }}{% endblock %}
 
 {% block content %}
-  <article id="resume">
+  <article id="resume" itemscope itemtype="https://schema.org/Person">
     <header class="resume-head">
-      <h1>{{ cv.name or site.author }}</h1>
-      {% if cv.headline %}<p class="resume-headline">{{ cv.headline }}</p>{% endif %}
+      {#
+        The avatar is `no-print`: on paper it wastes the top of a page that has one page to make its
+        case, and a greyscale photograph of a face is the first thing a printer renders badly.
+      #}
+      {% if cv.avatar or site.avatar %}
+        <img
+          class="resume-avatar no-print"
+          src="{{ (cv.avatar or site.avatar) | safe }}"
+          alt=""
+          width="96"
+          height="96"
+          itemprop="image"
+        />
+      {% endif %}
 
-      {% if cv.contact %}
-        <ul class="resume-contact">
-          {% for entry in cv.contact %}
-            <li>
-              {% if entry.url %}
-                <a href="{{ entry.url | safe }}" rel="noopener">{{ entry.value }}</a>
-              {% else %}
-                {{ entry.value }}
-              {% endif %}
-            </li>
-          {% endfor %}
-        </ul>
+      <h1 class="resume-name" itemprop="name">{{ cv.name or site.author }}</h1>
+
+      <div class="resume-title-bar">
+        {% if cv.headline %}
+          <p class="resume-headline" itemprop="jobTitle">{{ cv.headline }}</p>
+        {% endif %}
+
+        {% if cv.contact %}
+          <ul class="resume-contact">
+            {% for entry in cv.contact %}
+              <li>
+                {% if entry.url %}
+                  <a href="{{ entry.url | safe }}" rel="noopener"
+                     {%- if entry.url is startingwith "mailto:" %} itemprop="email"{% endif %}>{{ entry.value }}</a>
+                {% else %}
+                  {{ entry.value }}
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+
+      {% if cv.summary %}
+        <div class="resume-summary" itemprop="description">
+          <p>{{ cv.summary }}</p>
+        </div>
       {% endif %}
 
       {#
-        Hidden when printing: on paper the page *is* the document, so an invitation to download it
-        is noise. The print stylesheet removes it.
+        Both hidden when printing. On paper the page *is* the document, so an invitation to download
+        it is noise, and a button that cannot be pressed is worse than absent.
       #}
+      {% if cv.email %}
+        <a class="resume-contact-button no-print" href="mailto:{{ cv.email }}">
+          {{ site.text.page.resume_contact or "Get in touch" }}
+        </a>
+      {% endif %}
       <p class="resume-actions no-print">
         <button class="share" type="button" onclick="window.print()">Download as PDF</button>
       </p>
     </header>
 
-    {% if cv.summary %}
-      <section>
-        <h2>Summary</h2>
-        <p>{{ cv.summary }}</p>
-      </section>
-    {% endif %}
-
     {% if cv.experience %}
-      <section>
-        <h2>Experience</h2>
+      <section class="resume-section">
+        <header class="resume-section-head"><h2>{{ site.text.page.resume_experience or "Experience" }}</h2></header>
         {% for role in cv.experience %}
-          <div class="resume-entry">
-            <div class="resume-entry-head">
-              <h3>{{ role.title }}{% if role.company %} · {{ role.company }}{% endif %}</h3>
-              {% if role.dates %}<span class="resume-dates">{{ role.dates }}</span>{% endif %}
-            </div>
-            {% if role.summary %}<p>{{ role.summary }}</p>{% endif %}
+          <div class="resume-entry" itemscope itemprop="worksFor" itemtype="https://schema.org/Organization">
+            <h3 class="resume-entry-title" itemprop="name">{{ role.company or role.title }}</h3>
+            <p class="resume-entry-details">
+              {%- if role.company and role.title %}{{ role.title }}{% endif -%}
+              {%- if role.company and role.title and role.dates %} · {% endif -%}
+              {%- if role.dates %}<span class="resume-dates">{{ role.dates }}</span>{% endif -%}
+            </p>
+            {% if role.summary %}<p class="resume-entry-copy">{{ role.summary }}</p>{% endif %}
             {% if role.highlights %}
-              <ul>
+              <ul class="resume-entry-list">
                 {% for point in role.highlights %}<li>{{ point }}</li>{% endfor %}
               </ul>
             {% endif %}
@@ -74,51 +111,133 @@
       </section>
     {% endif %}
 
+    {% if cv.education %}
+      <section class="resume-section">
+        <header class="resume-section-head"><h2>{{ site.text.page.resume_education or "Education" }}</h2></header>
+        {% for item in cv.education %}
+          <div class="resume-entry" itemscope itemprop="alumniOf" itemtype="https://schema.org/EducationalOrganization">
+            <h3 class="resume-entry-title" itemprop="name">{{ item.institution or item.qualification }}</h3>
+            <p class="resume-entry-details">
+              {%- if item.institution and item.qualification %}{{ item.qualification }}{% endif -%}
+              {%- if item.institution and item.qualification and item.dates %} · {% endif -%}
+              {%- if item.dates %}<span class="resume-dates">{{ item.dates }}</span>{% endif -%}
+            </p>
+            {% if item.awards %}
+              <ul class="resume-entry-list">
+                {% for award in item.awards %}<li>{{ award }}</li>{% endfor %}
+              </ul>
+            {% endif %}
+            {% if item.summary %}<p class="resume-entry-copy">{{ item.summary }}</p>{% endif %}
+          </div>
+        {% endfor %}
+      </section>
+    {% endif %}
+
     {% if cv.projects %}
-      <section>
-        <h2>Projects</h2>
+      <section class="resume-section">
+        <header class="resume-section-head"><h2>{{ site.text.page.resume_projects or "Projects" }}</h2></header>
         {% for item in cv.projects %}
-          <div class="resume-entry">
-            <div class="resume-entry-head">
-              <h3>
-                {% if item.url %}
-                  <a href="{{ item.url | safe }}" rel="noopener">{{ item.name }}</a>
-                {% else %}
-                  {{ item.name }}
-                {% endif %}
-              </h3>
-              {% if item.dates %}<span class="resume-dates">{{ item.dates }}</span>{% endif %}
-            </div>
-            {% if item.summary %}<p>{{ item.summary }}</p>{% endif %}
+          <div class="resume-entry" itemscope itemtype="https://schema.org/CreativeWork">
+            <meta itemprop="creator" content="{{ cv.name or site.author }}" />
+            <h3 class="resume-entry-title" itemprop="name">
+              {%- if item.url -%}
+                <a href="{{ item.url | safe }}" rel="noopener" itemprop="url">{{ item.name }}</a>
+              {%- else -%}
+                {{ item.name }}
+              {%- endif -%}
+            </h3>
+            <p class="resume-entry-details">
+              {%- if item.role %}{{ item.role }}{% endif -%}
+              {%- if item.role and item.dates %} · {% endif -%}
+              {%- if item.dates %}<span class="resume-dates">{{ item.dates }}</span>{% endif -%}
+            </p>
+            {% if item.summary %}<p class="resume-entry-copy" itemprop="description">{{ item.summary }}</p>{% endif %}
           </div>
         {% endfor %}
       </section>
     {% endif %}
 
     {% if cv.skills %}
-      <section>
-        <h2>Skills</h2>
+      <section class="resume-section">
+        <header class="resume-section-head"><h2>{{ site.text.page.resume_skills or "Skills" }}</h2></header>
         <dl class="resume-skills">
           {% for group in cv.skills %}
             <dt>{{ group.name }}</dt>
-            <dd>{{ group.items | join(", ") }}</dd>
+            <dd>
+              {%- if group.items %}{{ group.items | join(", ") }}{% else %}{{ group.description }}{% endif -%}
+            </dd>
           {% endfor %}
         </dl>
       </section>
     {% endif %}
 
-    {% if cv.education %}
-      <section>
-        <h2>Education</h2>
-        {% for item in cv.education %}
+    {% if cv.recognition %}
+      <section class="resume-section">
+        <header class="resume-section-head"><h2>{{ site.text.page.resume_recognition or "Recognition" }}</h2></header>
+        {% for item in cv.recognition %}
           <div class="resume-entry">
-            <div class="resume-entry-head">
-              <h3>{{ item.qualification }}{% if item.institution %} · {{ item.institution }}{% endif %}</h3>
-              {% if item.dates %}<span class="resume-dates">{{ item.dates }}</span>{% endif %}
-            </div>
-            {% if item.summary %}<p>{{ item.summary }}</p>{% endif %}
+            <h3 class="resume-entry-title" itemprop="award">{{ item.award }}</h3>
+            <p class="resume-entry-details">
+              {%- if item.organization %}{{ item.organization }}{% endif -%}
+              {%- if item.organization and item.dates %} · {% endif -%}
+              {%- if item.dates %}<span class="resume-dates">{{ item.dates }}</span>{% endif -%}
+            </p>
+            {% if item.summary %}<p class="resume-entry-copy">{{ item.summary }}</p>{% endif %}
           </div>
         {% endfor %}
+      </section>
+    {% endif %}
+
+    {% if cv.associations %}
+      <section class="resume-section">
+        <header class="resume-section-head"><h2>{{ site.text.page.resume_associations or "Associations" }}</h2></header>
+        {% for item in cv.associations %}
+          <div class="resume-entry" itemscope itemprop="memberOf" itemtype="https://schema.org/Organization">
+            <h3 class="resume-entry-title" itemprop="name">
+              {%- if item.url -%}
+                <a href="{{ item.url | safe }}" rel="noopener" itemprop="url">{{ item.organization }}</a>
+              {%- else -%}
+                {{ item.organization }}
+              {%- endif -%}
+            </h3>
+            <p class="resume-entry-details">
+              {%- if item.role %}{{ item.role }}{% endif -%}
+              {%- if item.role and item.dates %} · {% endif -%}
+              {%- if item.dates %}<span class="resume-dates">{{ item.dates }}</span>{% endif -%}
+            </p>
+            {% if item.summary %}<p class="resume-entry-copy">{{ item.summary }}</p>{% endif %}
+          </div>
+        {% endfor %}
+      </section>
+    {% endif %}
+
+    {% if cv.interests %}
+      <section class="resume-section">
+        <header class="resume-section-head"><h2>{{ site.text.page.resume_interests or "Outside interests" }}</h2></header>
+        <div class="resume-entry">
+          <ul class="resume-entry-list">
+            {% for item in cv.interests %}<li>{{ item }}</li>{% endfor %}
+          </ul>
+        </div>
+      </section>
+    {% endif %}
+
+    {% if cv.links %}
+      <section class="resume-section">
+        <header class="resume-section-head"><h2>{{ site.text.page.resume_links or "Elsewhere" }}</h2></header>
+        <div class="resume-entry">
+          <ul class="resume-entry-list">
+            {% for item in cv.links %}
+              <li>
+                {%- if item.url -%}
+                  <a href="{{ item.url | safe }}" rel="noopener">{{ item.description or item.url }}</a>
+                {%- else -%}
+                  {{ item.description }}
+                {%- endif -%}
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
       </section>
     {% endif %}
   </article>

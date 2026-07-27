@@ -86,6 +86,17 @@ page:
   gallery: Gallery
   home: Home
   resume: Résumé
+  # Section headings on the résumé. Each is optional in the template too, so a translation that
+  # omits one falls back to the English rather than rendering an empty heading.
+  resume_contact: Get in touch
+  resume_experience: Experience
+  resume_education: Education
+  resume_projects: Projects
+  resume_skills: Skills
+  resume_recognition: Recognition
+  resume_associations: Associations
+  resume_interests: Outside interests
+  resume_links: Elsewhere
   undated: Undated
   empty: Nothing published yet.
   nothing_tagged: Nothing tagged yet.
