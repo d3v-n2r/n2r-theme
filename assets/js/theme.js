@@ -474,4 +474,33 @@
       });
     });
   }
+
+  // ------------------------------------------------------------------ video embeds
+  //
+  // The page ships a button, not a player. Nothing third-party is requested until a reader presses
+  // it — not the iframe and not a thumbnail, because YouTube's thumbnails come from i.ytimg.com and
+  // identify the reader exactly as well as the player does.
+  //
+  // The player URL is on the element rather than built here, so the engine — which validated the
+  // identifier — decides what gets loaded, and this only decides when.
+  document.querySelectorAll('.embed-video').forEach(function (embed) {
+    var button = embed.querySelector('.embed-play');
+    var player = embed.getAttribute('data-player');
+    if (!button || !player) {
+      return;
+    }
+
+    button.addEventListener('click', function () {
+      var frame = document.createElement('iframe');
+      frame.src = player + (player.indexOf('?') === -1 ? '?' : '&') + 'autoplay=1';
+      frame.title = 'Embedded video';
+      frame.loading = 'lazy';
+      frame.allow = 'accelerometer; encrypted-media; picture-in-picture; fullscreen';
+      // The embed is someone else's document: deny it the ambient authority of this origin.
+      frame.referrerPolicy = 'no-referrer';
+      frame.setAttribute('allowfullscreen', '');
+      embed.replaceChildren(frame);
+      embed.classList.add('playing');
+    });
+  });
 })();

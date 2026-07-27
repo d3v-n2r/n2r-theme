@@ -8,6 +8,13 @@ All notable changes to this theme are documented here. The format follows
 
 ### Added
 
+- **`.embed-video`** — the click-to-load player facade the engine now emits. It holds the 16/9 box
+  the video will occupy, so pressing play swaps the iframe in without the page moving under the
+  reader. The play triangle is drawn in CSS rather than fetched or inlined as SVG. The button names
+  the host, because "Play video" alone does not tell a reader whose server they are about to
+  contact — which is the whole point of not having contacted it already. The iframe is created with
+  `referrerPolicy = 'no-referrer'`.
+
 - **CI.** This was the one repository with no checks at all. It cannot prove the theme *works* —
   only the engine rendering a real site can do that, and fetching the engine here would invert the
   dependency the four-repo split exists to keep pointing one way. What it does prove: `theme.toml`
