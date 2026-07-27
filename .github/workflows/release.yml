@@ -17,7 +17,11 @@ jobs:
     outputs:
       digest: ${{ steps.digest.outputs.digest }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          # No job here pushes, so the token a checkout would leave in .git/config is
+          # only something for a later step to find.
+          persist-credentials: false
       - name: Package
         # Ships what a site consumes; repository metadata and CI config stay out.
         run: |
@@ -27,7 +31,7 @@ jobs:
             theme.toml templates sass assets locales LICENSE README.md CHANGELOG.md
       - id: digest
         run: echo "digest=sha256:$(sha256sum "dist/$ARTIFACT" | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: release-dist
           path: dist/
@@ -42,7 +46,7 @@ jobs:
       attestations: write
       contents: read
     steps:
-      - uses: actions/attest@v4
+      - uses: actions/attest@f7c74d28b9d84cb8768d0b8ca14a4bac6ef463e6 # v4
         with:
           subject-name: ${{ env.ARTIFACT }}
           subject-digest: ${{ needs.package.outputs.digest }}
@@ -54,10 +58,24 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           name: release-dist
           path: dist
+      # The attestation covers a digest. Nothing so far proves the bytes about to be published are
+      # the bytes that digest describes — upload/download-artifact is trusted to be faithful, and a
+      # release that shipped a different build than the one attested would look identical from the
+      # outside. Cheap to check, so it is checked.
+      - name: Confirm the published bytes are the attested bytes
+        env:
+          ATTESTED: ${{ needs.package.outputs.digest }}
+        run: |
+          actual="sha256:$(sha256sum "dist/$ARTIFACT" | cut -d' ' -f1)"
+          if [ "$actual" != "$ATTESTED" ]; then
+            echo "::error::attested $ATTESTED but about to publish $actual"
+            exit 1
+          fi
+          echo "digest matches the attestation: $actual"
       - run: gh release create "$GITHUB_REF_NAME" dist/* --generate-notes --repo "$GITHUB_REPOSITORY"
         env:
           GH_TOKEN: ${{ github.token }}

@@ -1,0 +1,110 @@
+name: CI
+
+# What can honestly be checked here, and nothing pretending to be more.
+#
+# This repository holds templates, SCSS, JavaScript and a locale catalogue. It has no build of its
+# own: the engine renders it. So CI cannot prove the theme *works* — only the engine building a real
+# site can do that, and asking this repository to fetch the engine would invert the dependency the
+# four-repo split exists to keep pointing one way.
+#
+# What it can prove is that nothing here is malformed, that the manifest and the directories it
+# names agree, and that the SCSS still compiles with the same compiler the engine uses. Every failure
+# below is one that would otherwise surface as a broken site at deploy time.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: manifest, sass, templates, locales
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          # Nothing here pushes, so the token a checkout would leave in .git/config is only
+          # something for a later step to find.
+          persist-credentials: false
+
+      - name: Manifest parses, and names directories that exist
+        run: |
+          python3 - <<'PY'
+          import sys, tomllib, pathlib
+          manifest = tomllib.loads(pathlib.Path("theme.toml").read_text())
+          missing = [
+              f"{key} = {name!r}"
+              for key, name in manifest.get("directories", {}).items()
+              if not pathlib.Path(name).is_dir()
+          ]
+          if missing:
+              sys.exit("theme.toml names directories that do not exist: " + ", ".join(missing))
+          for key in ("name", "version", "min_engine_version"):
+              if key not in manifest:
+                  sys.exit(f"theme.toml is missing {key}")
+          print(f"{manifest['name']} {manifest['version']}, engine >= {manifest['min_engine_version']}")
+          PY
+
+      - name: Locale catalogues parse
+        run: |
+          python3 -c '
+          import sys, pathlib
+          try:
+              import yaml
+          except ImportError:
+              sys.exit("pyyaml missing")
+          for f in sorted(pathlib.Path("locales").glob("*.yml")):
+              yaml.safe_load(f.read_text())
+              print("ok", f)
+          '
+
+      # Balanced block tags. minijinja reports an unclosed block as an error at render time, which
+      # means the first person to see it is whoever deploys — this moves that to the push.
+      - name: Template tags balance
+        run: |
+          python3 - <<'PY'
+          import re, sys, pathlib
+          PAIRS = {"block": "endblock", "if": "endif", "for": "endfor",
+                   "macro": "endmacro", "with": "endwith", "call": "endcall",
+                   "filter": "endfilter", "set": "endset", "raw": "endraw"}
+          bad = []
+          for f in sorted(pathlib.Path("templates").rglob("*")):
+              if not f.is_file() or f.suffix not in {".html", ".xml", ".txt", ".js", ".webmanifest"}:
+                  continue
+              text = f.read_text()
+              # Comments may legally contain unbalanced words.
+              text = re.sub(r"\{#.*?#\}", "", text, flags=re.S)
+              stack = []
+              for tag, rest in re.findall(r"\{%-?\s*(\w+)([^%]*)%\}", text):
+                  # `{% set x = 1 %}` assigns and ends there; only the bodyless
+                  # `{% set x %}…{% endset %}` form opens a block.
+                  if tag == "set" and "=" in rest:
+                      continue
+                  if tag in PAIRS:
+                      stack.append(tag)
+                  elif tag in PAIRS.values():
+                      want = next(k for k, v in PAIRS.items() if v == tag)
+                      if want in stack:
+                          while stack[-1] != want:
+                              stack.pop()
+                          stack.pop()
+                      else:
+                          bad.append(f"{f}: {{% {tag} %}} with nothing open")
+              if stack:
+                  bad.append(f"{f}: unclosed {', '.join(stack)}")
+          if bad:
+              sys.exit("\n".join(bad))
+          print("template tags balance")
+          PY
+
+      - uses: dtolnay/rust-toolchain@4cda84d5c5c54efe2404f9d843567869ab1699d4 # stable
+
+      # The same compiler the engine uses, so "it compiled in CI" means the engine will compile it.
+      - name: SCSS compiles
+        run: |
+          cargo install grass --locked
+          grass --style compressed sass/main.scss > /dev/null
+          echo "sass/main.scss compiles"

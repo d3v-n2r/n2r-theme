@@ -8,6 +8,24 @@ All notable changes to this theme are documented here. The format follows
 
 ### Added
 
+- **CI.** This was the one repository with no checks at all. It cannot prove the theme *works* —
+  only the engine rendering a real site can do that, and fetching the engine here would invert the
+  dependency the four-repo split exists to keep pointing one way. What it does prove: `theme.toml`
+  parses and names directories that exist, every locale catalogue parses, block tags balance in all
+  30 templates, and `sass/main.scss` compiles under grass — the same compiler the engine uses, so a
+  green run means the engine will compile it too. Each of those would otherwise first appear as a
+  broken site at deploy time.
+
+### Security
+
+- Actions pinned to commit SHAs rather than release tags, and the checkout no longer keeps its
+  token. A tag is a movable pointer; `@v4` meant whatever that repository decided `v4` was at the
+  moment the workflow ran.
+- The release workflow re-hashes the archive after download and fails if it differs from the
+  attested digest, so the bytes published are provably the bytes signed.
+
+### Added
+
 - **`twitter` and `signal` icons.** `twitter` answers to `x` as well and draws the X mark — a theme
   that only knew the new name would silently fall back to the generic link glyph for every site
   written before the rename. Signal is a speech bubble drawn in this set's own stroke style rather
