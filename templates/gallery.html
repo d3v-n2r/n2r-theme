@@ -15,7 +15,13 @@
           The placeholder is a `data:` URI the engine built and the variant URLs are engine-built
           paths, so both are marked safe. The caption and every EXIF value came out of a file and
           stays escaped.
+
+          Wrapped in the same `img-popup` anchor the engine puts around a content image, so the
+          gallery reuses the dialog in `base.html` rather than growing a second lightbox — and so
+          it degrades to an ordinary link with script off, where the picture still opens, just in a
+          page of its own.
         #}
+        <a class="img-popup" href="{{ image.url | url }}" aria-label="View {{ image.title }} larger">
         <img
           src="{{ image.url | url }}"
           srcset="
@@ -31,6 +37,7 @@
           decoding="async"
           style="background-image: url('{{ image.placeholder | url }}')"
         />
+        </a>
         <figcaption>
           {{ image.title }}
           {% if image.exif %}

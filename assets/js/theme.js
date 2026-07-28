@@ -440,6 +440,14 @@
       });
     });
 
+    // Suppresses the context menu over the enlarged picture only. A deterrent against saving it by
+    // reflex, not a protection: the file is already in the reader's cache, and the anchor behind
+    // the picture still names its URL. Confined to this element so right-click keeps working
+    // everywhere else on the page, which is a reader's own affordance and not ours to take.
+    popupImage.addEventListener('contextmenu', function (event) {
+      event.preventDefault();
+    });
+
     imagePopup.addEventListener('close', function () {
       delete root.dataset.popupOpen;
       // Dropped so a large image is not held in memory for the rest of the visit.

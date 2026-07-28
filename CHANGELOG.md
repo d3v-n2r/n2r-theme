@@ -8,6 +8,16 @@ All notable changes to this theme are documented here. The format follows
 
 ### Added
 
+- **Gallery images open full size.** Each is wrapped in the same `img-popup` anchor the engine puts
+  around a content image, so the gallery reuses the existing `<dialog>` rather than growing a second
+  lightbox — and degrades to an ordinary link with script off, where the picture still opens, just
+  in a page of its own. The hover state changes the border rather than the size, because a scale
+  that changed the cell would reflow every neighbour.
+- **Save deterrents on the enlarged picture** — no drag, no iOS long-press sheet, no context menu,
+  scoped to that one element so right-click keeps working everywhere else. These are **deterrents,
+  not protection**: anything a browser has rendered is already on the reader's machine. The only
+  real control is `image_max_width` in the engine, which decides what is published at all.
+
 - **Chirpy's image classes** — `.w-25/.w-50/.w-75/.w-100`, `.normal`, `.left`, `.right`, `.shadow`,
   and the `.light`/`.dark` pair that shows one screenshot per appearance. Headings `clear: both`, so
   a floated image does not have the next heading ride up beside it.

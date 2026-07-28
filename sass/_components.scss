@@ -335,14 +335,31 @@
     gap: 0.45rem;
   }
 
+  // The anchor is only there to carry the click, so it must not add a box of its own between the
+  // grid cell and the picture.
+  a.img-popup {
+    display: block;
+    line-height: 0;
+    border-radius: var(--radius);
+    outline-offset: 3px;
+  }
+
   img {
     width: 100%;
     border-radius: var(--radius);
     border: 1px solid var(--border);
+    transition: border-color motion.$quick ease, transform motion.$quick ease;
 
     // The engine emits a tiny inline placeholder; it shows through until the real file paints.
     background-size: cover;
     background-position: center;
+  }
+
+  // Says the picture does something, without moving the grid — a scale that changed the cell would
+  // reflow every neighbour on hover.
+  a.img-popup:hover img,
+  a.img-popup:focus-visible img {
+    border-color: var(--link);
   }
 
   figcaption {
@@ -1888,3 +1905,18 @@ $spine-width: 2px;
   font-weight: 620;
 }
 
+// ---------------------------------------------------------------- image popup: saving
+//
+// These make casually saving the enlarged picture awkward — no drag to the desktop, no long-press
+// sheet on iOS, no text selection around it.
+//
+// They are **deterrents, not protection**, and the distinction is worth writing down so nobody
+// later mistakes one for the other. Anything a browser has rendered is already on the reader's
+// machine: the network tab has the file, the cache has the file, `curl` on the URL in the anchor
+// has the file, and a screenshot needs none of that. The only real control over what a visitor can
+// keep is what the site publishes in the first place — see `image_max_width` in the engine.
+#image-popup img {
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+  user-select: none;
+}
